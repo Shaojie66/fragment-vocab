@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    fragment_vocab_temp_lib::run()
+    fragment_vocab_lib::run()
 }
