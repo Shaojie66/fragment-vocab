@@ -5,6 +5,8 @@ use tauri::{
 };
 
 mod db;
+mod idle;
+mod commands;
 
 // 编译期内嵌词库
 const IELTS_CORE_WORDBOOK: &str = include_str!("../../assets/wordbooks/ielts-core-3000.json");
@@ -32,6 +34,11 @@ fn show_stats_window(app: tauri::AppHandle) {
         let _ = window.show();
         let _ = window.set_focus();
     }
+}
+
+#[tauri::command]
+fn get_idle_seconds() -> Result<f64, String> {
+    idle::get_idle_seconds()
 }
 
 fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn std::error::Error>> {
@@ -66,11 +73,17 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
 }
 
 fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
-    let show_stats_i = MenuItem::with_id(app, "show_stats", "统计", true, None::<&str>)?;
+    // 创建菜单项
+    let stats_label = MenuItem::with_id(app, "stats_label", "今日统计", false, None::<&str>)?;
+    let show_stats_i = MenuItem::with_id(app, "show_stats", "打开统计页", true, None::<&str>)?;
     let pause_i = MenuItem::with_id(app, "pause", "暂停 1 小时", true, None::<&str>)?;
+    let no_more_today_i = MenuItem::with_id(app, "no_more_today", "今日不再提醒", true, None::<&str>)?;
     let quit_i = MenuItem::with_id(app, "quit", "退出", true, None::<&str>)?;
     
-    let menu = Menu::with_items(app, &[&show_stats_i, &pause_i, &quit_i])?;
+    let menu = Menu::with_items(
+        app,
+        &[&stats_label, &show_stats_i, &pause_i, &no_more_today_i, &quit_i]
+    )?;
 
     let _tray = TrayIconBuilder::new()
         .icon(app.default_window_icon().unwrap().clone())
@@ -84,20 +97,57 @@ fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
             }
             "pause" => {
                 println!("暂停 1 小时");
+                // 调用暂停命令
+                if let Some(db) = app.state::<Database>().get() {
+                    let _ = commands::pause_scheduler(tauri::State::from(db), 60);
+                }
+            }
+            "no_more_today" => {
+                println!("今日不再提醒");
+                // 计算到今天结束的分钟数
+                let now = chrono::Local::now();
+                let end_of_day = now.date_naive().and_hms_opt(23, 59, 59).unwrap();
+                let minutes_until_end = (end_of_day.and_local_timezone(chrono::Local).unwrap().timestamp() - now.timestamp()) / 60;
+                
+                if let Some(db) = app.state::<Database>().get() {
+                    let _ = commands::pause_scheduler(tauri::State::from(db), minutes_until_end as i64);
+                }
             }
             "quit" => {
                 app.exit(0);
             }
             _ => {}
         })
-        .on_tray_icon_event(|_tray, event| {
+        .on_tray_icon_event(|tray, event| {
             if let TrayIconEvent::Click {
                 button: MouseButton::Left,
                 button_state: MouseButtonState::Up,
                 ..
             } = event
             {
-                println!("托盘图标被点击");
+                // 更新菜单统计信息
+                if let Some(app) = tray.app_handle().upgrade() {
+                    if let Some(db) = app.state::<Database>().get() {
+                        if let Ok(stats) = commands::get_today_stats(tauri::State::from(db)) {
+                            let stats_text = format!(
+                                "今日: {}次 | 正确率: {:.0}% | 新词: {} | 待复习: {}",
+                                stats.total_reviews,
+                                stats.accuracy,
+                                stats.new_words_today,
+                                stats.due_cards_count
+                            );
+                            
+                            // 更新菜单项文本
+                            if let Some(menu) = tray.menu() {
+                                if let Some(item) = menu.get("stats_label") {
+                                    if let Some(menu_item) = item.as_menuitem() {
+                                        let _ = menu_item.set_text(stats_text);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
         .build(app)?;
@@ -113,6 +163,7 @@ pub fn run() {
             tauri_plugin_autostart::MacosLauncher::LaunchAgent,
             Some(vec![]),
         ))
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .setup(|app| {
             // 初始化数据库
             match setup_database(app) {
@@ -129,6 +180,41 @@ pub fn run() {
             
             setup_tray(app)?;
             
+            // 注册全局快捷键
+            use tauri_plugin_global_shortcut::{Code, Modifiers, ShortcutState};
+            
+            let app_handle = app.handle().clone();
+            app.global_shortcut().on_shortcut("CmdOrCtrl+K", move |_app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app_handle.get_webview_window("card") {
+                        let _ = window.emit("shortcut-know", ());
+                    }
+                }
+            }).unwrap();
+            
+            let app_handle = app.handle().clone();
+            app.global_shortcut().on_shortcut("CmdOrCtrl+J", move |_app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app_handle.get_webview_window("card") {
+                        let _ = window.emit("shortcut-dont-know", ());
+                    }
+                }
+            }).unwrap();
+            
+            let app_handle = app.handle().clone();
+            app.global_shortcut().on_shortcut("Escape", move |_app, _shortcut, event| {
+                if event.state == ShortcutState::Pressed {
+                    if let Some(window) = app_handle.get_webview_window("card") {
+                        let _ = window.emit("shortcut-skip", ());
+                    }
+                }
+            }).unwrap();
+            
+            // 注册快捷键
+            app.global_shortcut().register("CmdOrCtrl+K").unwrap();
+            app.global_shortcut().register("CmdOrCtrl+J").unwrap();
+            app.global_shortcut().register("Escape").unwrap();
+            
             #[cfg(target_os = "macos")]
             {
                 app.set_activation_policy(tauri::ActivationPolicy::Accessory);
@@ -139,7 +225,13 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             show_card_window,
             hide_card_window,
-            show_stats_window
+            show_stats_window,
+            get_idle_seconds,
+            commands::get_next_card,
+            commands::submit_review,
+            commands::get_today_stats,
+            commands::pause_scheduler,
+            commands::resume_scheduler,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

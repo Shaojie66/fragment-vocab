@@ -6,6 +6,10 @@ const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  },
   build: {
     rollupOptions: {
       input: {
