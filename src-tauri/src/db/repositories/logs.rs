@@ -23,6 +23,7 @@ impl LogsRepository {
         Ok(conn.last_insert_rowid())
     }
 
+    #[allow(dead_code)]
     pub fn get_by_card_id(&self, card_id: i64, limit: i64) -> Result<Vec<ReviewLog>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
@@ -45,6 +46,7 @@ impl LogsRepository {
         Ok(logs)
     }
 
+    #[allow(dead_code)]
     pub fn count_by_result(&self, result: &str, since: Option<&str>) -> Result<i64> {
         let conn = self.conn.lock().unwrap();
         

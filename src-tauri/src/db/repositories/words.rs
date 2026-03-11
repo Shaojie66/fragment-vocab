@@ -23,6 +23,7 @@ impl WordsRepository {
         Ok(conn.last_insert_rowid())
     }
 
+    #[allow(dead_code)]
     pub fn get_by_id(&self, id: i64) -> Result<Option<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
@@ -73,6 +74,7 @@ impl WordsRepository {
         Ok(count)
     }
 
+    #[allow(dead_code)]
     pub fn list(&self, limit: i64, offset: i64) -> Result<Vec<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(

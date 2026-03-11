@@ -39,6 +39,7 @@ pub struct ReviewLog {
     pub created_at: String,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppState {
     pub key: String,

@@ -23,6 +23,7 @@ impl StateRepository {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub fn get(&self, key: &str) -> Result<Option<String>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT value FROM app_state WHERE key = ?1")?;
@@ -31,6 +32,7 @@ impl StateRepository {
         Ok(value)
     }
 
+    #[allow(dead_code)]
     pub fn get_all(&self) -> Result<Vec<AppState>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT key, value, updated_at FROM app_state ORDER BY key")?;

@@ -1,5 +1,5 @@
 use tauri::State;
-use crate::db::{Database, CardsRepository, LogsRepository, StateRepository, models::SrsCard};
+use crate::db::{Database, CardsRepository, LogsRepository, StateRepository};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]

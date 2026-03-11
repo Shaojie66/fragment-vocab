@@ -49,6 +49,7 @@ impl CardsRepository {
         Ok(card)
     }
 
+    #[allow(dead_code)]
     pub fn get_by_word_id(&self, word_id: i64) -> Result<Option<SrsCard>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
