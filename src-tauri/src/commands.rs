@@ -1,5 +1,5 @@
 use tauri::State;
-use crate::db::{Database, CardsRepository, WordsRepository, LogsRepository, StateRepository};
+use crate::db::{Database, CardsRepository, LogsRepository, StateRepository, models::SrsCard};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -29,43 +29,36 @@ pub struct TodayStats {
 pub fn get_next_card(db: State<Database>) -> Result<Option<WordCardData>, String> {
     let conn = db.get_connection();
     let cards_repo = CardsRepository::new(conn.clone());
-    let words_repo = WordsRepository::new(conn.clone());
+    
+    let now = chrono::Utc::now().to_rfc3339();
     
     // 先尝试获取到期的复习卡片
-    let due_cards = cards_repo.get_due_cards(1)
+    let due_cards = cards_repo.get_due_cards(&now, 1)
         .map_err(|e| format!("Failed to get due cards: {}", e))?;
     
-    if let Some(card) = due_cards.first() {
-        let word = words_repo.get_by_id(card.word_id)
-            .map_err(|e| format!("Failed to get word: {}", e))?
-            .ok_or_else(|| "Word not found".to_string())?;
-        
+    if let Some(word_with_card) = due_cards.first() {
         return Ok(Some(WordCardData {
-            word_id: word.id,
-            card_id: card.id,
-            word: word.word,
-            phonetic: word.phonetic,
-            part_of_speech: word.part_of_speech,
-            meaning_zh: word.meaning_zh,
+            word_id: word_with_card.word.id,
+            card_id: word_with_card.card.id,
+            word: word_with_card.word.word.clone(),
+            phonetic: word_with_card.word.phonetic.clone(),
+            part_of_speech: word_with_card.word.part_of_speech.clone(),
+            meaning_zh: word_with_card.word.meaning_zh.clone(),
         }));
     }
     
     // 如果没有到期的复习卡片，获取新词
-    let new_cards = cards_repo.get_new_cards(1)
+    let new_cards = cards_repo.get_new_cards(&now, 1)
         .map_err(|e| format!("Failed to get new cards: {}", e))?;
     
-    if let Some(card) = new_cards.first() {
-        let word = words_repo.get_by_id(card.word_id)
-            .map_err(|e| format!("Failed to get word: {}", e))?
-            .ok_or_else(|| "Word not found".to_string())?;
-        
+    if let Some(word_with_card) = new_cards.first() {
         return Ok(Some(WordCardData {
-            word_id: word.id,
-            card_id: card.id,
-            word: word.word,
-            phonetic: word.phonetic,
-            part_of_speech: word.part_of_speech,
-            meaning_zh: word.meaning_zh,
+            word_id: word_with_card.word.id,
+            card_id: word_with_card.card.id,
+            word: word_with_card.word.word.clone(),
+            phonetic: word_with_card.word.phonetic.clone(),
+            part_of_speech: word_with_card.word.part_of_speech.clone(),
+            meaning_zh: word_with_card.word.meaning_zh.clone(),
         }));
     }
     
@@ -83,17 +76,25 @@ pub fn submit_review(
     let cards_repo = CardsRepository::new(conn.clone());
     let logs_repo = LogsRepository::new(conn.clone());
     
+    let now = chrono::Utc::now();
+    let now_str = now.to_rfc3339();
+    
     // 获取当前卡片
-    let card = cards_repo.get_by_id(card_id)
+    let mut card = cards_repo.get_by_id(card_id)
         .map_err(|e| format!("Failed to get card: {}", e))?
         .ok_or_else(|| "Card not found".to_string())?;
     
     // 计算新的状态
-    let (new_status, new_stage, new_due_at) = match result.as_str() {
+    match result.as_str() {
         "know" => {
-            let new_stage = card.stage + 1;
-            let new_status = if new_stage >= 5 { "mastered" } else { "learning" };
-            let interval_minutes = match new_stage {
+            card.stage += 1;
+            card.status = if card.stage >= 5 { "mastered".to_string() } else { "learning".to_string() };
+            card.correct_streak += 1;
+            card.lifetime_correct += 1;
+            card.last_result = Some("know".to_string());
+            card.last_seen_at = Some(now_str.clone());
+            
+            let interval_minutes = match card.stage {
                 0 => 10,
                 1 => 1440,      // 1 day
                 2 => 4320,      // 3 days
@@ -101,16 +102,23 @@ pub fn submit_review(
                 4 => 20160,     // 14 days
                 _ => 0,
             };
-            let due_at = if new_status == "mastered" {
+            
+            card.due_at = if card.status == "mastered" {
                 None
             } else {
-                Some(chrono::Utc::now() + chrono::Duration::minutes(interval_minutes))
+                Some((now + chrono::Duration::minutes(interval_minutes)).to_rfc3339())
             };
-            (new_status.to_string(), new_stage, due_at)
+            card.skip_cooldown_until = None;
         }
         "dont_know" => {
-            let new_stage = std::cmp::max(0, card.stage - 1);
-            let interval_minutes = match new_stage {
+            card.stage = std::cmp::max(0, card.stage - 1);
+            card.status = "learning".to_string();
+            card.correct_streak = 0;
+            card.lifetime_wrong += 1;
+            card.last_result = Some("dont_know".to_string());
+            card.last_seen_at = Some(now_str.clone());
+            
+            let interval_minutes = match card.stage {
                 0 => 10,
                 1 => 1440,
                 2 => 4320,
@@ -118,28 +126,25 @@ pub fn submit_review(
                 4 => 20160,
                 _ => 10,
             };
-            let due_at = Some(chrono::Utc::now() + chrono::Duration::minutes(interval_minutes));
-            ("learning".to_string(), new_stage, due_at)
+            
+            card.due_at = Some((now + chrono::Duration::minutes(interval_minutes)).to_rfc3339());
+            card.skip_cooldown_until = None;
         }
         "skip" => {
-            // 跳过不改变状态，只记录日志
-            (card.status.clone(), card.stage, card.due_at)
+            // 跳过：设置冷却期，不改变其他状态
+            card.last_result = Some("skip".to_string());
+            card.last_seen_at = Some(now_str.clone());
+            card.skip_cooldown_until = Some((now + chrono::Duration::minutes(30)).to_rfc3339());
         }
         _ => return Err(format!("Invalid result: {}", result)),
     };
     
     // 更新卡片
-    cards_repo.update(
-        card_id,
-        &new_status,
-        new_stage,
-        new_due_at,
-        Some(chrono::Utc::now()),
-        Some(&result),
-    ).map_err(|e| format!("Failed to update card: {}", e))?;
+    cards_repo.update(&card, &now_str)
+        .map_err(|e| format!("Failed to update card: {}", e))?;
     
     // 记录日志
-    logs_repo.insert(card_id, &result)
+    logs_repo.insert(card_id, &now_str, &result, "manual", None)
         .map_err(|e| format!("Failed to insert log: {}", e))?;
     
     Ok(())
@@ -160,8 +165,8 @@ pub fn get_today_stats(db: State<Database>) -> Result<TodayStats, String> {
     let today_start = chrono::Utc::now().date_naive().and_hms_opt(0, 0, 0).unwrap();
     let today_logs: Vec<_> = today_logs.into_iter()
         .filter(|log| {
-            if let Ok(created_at) = chrono::DateTime::parse_from_rfc3339(&log.created_at) {
-                created_at.naive_utc() >= today_start
+            if let Ok(shown_at) = chrono::DateTime::parse_from_rfc3339(&log.shown_at) {
+                shown_at.naive_utc() >= today_start
             } else {
                 false
             }
@@ -173,25 +178,26 @@ pub fn get_today_stats(db: State<Database>) -> Result<TodayStats, String> {
     let dont_know_count = today_logs.iter().filter(|log| log.result == "dont_know").count() as i64;
     let skip_count = today_logs.iter().filter(|log| log.result == "skip").count() as i64;
     
-    let accuracy = if total_reviews > 0 {
+    let accuracy = if know_count + dont_know_count > 0 {
         (know_count as f64 / (know_count + dont_know_count) as f64) * 100.0
     } else {
         0.0
     };
     
-    // 统计今日新学词数（首次答对的词）
+    // 统计今日新学词数
     let new_words_today = today_logs.iter()
-        .filter(|log| log.result == "know")
+        .filter(|log| log.result == "know" || log.result == "dont_know")
         .map(|log| log.card_id)
         .collect::<std::collections::HashSet<_>>()
         .len() as i64;
     
-    // 获取待复习词数
-    let due_cards = cards_repo.get_due_cards(1000)
+    // 统计待复习词数
+    let now = chrono::Utc::now().to_rfc3339();
+    let due_cards = cards_repo.get_due_cards(&now, 1000)
         .map_err(|e| format!("Failed to get due cards: {}", e))?;
     let due_cards_count = due_cards.len() as i64;
     
-    // 获取已掌握词数
+    // 统计已掌握词数
     let mastered_count = cards_repo.count_by_status("mastered")
         .map_err(|e| format!("Failed to count mastered cards: {}", e))?;
     
@@ -209,12 +215,14 @@ pub fn get_today_stats(db: State<Database>) -> Result<TodayStats, String> {
 
 /// 暂停调度器
 #[tauri::command]
-pub fn pause_scheduler(db: State<Database>, duration_minutes: i64) -> Result<(), String> {
+pub fn pause_scheduler(db: State<Database>, minutes: i64) -> Result<(), String> {
     let conn = db.get_connection();
     let state_repo = StateRepository::new(conn);
     
-    let pause_until = chrono::Utc::now() + chrono::Duration::minutes(duration_minutes);
-    state_repo.set("pause_until", &pause_until.to_rfc3339())
+    let pause_until = chrono::Utc::now() + chrono::Duration::minutes(minutes);
+    let now = chrono::Utc::now().to_rfc3339();
+    
+    state_repo.set("pause_until", &pause_until.to_rfc3339(), &now)
         .map_err(|e| format!("Failed to set pause state: {}", e))?;
     
     Ok(())
@@ -230,20 +238,4 @@ pub fn resume_scheduler(db: State<Database>) -> Result<(), String> {
         .map_err(|e| format!("Failed to delete pause state: {}", e))?;
     
     Ok(())
-}
-
-/// 检查是否暂停中
-#[tauri::command]
-pub fn is_paused(db: State<Database>) -> Result<bool, String> {
-    let conn = db.get_connection();
-    let state_repo = StateRepository::new(conn);
-    
-    if let Some(pause_until_str) = state_repo.get("pause_until")
-        .map_err(|e| format!("Failed to get pause state: {}", e))? {
-        if let Ok(pause_until) = chrono::DateTime::parse_from_rfc3339(&pause_until_str) {
-            return Ok(chrono::Utc::now() < pause_until);
-        }
-    }
-    
-    Ok(false)
 }

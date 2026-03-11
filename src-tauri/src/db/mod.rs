@@ -5,6 +5,5 @@ pub mod repositories;
 pub mod importer;
 
 pub use connection::Database;
-pub use models::*;
 pub use repositories::*;
 pub use importer::WordbookImporter;

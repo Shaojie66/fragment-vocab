@@ -14,6 +14,16 @@
     "macOSPrivateApi": true,
     "windows": [
       {
+        "label": "main",
+        "title": "Fragment Vocab",
+        "url": "index.html",
+        "width": 0,
+        "height": 0,
+        "visible": false,
+        "decorations": false,
+        "skipTaskbar": true
+      },
+      {
         "label": "card",
         "title": "Word Card",
         "url": "card.html",

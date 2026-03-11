@@ -1,8 +1,9 @@
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    Manager, Runtime,
+    Manager, Runtime, Emitter,
 };
+use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 
 mod db;
 mod idle;
@@ -98,8 +99,8 @@ fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
             "pause" => {
                 println!("暂停 1 小时");
                 // 调用暂停命令
-                if let Some(db) = app.state::<Database>().get() {
-                    let _ = commands::pause_scheduler(tauri::State::from(db), 60);
+                if let Some(db) = app.try_state::<Database>() {
+                    let _ = commands::pause_scheduler(db.clone(), 60);
                 }
             }
             "no_more_today" => {
@@ -109,8 +110,8 @@ fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
                 let end_of_day = now.date_naive().and_hms_opt(23, 59, 59).unwrap();
                 let minutes_until_end = (end_of_day.and_local_timezone(chrono::Local).unwrap().timestamp() - now.timestamp()) / 60;
                 
-                if let Some(db) = app.state::<Database>().get() {
-                    let _ = commands::pause_scheduler(tauri::State::from(db), minutes_until_end as i64);
+                if let Some(db) = app.try_state::<Database>() {
+                    let _ = commands::pause_scheduler(db.clone(), minutes_until_end as i64);
                 }
             }
             "quit" => {
@@ -126,26 +127,18 @@ fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
             } = event
             {
                 // 更新菜单统计信息
-                if let Some(app) = tray.app_handle().upgrade() {
-                    if let Some(db) = app.state::<Database>().get() {
-                        if let Ok(stats) = commands::get_today_stats(tauri::State::from(db)) {
-                            let stats_text = format!(
-                                "今日: {}次 | 正确率: {:.0}% | 新词: {} | 待复习: {}",
-                                stats.total_reviews,
-                                stats.accuracy,
-                                stats.new_words_today,
-                                stats.due_cards_count
-                            );
-                            
-                            // 更新菜单项文本
-                            if let Some(menu) = tray.menu() {
-                                if let Some(item) = menu.get("stats_label") {
-                                    if let Some(menu_item) = item.as_menuitem() {
-                                        let _ = menu_item.set_text(stats_text);
-                                    }
-                                }
-                            }
-                        }
+                let app_handle = tray.app_handle();
+                if let Some(db) = app_handle.try_state::<Database>() {
+                    if let Ok(stats) = commands::get_today_stats(db.clone()) {
+                        let stats_text = format!(
+                            "今日: {}次 | 正确率: {:.0}% | 新词: {} | 待复习: {}",
+                            stats.total_reviews,
+                            stats.accuracy,
+                            stats.new_words_today,
+                            stats.due_cards_count
+                        );
+                        
+                        println!("📊 {}", stats_text);
                     }
                 }
             }
@@ -180,40 +173,40 @@ pub fn run() {
             
             setup_tray(app)?;
             
-            // 注册全局快捷键
-            use tauri_plugin_global_shortcut::{Code, Modifiers, ShortcutState};
-            
+            // 注册全局快捷键（处理注册失败的情况）
             let app_handle = app.handle().clone();
-            app.global_shortcut().on_shortcut("CmdOrCtrl+K", move |_app, _shortcut, event| {
+            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+K", move |_app, _shortcut, event| {
                 if event.state == ShortcutState::Pressed {
                     if let Some(window) = app_handle.get_webview_window("card") {
                         let _ = window.emit("shortcut-know", ());
                     }
                 }
-            }).unwrap();
+            });
             
             let app_handle = app.handle().clone();
-            app.global_shortcut().on_shortcut("CmdOrCtrl+J", move |_app, _shortcut, event| {
+            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+J", move |_app, _shortcut, event| {
                 if event.state == ShortcutState::Pressed {
                     if let Some(window) = app_handle.get_webview_window("card") {
                         let _ = window.emit("shortcut-dont-know", ());
                     }
                 }
-            }).unwrap();
+            });
             
             let app_handle = app.handle().clone();
-            app.global_shortcut().on_shortcut("Escape", move |_app, _shortcut, event| {
+            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+Escape", move |_app, _shortcut, event| {
                 if event.state == ShortcutState::Pressed {
                     if let Some(window) = app_handle.get_webview_window("card") {
                         let _ = window.emit("shortcut-skip", ());
                     }
                 }
-            }).unwrap();
+            });
             
-            // 注册快捷键
-            app.global_shortcut().register("CmdOrCtrl+K").unwrap();
-            app.global_shortcut().register("CmdOrCtrl+J").unwrap();
-            app.global_shortcut().register("Escape").unwrap();
+            // 注册快捷键（忽略失败）
+            let _ = app.global_shortcut().register("CmdOrCtrl+Shift+K");
+            let _ = app.global_shortcut().register("CmdOrCtrl+Shift+J");
+            let _ = app.global_shortcut().register("CmdOrCtrl+Shift+Escape");
+            
+            println!("✅ Global shortcuts registered (Cmd+Shift+K/J/Esc)");
             
             #[cfg(target_os = "macos")]
             {
