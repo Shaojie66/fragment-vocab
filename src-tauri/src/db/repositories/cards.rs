@@ -75,10 +75,10 @@ impl CardsRepository {
         Ok(card)
     }
 
-    pub fn update(&self, card: &SrsCard) -> Result<()> {
+    pub fn update(&self, card: &SrsCard, now: &str) -> Result<()> {
         let conn = self.conn.lock().unwrap();
         conn.execute(
-            "UPDATE srs_cards SET status = ?1, stage = ?2, due_at = ?3, last_seen_at = ?4, last_result = ?5, correct_streak = ?6, lifetime_correct = ?7, lifetime_wrong = ?8, skip_cooldown_until = ?9, updated_at = datetime('now') WHERE id = ?10",
+            "UPDATE srs_cards SET status = ?1, stage = ?2, due_at = ?3, last_seen_at = ?4, last_result = ?5, correct_streak = ?6, lifetime_correct = ?7, lifetime_wrong = ?8, skip_cooldown_until = ?9, updated_at = ?10 WHERE id = ?11",
             (
                 &card.status,
                 card.stage,
@@ -89,6 +89,7 @@ impl CardsRepository {
                 card.lifetime_correct,
                 card.lifetime_wrong,
                 &card.skip_cooldown_until,
+                now,
                 card.id,
             ),
         ).context("Failed to update srs_card")?;
@@ -113,7 +114,7 @@ impl CardsRepository {
                     c.id, c.word_id, c.status, c.stage, c.due_at, c.last_seen_at, c.last_result, c.correct_streak, c.lifetime_correct, c.lifetime_wrong, c.skip_cooldown_until, c.updated_at
              FROM srs_cards c
              JOIN words w ON c.word_id = w.id
-             WHERE c.status IN ('learning', 'review') 
+             WHERE c.status = 'learning'
                AND c.due_at <= ?1
                AND (c.skip_cooldown_until IS NULL OR c.skip_cooldown_until <= ?1)
              ORDER BY c.due_at ASC
@@ -153,7 +154,7 @@ impl CardsRepository {
         Ok(cards)
     }
 
-    pub fn get_new_cards(&self, limit: i64) -> Result<Vec<WordWithCard>> {
+    pub fn get_new_cards(&self, now: &str, limit: i64) -> Result<Vec<WordWithCard>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
             "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.source, w.difficulty, w.created_at,
@@ -161,12 +162,12 @@ impl CardsRepository {
              FROM srs_cards c
              JOIN words w ON c.word_id = w.id
              WHERE c.status = 'new'
-               AND (c.skip_cooldown_until IS NULL OR c.skip_cooldown_until <= datetime('now'))
-             ORDER BY w.id ASC
-             LIMIT ?1"
+               AND (c.skip_cooldown_until IS NULL OR c.skip_cooldown_until <= ?1)
+             ORDER BY w.difficulty ASC, w.id ASC
+             LIMIT ?2"
         )?;
 
-        let cards = stmt.query_map([limit], |row| {
+        let cards = stmt.query_map([now, &limit.to_string()], |row| {
             Ok(WordWithCard {
                 word: crate::db::models::Word {
                     id: row.get(0)?,
@@ -252,7 +253,8 @@ mod tests {
         card.stage = 0;
         card.correct_streak = 1;
         
-        cards_repo.update(&card).unwrap();
+        let now = "2026-03-12T02:00:00Z";
+        cards_repo.update(&card, now).unwrap();
         
         let updated_card = cards_repo.get_by_id(card_id).unwrap().unwrap();
         assert_eq!(updated_card.status, "learning");

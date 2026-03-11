@@ -6,8 +6,10 @@ use tauri::{
 
 mod db;
 
+// 编译期内嵌词库
+const IELTS_CORE_WORDBOOK: &str = include_str!("../../assets/wordbooks/ielts-core-3000.json");
+
 use db::{Database, migration::Migrator};
-use std::path::PathBuf;
 
 #[tauri::command]
 fn show_card_window(app: tauri::AppHandle) {
@@ -51,16 +53,10 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
     let word_count = words_repo.count()?;
     
     if word_count == 0 {
-        println!("📚 Importing wordbook...");
-        let wordbook_path = app.path().resource_dir()?.join("assets/wordbooks/ielts-core-3000.json");
-        
-        if wordbook_path.exists() {
-            match db::WordbookImporter::import_from_json(&db, wordbook_path, "ielts-core") {
-                Ok(count) => println!("✅ Imported {} words", count),
-                Err(e) => eprintln!("⚠️  Failed to import wordbook: {}", e),
-            }
-        } else {
-            eprintln!("⚠️  Wordbook file not found: {:?}", wordbook_path);
+        println!("📚 Importing embedded wordbook...");
+        match db::WordbookImporter::import_from_embedded(&db, IELTS_CORE_WORDBOOK, "ielts-core") {
+            Ok(count) => println!("✅ Imported {} words", count),
+            Err(e) => eprintln!("⚠️  Failed to import wordbook: {}", e),
         }
     } else {
         println!("✅ Database already contains {} words", word_count);

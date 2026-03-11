@@ -13,11 +13,11 @@ impl StateRepository {
         Self { conn }
     }
 
-    pub fn set(&self, key: &str, value: &str) -> Result<()> {
+    pub fn set(&self, key: &str, value: &str, now: &str) -> Result<()> {
         let conn = self.conn.lock().unwrap();
         conn.execute(
-            "INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?1, ?2, datetime('now'))",
-            (key, value),
+            "INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?1, ?2, ?3)",
+            (key, value, now),
         ).context("Failed to set app_state")?;
         
         Ok(())
@@ -71,8 +71,9 @@ mod tests {
         Migrator::run_migrations(&db).unwrap();
 
         let repo = StateRepository::new(db.get_connection());
+        let now = "2026-03-12T02:00:00Z";
         
-        repo.set("paused_until", "2026-03-12T10:00:00Z").unwrap();
+        repo.set("paused_until", "2026-03-12T10:00:00Z", now).unwrap();
         
         let value = repo.get("paused_until").unwrap();
         assert_eq!(value, Some("2026-03-12T10:00:00Z".to_string()));
@@ -99,9 +100,10 @@ mod tests {
         Migrator::run_migrations(&db).unwrap();
 
         let repo = StateRepository::new(db.get_connection());
+        let now = "2026-03-12T02:00:00Z";
         
-        repo.set("test_key", "value1").unwrap();
-        repo.set("test_key", "value2").unwrap();
+        repo.set("test_key", "value1", now).unwrap();
+        repo.set("test_key", "value2", now).unwrap();
         
         let value = repo.get("test_key").unwrap();
         assert_eq!(value, Some("value2".to_string()));
