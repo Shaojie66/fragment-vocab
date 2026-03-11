@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
 node_modules
 dist
 dist-ssr
@@ -23,28 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Tauri
-src-tauri/target
-src-tauri/Cargo.lock
-
-# Database
-*.db
-*.db-shm
-*.db-wal
-
-# Build outputs
-*.dmg
-*.app
-*.exe
-*.msi
-*.deb
-*.AppImage
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# OS
-Thumbs.db

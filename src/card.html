@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .word-content {
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .word {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .phonetic {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .pos {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        
+        .meaning {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-know {
+            background: #34c759;
+            color: white;
+        }
+        
+        .btn-know:hover {
+            background: #2fb350;
+        }
+        
+        .btn-unknown {
+            background: #ff3b30;
+            color: white;
+        }
+        
+        .btn-unknown:hover {
+            background: #e6342a;
+        }
+        
+        .btn-skip {
+            background: #8e8e93;
+            color: white;
+        }
+        
+        .btn-skip:hover {
+            background: #7e7e83;
+        }
+    </style>
+</head>
+<body>
+    <div class="word-content">
+        <div class="word">abandon</div>
+        <div class="phonetic">/əˈbændən/</div>
+        <div class="pos">v.</div>
+        <div class="meaning">放弃；抛弃</div>
+    </div>
+    
+    <div class="actions">
+        <button class="btn-know" id="btnKnow">认识 (⌘K)</button>
+        <button class="btn-unknown" id="btnUnknown">不认识 (⌘J)</button>
+        <button class="btn-skip" id="btnSkip">跳过 (Esc)</button>
+    </div>
+    
+    <script type="module" src="/src/card.ts"></script>
+</body>
+</html>
