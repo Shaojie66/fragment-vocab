@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    
+    steps:
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Fragment Vocab v${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+          body: |
+            ## 🎉 Fragment Vocab v${{ steps.get_version.outputs.version }}
+            
+            ### 下载
+            - macOS: `Fragment-Vocab_${{ steps.get_version.outputs.version }}_aarch64.dmg` (Apple Silicon)
+            - macOS: `Fragment-Vocab_${{ steps.get_version.outputs.version }}_x64.dmg` (Intel)
+            
+            ### 安装
+            1. 下载对应架构的 .dmg 文件
+            2. 打开 .dmg 并拖拽到应用程序文件夹
+            3. 首次运行需要在系统设置中允许应用
+            
+            ### 更新日志
+            请查看 [CHANGELOG.md](https://github.com/Shaojie66/fragment-vocab/blob/main/CHANGELOG.md)
+
+  build-macos:
+    name: Build macOS
+    needs: create-release
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Tauri app (Universal)
+        run: npm run tauri build -- --target universal-apple-darwin
+        env:
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+
+      - name: Rename DMG
+        run: |
+          cd src-tauri/target/universal-apple-darwin/release/bundle/dmg
+          mv *.dmg Fragment-Vocab_${{ needs.create-release.outputs.version }}_universal.dmg
+
+      - name: Upload DMG to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/Fragment-Vocab_${{ needs.create-release.outputs.version }}_universal.dmg
+          asset_name: Fragment-Vocab_${{ needs.create-release.outputs.version }}_universal.dmg
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Generate checksums
+        run: |
+          cd src-tauri/target/universal-apple-darwin/release/bundle/dmg
+          shasum -a 256 *.dmg > checksums.txt
+
+      - name: Upload checksums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: src-tauri/target/universal-apple-darwin/release/bundle/dmg/checksums.txt
+          asset_name: checksums.txt
+          asset_content_type: text/plain
