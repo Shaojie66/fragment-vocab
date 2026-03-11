@@ -1,0 +1,37 @@
+[
+  {
+    "word": "abandon",
+    "phonetic": "/əˈbændən/",
+    "part_of_speech": "v.",
+    "meaning_zh": "放弃；抛弃",
+    "difficulty": 1
+  },
+  {
+    "word": "ability",
+    "phonetic": "/əˈbɪləti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "能力；才能",
+    "difficulty": 1
+  },
+  {
+    "word": "abroad",
+    "phonetic": "/əˈbrɔːd/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "在国外；到国外",
+    "difficulty": 1
+  },
+  {
+    "word": "absence",
+    "phonetic": "/ˈæbsəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "缺席；不在",
+    "difficulty": 1
+  },
+  {
+    "word": "absolute",
+    "phonetic": "/ˈæbsəluːt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "绝对的；完全的",
+    "difficulty": 2
+  }
+]

@@ -4,6 +4,11 @@ use tauri::{
     Manager, Runtime,
 };
 
+mod db;
+
+use db::{Database, migration::Migrator};
+use std::path::PathBuf;
+
 #[tauri::command]
 fn show_card_window(app: tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("card") {
@@ -25,6 +30,43 @@ fn show_stats_window(app: tauri::AppHandle) {
         let _ = window.show();
         let _ = window.set_focus();
     }
+}
+
+fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn std::error::Error>> {
+    // 获取应用数据目录
+    let app_data_dir = app.path().app_data_dir()?;
+    std::fs::create_dir_all(&app_data_dir)?;
+    
+    let db_path = app_data_dir.join("fragment-vocab.db");
+    println!("📁 Database path: {:?}", db_path);
+    
+    // 创建数据库连接
+    let db = Database::new(db_path)?;
+    
+    // 运行 migrations
+    Migrator::run_migrations(&db)?;
+    
+    // 导入词库（仅在首次运行时）
+    let words_repo = db::WordsRepository::new(db.get_connection());
+    let word_count = words_repo.count()?;
+    
+    if word_count == 0 {
+        println!("📚 Importing wordbook...");
+        let wordbook_path = app.path().resource_dir()?.join("assets/wordbooks/ielts-core-3000.json");
+        
+        if wordbook_path.exists() {
+            match db::WordbookImporter::import_from_json(&db, wordbook_path, "ielts-core") {
+                Ok(count) => println!("✅ Imported {} words", count),
+                Err(e) => eprintln!("⚠️  Failed to import wordbook: {}", e),
+            }
+        } else {
+            eprintln!("⚠️  Wordbook file not found: {:?}", wordbook_path);
+        }
+    } else {
+        println!("✅ Database already contains {} words", word_count);
+    }
+    
+    Ok(db)
 }
 
 fn setup_tray<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
@@ -76,6 +118,19 @@ pub fn run() {
             Some(vec![]),
         ))
         .setup(|app| {
+            // 初始化数据库
+            match setup_database(app) {
+                Ok(db) => {
+                    println!("✅ Database initialized successfully");
+                    // 将数据库实例存储到 app state 中供后续使用
+                    app.manage(db);
+                }
+                Err(e) => {
+                    eprintln!("❌ Failed to initialize database: {}", e);
+                    return Err(e.into());
+                }
+            }
+            
             setup_tray(app)?;
             
             #[cfg(target_os = "macos")]
