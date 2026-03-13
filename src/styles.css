@@ -387,6 +387,71 @@ button {
   color: #6a5f52;
 }
 
+.wordbook-preview {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(38, 65, 53, 0.12);
+  background: rgba(252, 249, 244, 0.86);
+}
+
+.wordbook-preview-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.wordbook-preview-head h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.wordbook-preview-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.wordbook-preview-item {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(247, 243, 235, 0.88);
+}
+
+.wordbook-preview-topline,
+.wordbook-preview-bottomline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wordbook-preview-topline strong {
+  font-size: 18px;
+}
+
+.wordbook-preview-aux {
+  margin: 8px 0 0;
+  color: #5a665f;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.wordbook-preview-meaning {
+  margin: 12px 0 0;
+  color: #243930;
+  line-height: 1.6;
+}
+
+.wordbook-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
 .export-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

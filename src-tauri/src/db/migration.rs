@@ -8,7 +8,7 @@ impl Migrator {
     pub fn run_migrations(db: &Database) -> Result<()> {
         // 读取 001_init.sql
         let migration_sql = include_str!("../../migrations/001_init.sql");
-        
+
         db.execute_migration(migration_sql)
             .context("Failed to run 001_init.sql migration")?;
 

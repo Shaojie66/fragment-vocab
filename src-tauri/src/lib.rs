@@ -5,14 +5,14 @@ use tauri::{
 };
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 
+mod commands;
 mod db;
 mod idle;
-mod commands;
 
 // 编译期内嵌词库
 const IELTS_CORE_WORDBOOK: &str = include_str!("../../assets/wordbooks/ielts-core-3000.json");
 
-use db::{Database, migration::Migrator};
+use db::{migration::Migrator, Database};
 
 fn focus_window(window: &tauri::WebviewWindow) {
     let _ = window.unminimize();
@@ -118,20 +118,20 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
     // 获取应用数据目录
     let app_data_dir = app.path().app_data_dir()?;
     std::fs::create_dir_all(&app_data_dir)?;
-    
+
     let db_path = app_data_dir.join("fragment-vocab.db");
     println!("📁 Database path: {:?}", db_path);
-    
+
     // 创建数据库连接
     let db = Database::new(db_path)?;
-    
+
     // 运行 migrations
     Migrator::run_migrations(&db)?;
-    
+
     // 导入词库（仅在首次运行时）
     let words_repo = db::WordsRepository::new(db.get_connection());
     let word_count = words_repo.count()?;
-    
+
     if word_count == 0 {
         println!("📚 Importing embedded wordbook...");
         match db::WordbookImporter::import_from_embedded(&db, IELTS_CORE_WORDBOOK, "ielts-core") {
@@ -141,7 +141,7 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
     } else {
         println!("✅ Database already contains {} words", word_count);
     }
-    
+
     Ok(db)
 }
 
@@ -151,12 +151,20 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
     let show_main_i = MenuItem::with_id(app, "show_main", "打开主页面", true, None::<&str>)?;
     let show_stats_i = MenuItem::with_id(app, "show_stats", "打开统计页", true, None::<&str>)?;
     let pause_i = MenuItem::with_id(app, "pause", "暂停 1 小时", true, None::<&str>)?;
-    let no_more_today_i = MenuItem::with_id(app, "no_more_today", "今日不再提醒", true, None::<&str>)?;
+    let no_more_today_i =
+        MenuItem::with_id(app, "no_more_today", "今日不再提醒", true, None::<&str>)?;
     let quit_i = MenuItem::with_id(app, "quit", "退出", true, None::<&str>)?;
-    
+
     let menu = Menu::with_items(
         app,
-        &[&stats_label, &show_main_i, &show_stats_i, &pause_i, &no_more_today_i, &quit_i]
+        &[
+            &stats_label,
+            &show_main_i,
+            &show_stats_i,
+            &pause_i,
+            &no_more_today_i,
+            &quit_i,
+        ],
     )?;
 
     let _tray = TrayIconBuilder::new()
@@ -187,7 +195,12 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
                 // 计算到今天结束的分钟数
                 let now = chrono::Local::now();
                 let end_of_day = now.date_naive().and_hms_opt(23, 59, 59).unwrap();
-                let minutes_until_end = (end_of_day.and_local_timezone(chrono::Local).unwrap().timestamp() - now.timestamp()) / 60;
+                let minutes_until_end = (end_of_day
+                    .and_local_timezone(chrono::Local)
+                    .unwrap()
+                    .timestamp()
+                    - now.timestamp())
+                    / 60;
 
                 if let Some(db) = app.try_state::<Database>() {
                     let _ = commands::pause_scheduler(db.clone(), minutes_until_end as i64);
@@ -221,7 +234,7 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
                             stats.new_words_today,
                             stats.due_cards_count
                         );
-                        
+
                         println!("📊 {}", stats_text);
                     }
                 }
@@ -293,47 +306,62 @@ pub fn run() {
 
             // 注册全局快捷键（处理注册失败的情况）
             let app_handle = app.handle().clone();
-            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+1", move |_app, _shortcut, event| {
-                if event.state == ShortcutState::Pressed {
-                    emit_card_shortcut_if_visible(&app_handle, "shortcut-option-1");
-                }
-            });
-            
-            let app_handle = app.handle().clone();
-            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+2", move |_app, _shortcut, event| {
-                if event.state == ShortcutState::Pressed {
-                    emit_card_shortcut_if_visible(&app_handle, "shortcut-option-2");
-                }
-            });
+            let _ = app.global_shortcut().on_shortcut(
+                "CmdOrCtrl+Shift+1",
+                move |_app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        emit_card_shortcut_if_visible(&app_handle, "shortcut-option-1");
+                    }
+                },
+            );
 
             let app_handle = app.handle().clone();
-            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+3", move |_app, _shortcut, event| {
-                if event.state == ShortcutState::Pressed {
-                    emit_card_shortcut_if_visible(&app_handle, "shortcut-option-3");
-                }
-            });
+            let _ = app.global_shortcut().on_shortcut(
+                "CmdOrCtrl+Shift+2",
+                move |_app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        emit_card_shortcut_if_visible(&app_handle, "shortcut-option-2");
+                    }
+                },
+            );
 
             let app_handle = app.handle().clone();
-            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+4", move |_app, _shortcut, event| {
-                if event.state == ShortcutState::Pressed {
-                    emit_card_shortcut_if_visible(&app_handle, "shortcut-option-4");
-                }
-            });
-            
+            let _ = app.global_shortcut().on_shortcut(
+                "CmdOrCtrl+Shift+3",
+                move |_app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        emit_card_shortcut_if_visible(&app_handle, "shortcut-option-3");
+                    }
+                },
+            );
+
             let app_handle = app.handle().clone();
-            let _ = app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+Escape", move |_app, _shortcut, event| {
-                if event.state == ShortcutState::Pressed {
-                    emit_card_shortcut_if_visible(&app_handle, "shortcut-skip");
-                }
-            });
-            
+            let _ = app.global_shortcut().on_shortcut(
+                "CmdOrCtrl+Shift+4",
+                move |_app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        emit_card_shortcut_if_visible(&app_handle, "shortcut-option-4");
+                    }
+                },
+            );
+
+            let app_handle = app.handle().clone();
+            let _ = app.global_shortcut().on_shortcut(
+                "CmdOrCtrl+Shift+Escape",
+                move |_app, _shortcut, event| {
+                    if event.state == ShortcutState::Pressed {
+                        emit_card_shortcut_if_visible(&app_handle, "shortcut-skip");
+                    }
+                },
+            );
+
             // 注册快捷键（忽略失败）
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+1");
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+2");
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+3");
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+4");
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+Escape");
-            
+
             println!("✅ Global shortcuts registered (Cmd+Shift+1/2/3/4/Esc)");
 
             Ok(())
@@ -353,6 +381,7 @@ pub fn run() {
             commands::get_export_bundle,
             commands::import_custom_wordbook,
             commands::list_wordbooks,
+            commands::list_wordbook_words,
             commands::set_wordbook_enabled,
             commands::delete_wordbook,
             commands::get_next_card,

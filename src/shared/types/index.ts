@@ -215,3 +215,13 @@ export interface WordbookListItem {
   first_created_at?: string;
   last_created_at?: string;
 }
+
+export interface WordbookWordItem {
+  id: number;
+  word: string;
+  phonetic?: string;
+  part_of_speech?: string;
+  meaning_zh: string;
+  difficulty: number;
+  created_at: string;
+}

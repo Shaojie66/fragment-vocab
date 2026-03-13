@@ -18,8 +18,9 @@ impl CardsRepository {
         conn.execute(
             "INSERT INTO srs_cards (word_id, status, stage) VALUES (?1, 'new', -1)",
             [word_id],
-        ).context("Failed to insert srs_card")?;
-        
+        )
+        .context("Failed to insert srs_card")?;
+
         Ok(conn.last_insert_rowid())
     }
 
@@ -29,22 +30,24 @@ impl CardsRepository {
             "SELECT id, word_id, status, stage, due_at, last_seen_at, last_result, correct_streak, lifetime_correct, lifetime_wrong, skip_cooldown_until, updated_at FROM srs_cards WHERE id = ?1"
         )?;
 
-        let card = stmt.query_row([id], |row| {
-            Ok(SrsCard {
-                id: row.get(0)?,
-                word_id: row.get(1)?,
-                status: row.get(2)?,
-                stage: row.get(3)?,
-                due_at: row.get(4)?,
-                last_seen_at: row.get(5)?,
-                last_result: row.get(6)?,
-                correct_streak: row.get(7)?,
-                lifetime_correct: row.get(8)?,
-                lifetime_wrong: row.get(9)?,
-                skip_cooldown_until: row.get(10)?,
-                updated_at: row.get(11)?,
+        let card = stmt
+            .query_row([id], |row| {
+                Ok(SrsCard {
+                    id: row.get(0)?,
+                    word_id: row.get(1)?,
+                    status: row.get(2)?,
+                    stage: row.get(3)?,
+                    due_at: row.get(4)?,
+                    last_seen_at: row.get(5)?,
+                    last_result: row.get(6)?,
+                    correct_streak: row.get(7)?,
+                    lifetime_correct: row.get(8)?,
+                    lifetime_wrong: row.get(9)?,
+                    skip_cooldown_until: row.get(10)?,
+                    updated_at: row.get(11)?,
+                })
             })
-        }).optional()?;
+            .optional()?;
 
         Ok(card)
     }
@@ -56,22 +59,24 @@ impl CardsRepository {
             "SELECT id, word_id, status, stage, due_at, last_seen_at, last_result, correct_streak, lifetime_correct, lifetime_wrong, skip_cooldown_until, updated_at FROM srs_cards WHERE word_id = ?1"
         )?;
 
-        let card = stmt.query_row([word_id], |row| {
-            Ok(SrsCard {
-                id: row.get(0)?,
-                word_id: row.get(1)?,
-                status: row.get(2)?,
-                stage: row.get(3)?,
-                due_at: row.get(4)?,
-                last_seen_at: row.get(5)?,
-                last_result: row.get(6)?,
-                correct_streak: row.get(7)?,
-                lifetime_correct: row.get(8)?,
-                lifetime_wrong: row.get(9)?,
-                skip_cooldown_until: row.get(10)?,
-                updated_at: row.get(11)?,
+        let card = stmt
+            .query_row([word_id], |row| {
+                Ok(SrsCard {
+                    id: row.get(0)?,
+                    word_id: row.get(1)?,
+                    status: row.get(2)?,
+                    stage: row.get(3)?,
+                    due_at: row.get(4)?,
+                    last_seen_at: row.get(5)?,
+                    last_result: row.get(6)?,
+                    correct_streak: row.get(7)?,
+                    lifetime_correct: row.get(8)?,
+                    lifetime_wrong: row.get(9)?,
+                    skip_cooldown_until: row.get(10)?,
+                    updated_at: row.get(11)?,
+                })
             })
-        }).optional()?;
+            .optional()?;
 
         Ok(card)
     }
@@ -94,7 +99,7 @@ impl CardsRepository {
                 card.id,
             ),
         ).context("Failed to update srs_card")?;
-        
+
         Ok(())
     }
 
@@ -103,7 +108,7 @@ impl CardsRepository {
         let count: i64 = conn.query_row(
             "SELECT COUNT(*) FROM srs_cards WHERE status = ?1",
             [status],
-            |row| row.get(0)
+            |row| row.get(0),
         )?;
         Ok(count)
     }
@@ -122,35 +127,36 @@ impl CardsRepository {
              LIMIT ?2"
         )?;
 
-        let cards = stmt.query_map([now, &limit.to_string()], |row| {
-            Ok(WordWithCard {
-                word: crate::db::models::Word {
-                    id: row.get(0)?,
-                    word: row.get(1)?,
-                    phonetic: row.get(2)?,
-                    part_of_speech: row.get(3)?,
-                    meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
-                },
-                card: SrsCard {
-                    id: row.get(8)?,
-                    word_id: row.get(9)?,
-                    status: row.get(10)?,
-                    stage: row.get(11)?,
-                    due_at: row.get(12)?,
-                    last_seen_at: row.get(13)?,
-                    last_result: row.get(14)?,
-                    correct_streak: row.get(15)?,
-                    lifetime_correct: row.get(16)?,
-                    lifetime_wrong: row.get(17)?,
-                    skip_cooldown_until: row.get(18)?,
-                    updated_at: row.get(19)?,
-                },
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
+        let cards = stmt
+            .query_map([now, &limit.to_string()], |row| {
+                Ok(WordWithCard {
+                    word: crate::db::models::Word {
+                        id: row.get(0)?,
+                        word: row.get(1)?,
+                        phonetic: row.get(2)?,
+                        part_of_speech: row.get(3)?,
+                        meaning_zh: row.get(4)?,
+                        source: row.get(5)?,
+                        difficulty: row.get(6)?,
+                        created_at: row.get(7)?,
+                    },
+                    card: SrsCard {
+                        id: row.get(8)?,
+                        word_id: row.get(9)?,
+                        status: row.get(10)?,
+                        stage: row.get(11)?,
+                        due_at: row.get(12)?,
+                        last_seen_at: row.get(13)?,
+                        last_result: row.get(14)?,
+                        correct_streak: row.get(15)?,
+                        lifetime_correct: row.get(16)?,
+                        lifetime_wrong: row.get(17)?,
+                        skip_cooldown_until: row.get(18)?,
+                        updated_at: row.get(19)?,
+                    },
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
 
         Ok(cards)
     }
@@ -168,35 +174,36 @@ impl CardsRepository {
              LIMIT ?2"
         )?;
 
-        let cards = stmt.query_map([now, &limit.to_string()], |row| {
-            Ok(WordWithCard {
-                word: crate::db::models::Word {
-                    id: row.get(0)?,
-                    word: row.get(1)?,
-                    phonetic: row.get(2)?,
-                    part_of_speech: row.get(3)?,
-                    meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
-                },
-                card: SrsCard {
-                    id: row.get(8)?,
-                    word_id: row.get(9)?,
-                    status: row.get(10)?,
-                    stage: row.get(11)?,
-                    due_at: row.get(12)?,
-                    last_seen_at: row.get(13)?,
-                    last_result: row.get(14)?,
-                    correct_streak: row.get(15)?,
-                    lifetime_correct: row.get(16)?,
-                    lifetime_wrong: row.get(17)?,
-                    skip_cooldown_until: row.get(18)?,
-                    updated_at: row.get(19)?,
-                },
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
+        let cards = stmt
+            .query_map([now, &limit.to_string()], |row| {
+                Ok(WordWithCard {
+                    word: crate::db::models::Word {
+                        id: row.get(0)?,
+                        word: row.get(1)?,
+                        phonetic: row.get(2)?,
+                        part_of_speech: row.get(3)?,
+                        meaning_zh: row.get(4)?,
+                        source: row.get(5)?,
+                        difficulty: row.get(6)?,
+                        created_at: row.get(7)?,
+                    },
+                    card: SrsCard {
+                        id: row.get(8)?,
+                        word_id: row.get(9)?,
+                        status: row.get(10)?,
+                        stage: row.get(11)?,
+                        due_at: row.get(12)?,
+                        last_seen_at: row.get(13)?,
+                        last_result: row.get(14)?,
+                        correct_streak: row.get(15)?,
+                        lifetime_correct: row.get(16)?,
+                        lifetime_wrong: row.get(17)?,
+                        skip_cooldown_until: row.get(18)?,
+                        updated_at: row.get(19)?,
+                    },
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
 
         Ok(cards)
     }
@@ -205,7 +212,7 @@ impl CardsRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::db::{Database, migration::Migrator, repositories::WordsRepository};
+    use crate::db::{migration::Migrator, repositories::WordsRepository, Database};
     use std::env;
 
     #[test]
@@ -219,10 +226,12 @@ mod tests {
 
         let words_repo = WordsRepository::new(db.get_connection());
         let cards_repo = CardsRepository::new(db.get_connection());
-        
-        let word_id = words_repo.insert("test", "测试", "test", None, None, 1).unwrap();
+
+        let word_id = words_repo
+            .insert("test", "测试", "test", None, None, 1)
+            .unwrap();
         let card_id = cards_repo.insert(word_id).unwrap();
-        
+
         let card = cards_repo.get_by_id(card_id).unwrap().unwrap();
         assert_eq!(card.word_id, word_id);
         assert_eq!(card.status, "new");
@@ -245,18 +254,20 @@ mod tests {
 
         let words_repo = WordsRepository::new(db.get_connection());
         let cards_repo = CardsRepository::new(db.get_connection());
-        
-        let word_id = words_repo.insert("test", "测试", "test", None, None, 1).unwrap();
+
+        let word_id = words_repo
+            .insert("test", "测试", "test", None, None, 1)
+            .unwrap();
         let card_id = cards_repo.insert(word_id).unwrap();
-        
+
         let mut card = cards_repo.get_by_id(card_id).unwrap().unwrap();
         card.status = "learning".to_string();
         card.stage = 0;
         card.correct_streak = 1;
-        
+
         let now = "2026-03-12T02:00:00Z";
         cards_repo.update(&card, now).unwrap();
-        
+
         let updated_card = cards_repo.get_by_id(card_id).unwrap().unwrap();
         assert_eq!(updated_card.status, "learning");
         assert_eq!(updated_card.stage, 0);

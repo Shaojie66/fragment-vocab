@@ -61,15 +61,11 @@ impl WordbookImporter {
         let format = detect_format(file_name, utf8_content)?;
 
         let entries = match format.as_str() {
-            "json" => parse_json_wordbook(
-                utf8_content.context("JSON wordbook must be valid UTF-8")?,
-            )?,
-            "csv" => parse_csv_wordbook(
-                utf8_content.context("CSV wordbook must be valid UTF-8")?,
-            )?,
-            "txt" => parse_txt_wordbook(
-                utf8_content.context("TXT wordbook must be valid UTF-8")?,
-            )?,
+            "json" => {
+                parse_json_wordbook(utf8_content.context("JSON wordbook must be valid UTF-8")?)?
+            }
+            "csv" => parse_csv_wordbook(utf8_content.context("CSV wordbook must be valid UTF-8")?)?,
+            "txt" => parse_txt_wordbook(utf8_content.context("TXT wordbook must be valid UTF-8")?)?,
             "xlsx" => parse_xlsx_wordbook(raw_bytes, file_name)?,
             _ => unreachable!(),
         };
@@ -107,8 +103,16 @@ impl WordbookImporter {
                 word,
                 meaning_zh,
                 source,
-                entry.phonetic.as_deref().map(str::trim).filter(|value| !value.is_empty()),
-                entry.part_of_speech.as_deref().map(str::trim).filter(|value| !value.is_empty()),
+                entry
+                    .phonetic
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|value| !value.is_empty()),
+                entry
+                    .part_of_speech
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|value| !value.is_empty()),
                 entry.difficulty.max(1),
             )?;
 
@@ -153,17 +157,23 @@ fn detect_format(file_name: Option<&str>, raw_content: Option<&str>) -> Result<S
             return Ok("csv".to_string());
         }
 
-        if trimmed.contains('\t') || trimmed.contains(" - ") || trimmed.contains('：') || trimmed.contains(':') {
+        if trimmed.contains('\t')
+            || trimmed.contains(" - ")
+            || trimmed.contains('：')
+            || trimmed.contains(':')
+        {
             return Ok("txt".to_string());
         }
     }
 
-    Err(anyhow::anyhow!("Unsupported wordbook format. Use JSON, CSV, TXT or XLSX."))
+    Err(anyhow::anyhow!(
+        "Unsupported wordbook format. Use JSON, CSV, TXT or XLSX."
+    ))
 }
 
 fn parse_json_wordbook(json_content: &str) -> Result<Vec<WordbookEntry>> {
-    let payload: JsonWordbookPayload = serde_json::from_str(json_content)
-        .context("Failed to parse wordbook JSON")?;
+    let payload: JsonWordbookPayload =
+        serde_json::from_str(json_content).context("Failed to parse wordbook JSON")?;
 
     let entries = match payload {
         JsonWordbookPayload::Entries(entries) => entries,
@@ -181,8 +191,13 @@ fn normalize_header(value: &str) -> String {
         .replace(' ', "_")
 }
 
-fn build_header_index_from_values(values: &[String]) -> Option<(usize, usize, Option<usize>, Option<usize>, Option<usize>)> {
-    let normalized = values.iter().map(|value| normalize_header(value)).collect::<Vec<_>>();
+fn build_header_index_from_values(
+    values: &[String],
+) -> Option<(usize, usize, Option<usize>, Option<usize>, Option<usize>)> {
+    let normalized = values
+        .iter()
+        .map(|value| normalize_header(value))
+        .collect::<Vec<_>>();
 
     let find_index = |aliases: &[&str]| {
         normalized
@@ -196,10 +211,18 @@ fn build_header_index_from_values(values: &[String]) -> Option<(usize, usize, Op
     let pos_index = find_index(&["part_of_speech", "pos", "词性"]);
     let difficulty_index = find_index(&["difficulty", "level", "难度"]);
 
-    Some((word_index, meaning_index, phonetic_index, pos_index, difficulty_index))
+    Some((
+        word_index,
+        meaning_index,
+        phonetic_index,
+        pos_index,
+        difficulty_index,
+    ))
 }
 
-fn build_header_index(record: &StringRecord) -> Option<(usize, usize, Option<usize>, Option<usize>, Option<usize>)> {
+fn build_header_index(
+    record: &StringRecord,
+) -> Option<(usize, usize, Option<usize>, Option<usize>, Option<usize>)> {
     build_header_index_from_values(&record.iter().map(str::to_string).collect::<Vec<_>>())
 }
 
@@ -294,8 +317,14 @@ fn parse_txt_wordbook(txt_content: &str) -> Result<Vec<WordbookEntry>> {
         entries.push(WordbookEntry {
             word: segments[0].to_string(),
             meaning_zh: segments[1].to_string(),
-            phonetic: segments.get(2).filter(|value| !value.is_empty()).map(|value| (*value).to_string()),
-            part_of_speech: segments.get(3).filter(|value| !value.is_empty()).map(|value| (*value).to_string()),
+            phonetic: segments
+                .get(2)
+                .filter(|value| !value.is_empty())
+                .map(|value| (*value).to_string()),
+            part_of_speech: segments
+                .get(3)
+                .filter(|value| !value.is_empty())
+                .map(|value| (*value).to_string()),
             difficulty,
         });
     }
@@ -320,7 +349,8 @@ fn parse_xlsx_wordbook(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<
     fs::write(&temp_path, raw_bytes).context("Failed to stage XLSX wordbook")?;
 
     let result = (|| -> Result<Vec<WordbookEntry>> {
-        let mut workbook = open_workbook_auto(&temp_path).context("Failed to open XLSX workbook")?;
+        let mut workbook =
+            open_workbook_auto(&temp_path).context("Failed to open XLSX workbook")?;
         let sheet_name = workbook
             .sheet_names()
             .first()
@@ -348,8 +378,18 @@ fn parse_xlsx_wordbook(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<
         let mut entries = Vec::new();
 
         for row in rows.iter().skip(rows_start) {
-            let word = row.get(word_index).map(String::as_str).unwrap_or("").trim().to_string();
-            let meaning_zh = row.get(meaning_index).map(String::as_str).unwrap_or("").trim().to_string();
+            let word = row
+                .get(word_index)
+                .map(String::as_str)
+                .unwrap_or("")
+                .trim()
+                .to_string();
+            let meaning_zh = row
+                .get(meaning_index)
+                .map(String::as_str)
+                .unwrap_or("")
+                .trim()
+                .to_string();
 
             if word.is_empty() && meaning_zh.is_empty() {
                 continue;
@@ -437,7 +477,13 @@ mod tests {
         Migrator::run_migrations(&db).unwrap();
 
         let csv = "word,meaning_zh,phonetic,part_of_speech,difficulty\nabandon,放弃,/əˈbændən/,v.,2\nability,能力,,,1\n";
-        let summary = WordbookImporter::import_from_bytes(&db, csv.as_bytes(), "custom-upload", Some("my.csv")).unwrap();
+        let summary = WordbookImporter::import_from_bytes(
+            &db,
+            csv.as_bytes(),
+            "custom-upload",
+            Some("my.csv"),
+        )
+        .unwrap();
 
         assert_eq!(summary.format, "csv");
         assert_eq!(summary.imported_count, 2);

@@ -7,14 +7,8 @@ use tauri::State;
 
 use crate::db::{
     models::{Word, WordWithCard},
-    CardsRepository,
-    Database,
-    LogsRepository,
-    StateRepository,
-    WordbookImportSummary,
-    WordSourceSummary,
-    WordsRepository,
-    WordbookImporter,
+    CardsRepository, Database, LogsRepository, StateRepository, WordSourceSummary,
+    WordbookImportSummary, WordbookImporter, WordsRepository,
 };
 
 const APP_CONFIG_KEY: &str = "app_config";
@@ -227,6 +221,17 @@ pub struct WordbookListItem {
     pub last_created_at: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WordbookWordItem {
+    pub id: i64,
+    pub word: String,
+    pub phonetic: Option<String>,
+    pub part_of_speech: Option<String>,
+    pub meaning_zh: String,
+    pub difficulty: i32,
+    pub created_at: String,
+}
+
 fn now_rfc3339() -> String {
     Utc::now().to_rfc3339()
 }
@@ -324,7 +329,10 @@ fn is_source_enabled(disabled_sources: &HashSet<String>, source: &str) -> bool {
     !disabled_sources.contains(source)
 }
 
-fn filter_active_cards(cards: Vec<WordWithCard>, disabled_sources: &HashSet<String>) -> Vec<WordWithCard> {
+fn filter_active_cards(
+    cards: Vec<WordWithCard>,
+    disabled_sources: &HashSet<String>,
+) -> Vec<WordWithCard> {
     cards
         .into_iter()
         .filter(|item| is_source_enabled(disabled_sources, &item.word.source))
@@ -349,6 +357,10 @@ fn build_wordbook_list_items(
         .collect()
 }
 
+fn clamp_wordbook_preview_limit(limit: i64) -> i64 {
+    limit.clamp(1, 50)
+}
+
 fn load_wrong_book_set(state_repo: &StateRepository) -> Result<HashSet<i64>, String> {
     let raw = state_repo
         .get(WRONG_BOOK_KEY)
@@ -362,7 +374,10 @@ fn load_wrong_book_set(state_repo: &StateRepository) -> Result<HashSet<i64>, Str
     }
 }
 
-fn persist_wrong_book_set(state_repo: &StateRepository, wrong_book: &HashSet<i64>) -> Result<(), String> {
+fn persist_wrong_book_set(
+    state_repo: &StateRepository,
+    wrong_book: &HashSet<i64>,
+) -> Result<(), String> {
     let mut items = wrong_book.iter().copied().collect::<Vec<_>>();
     items.sort_unstable();
     let raw = serde_json::to_string(&items)
@@ -373,7 +388,11 @@ fn persist_wrong_book_set(state_repo: &StateRepository, wrong_book: &HashSet<i64
         .map_err(|e| format!("Failed to save wrong book: {}", e))
 }
 
-fn update_wrong_book(state_repo: &StateRepository, card_id: i64, result: &str) -> Result<(), String> {
+fn update_wrong_book(
+    state_repo: &StateRepository,
+    card_id: i64,
+    result: &str,
+) -> Result<(), String> {
     let mut wrong_book = load_wrong_book_set(state_repo)?;
     match result {
         "dont_know" => {
@@ -394,12 +413,18 @@ fn select_card_candidate(
     review_first: bool,
     new_cards_allowed: bool,
 ) -> Option<WordWithCard> {
-    if let Some(card) = due_cards.iter().find(|item| wrong_book.contains(&item.card.id)) {
+    if let Some(card) = due_cards
+        .iter()
+        .find(|item| wrong_book.contains(&item.card.id))
+    {
         return Some(card.clone());
     }
 
     if new_cards_allowed {
-        if let Some(card) = new_cards.iter().find(|item| wrong_book.contains(&item.card.id)) {
+        if let Some(card) = new_cards
+            .iter()
+            .find(|item| wrong_book.contains(&item.card.id))
+        {
             return Some(card.clone());
         }
     }
@@ -413,7 +438,10 @@ fn select_card_candidate(
             }
         })
     } else if new_cards_allowed {
-        new_cards.first().cloned().or_else(|| due_cards.first().cloned())
+        new_cards
+            .first()
+            .cloned()
+            .or_else(|| due_cards.first().cloned())
     } else {
         due_cards.first().cloned()
     }
@@ -446,7 +474,12 @@ fn format_explanation_detail(word: &Word) -> String {
     }
 }
 
-fn build_quiz_options(target: &Word, distractors: &[Word], quiz_mode: &WordQuizMode, show_phonetic: bool) -> Vec<WordQuizOption> {
+fn build_quiz_options(
+    target: &Word,
+    distractors: &[Word],
+    quiz_mode: &WordQuizMode,
+    show_phonetic: bool,
+) -> Vec<WordQuizOption> {
     let mut options = Vec::with_capacity(QUIZ_OPTION_COUNT);
     let mut seen_labels = HashSet::new();
 
@@ -464,7 +497,10 @@ fn build_quiz_options(target: &Word, distractors: &[Word], quiz_mode: &WordQuizM
             WordQuizMode::EnToZhChoice => WordQuizOption {
                 id: option_id_for_word(word.id),
                 label: word.meaning_zh.clone(),
-                detail: word.part_of_speech.clone().filter(|value| !value.is_empty()),
+                detail: word
+                    .part_of_speech
+                    .clone()
+                    .filter(|value| !value.is_empty()),
             },
         }
     };
@@ -489,19 +525,36 @@ fn build_quiz_options(target: &Word, distractors: &[Word], quiz_mode: &WordQuizM
     options
 }
 
-fn build_word_card_data(word_with_card: WordWithCard, distractors: Vec<Word>, show_phonetic: bool) -> WordCardData {
+fn build_word_card_data(
+    word_with_card: WordWithCard,
+    distractors: Vec<Word>,
+    show_phonetic: bool,
+) -> WordCardData {
     let quiz_mode = determine_quiz_mode(&word_with_card);
-    let options = build_quiz_options(&word_with_card.word, &distractors, &quiz_mode, show_phonetic);
+    let options = build_quiz_options(
+        &word_with_card.word,
+        &distractors,
+        &quiz_mode,
+        show_phonetic,
+    );
 
     let (prompt, prompt_hint) = match quiz_mode {
         WordQuizMode::ZhToEnChoice => (
             word_with_card.word.meaning_zh.clone(),
-            word_with_card.word.part_of_speech.clone().filter(|value| !value.is_empty()),
+            word_with_card
+                .word
+                .part_of_speech
+                .clone()
+                .filter(|value| !value.is_empty()),
         ),
         WordQuizMode::EnToZhChoice => (
             word_with_card.word.word.clone(),
             if show_phonetic {
-                word_with_card.word.phonetic.clone().filter(|value| !value.is_empty())
+                word_with_card
+                    .word
+                    .phonetic
+                    .clone()
+                    .filter(|value| !value.is_empty())
             } else {
                 None
             },
@@ -537,7 +590,8 @@ fn normalize_app_config(config: AppConfig) -> AppConfig {
         _ => "gentle".to_string(),
     };
     normalized.reminder.idle_threshold_sec = normalized.reminder.idle_threshold_sec.clamp(30, 3600);
-    normalized.reminder.fallback_interval_min = normalized.reminder.fallback_interval_min.clamp(5, 240);
+    normalized.reminder.fallback_interval_min =
+        normalized.reminder.fallback_interval_min.clamp(5, 240);
 
     if normalized.schedule.quiet_hours_start.len() != 5 {
         normalized.schedule.quiet_hours_start = "23:00".to_string();
@@ -603,7 +657,10 @@ pub(crate) fn load_app_config(state_repo: &StateRepository) -> Result<AppConfig,
     }
 }
 
-fn persist_app_config(state_repo: &StateRepository, config: AppConfig) -> Result<AppConfig, String> {
+fn persist_app_config(
+    state_repo: &StateRepository,
+    config: AppConfig,
+) -> Result<AppConfig, String> {
     let config = normalize_app_config(config);
     let raw = serde_json::to_string(&config)
         .map_err(|e| format!("Failed to serialize app config: {}", e))?;
@@ -707,7 +764,10 @@ fn persist_feedback_records(
     state_repo: &StateRepository,
     feedback_records: Vec<FeedbackRecord>,
 ) -> Result<Vec<FeedbackRecord>, String> {
-    let trimmed: Vec<_> = feedback_records.into_iter().take(FEEDBACK_HISTORY_LIMIT).collect();
+    let trimmed: Vec<_> = feedback_records
+        .into_iter()
+        .take(FEEDBACK_HISTORY_LIMIT)
+        .collect();
     let raw = serde_json::to_string(&trimmed)
         .map_err(|e| format!("Failed to serialize feedback history: {}", e))?;
 
@@ -792,8 +852,14 @@ fn compute_recommendation(
         reasons.push("最近识别稳定且仍有待复习词，可以适度加快提醒节奏。".to_string());
     }
 
-    let suggested_mode = rank_to_recommended_mode(recommended_mode_rank(&base_mode) + delta.clamp(-1, 1));
-    let source = if reasons.is_empty() { "static" } else { "adaptive" }.to_string();
+    let suggested_mode =
+        rank_to_recommended_mode(recommended_mode_rank(&base_mode) + delta.clamp(-1, 1));
+    let source = if reasons.is_empty() {
+        "static"
+    } else {
+        "adaptive"
+    }
+    .to_string();
     if reasons.is_empty() {
         reasons.push("先沿用当前时段默认推荐，继续观察你的作答、跳过和暂停反馈。".to_string());
     }
@@ -876,7 +942,13 @@ fn build_export_bundle(
     let feedback_summary = feedback_records
         .iter()
         .take(5)
-        .map(|record| format!("{} {}", feedback_type_label(&record.feedback_type), format_date_for_export(&record.created_at)))
+        .map(|record| {
+            format!(
+                "{} {}",
+                feedback_type_label(&record.feedback_type),
+                format_date_for_export(&record.created_at)
+            )
+        })
         .collect::<Vec<_>>()
         .join(" / ");
     let pause_summary = pause_until
@@ -902,18 +974,42 @@ fn build_export_bundle(
         recommended_mode_label(&recommendation.suggested_mode),
         app_config.schedule.quiet_hours_start,
         app_config.schedule.quiet_hours_end,
-        recommended_mode_label(app_config.schedule.weekday_profile.as_deref().unwrap_or("gentle")),
-        recommended_mode_label(app_config.schedule.weekend_profile.as_deref().unwrap_or("balanced")),
+        recommended_mode_label(
+            app_config
+                .schedule
+                .weekday_profile
+                .as_deref()
+                .unwrap_or("gentle")
+        ),
+        recommended_mode_label(
+            app_config
+                .schedule
+                .weekend_profile
+                .as_deref()
+                .unwrap_or("balanced")
+        ),
         app_config.learning.daily_new_limit,
         app_config.card.auto_hide_sec,
-        if app_config.system.tray_enabled { "开启" } else { "关闭" },
-        if app_config.system.start_behavior == "show-main" { "显示主页面" } else { "最小化到托盘" },
+        if app_config.system.tray_enabled {
+            "开启"
+        } else {
+            "关闭"
+        },
+        if app_config.system.start_behavior == "show-main" {
+            "显示主页面"
+        } else {
+            "最小化到托盘"
+        },
         pause_summary,
         today_stats.total_reviews,
         today_stats.accuracy,
         today_stats.new_words_today,
         today_stats.due_cards_count,
-        if feedback_summary.is_empty() { "暂无".to_string() } else { feedback_summary },
+        if feedback_summary.is_empty() {
+            "暂无".to_string()
+        } else {
+            feedback_summary
+        },
         recommendation.explanation,
     );
     let config_json = serde_json::to_string_pretty(app_config)
@@ -978,7 +1074,10 @@ fn load_today_stats(
 
     let total_reviews = today_logs.len() as i64;
     let know_count = today_logs.iter().filter(|log| log.result == "know").count() as i64;
-    let dont_know_count = today_logs.iter().filter(|log| log.result == "dont_know").count() as i64;
+    let dont_know_count = today_logs
+        .iter()
+        .filter(|log| log.result == "dont_know")
+        .count() as i64;
     let skip_count = today_logs.iter().filter(|log| log.result == "skip").count() as i64;
 
     let accuracy = if know_count + dont_know_count > 0 {
@@ -1054,7 +1153,8 @@ pub fn get_dashboard_state(db: State<Database>) -> Result<DashboardState, String
         .map_err(|e| format!("Failed to get pause state: {}", e))?;
     let needs_onboarding = needs_onboarding(&state_repo)?;
     let feedback_records = load_feedback_records(&state_repo)?;
-    let recommendation = compute_recommendation(&app_config, &today_stats, &pause_until, &feedback_records);
+    let recommendation =
+        compute_recommendation(&app_config, &today_stats, &pause_until, &feedback_records);
 
     Ok(DashboardState {
         app_config,
@@ -1123,7 +1223,8 @@ pub fn get_export_bundle(db: State<Database>) -> Result<ExportBundle, String> {
         .get("pause_until")
         .map_err(|e| format!("Failed to get pause state: {}", e))?;
     let feedback_records = load_feedback_records(&state_repo)?;
-    let recommendation = compute_recommendation(&app_config, &today_stats, &pause_until, &feedback_records);
+    let recommendation =
+        compute_recommendation(&app_config, &today_stats, &pause_until, &feedback_records);
 
     build_export_bundle(
         &app_config,
@@ -1162,6 +1263,37 @@ pub fn list_wordbooks(db: State<Database>) -> Result<Vec<WordbookListItem>, Stri
 }
 
 #[tauri::command]
+pub fn list_wordbook_words(
+    db: State<Database>,
+    source: String,
+    limit: i64,
+    offset: i64,
+) -> Result<Vec<WordbookWordItem>, String> {
+    let conn = db.get_connection();
+    let words_repo = WordsRepository::new(conn);
+    let safe_limit = clamp_wordbook_preview_limit(limit);
+    let safe_offset = offset.max(0);
+
+    words_repo
+        .list_by_source(&source, safe_limit, safe_offset)
+        .map(|words| {
+            words
+                .into_iter()
+                .map(|word| WordbookWordItem {
+                    id: word.id,
+                    word: word.word,
+                    phonetic: word.phonetic,
+                    part_of_speech: word.part_of_speech,
+                    meaning_zh: word.meaning_zh,
+                    difficulty: word.difficulty,
+                    created_at: word.created_at,
+                })
+                .collect()
+        })
+        .map_err(|e| format!("Failed to list wordbook words: {}", e))
+}
+
+#[tauri::command]
 pub fn set_wordbook_enabled(
     db: State<Database>,
     source: String,
@@ -1191,6 +1323,10 @@ pub fn delete_wordbook(
     db: State<Database>,
     source: String,
 ) -> Result<Vec<WordbookListItem>, String> {
+    if source == "ielts-core" {
+        return Err("内置词库不能删除，只能停用。".to_string());
+    }
+
     let conn = db.get_connection();
     let words_repo = WordsRepository::new(conn.clone());
     let state_repo = StateRepository::new(conn);
@@ -1222,16 +1358,22 @@ pub fn get_next_card(db: State<Database>) -> Result<Option<WordCardData>, String
     let wrong_book = load_wrong_book_set(&state_repo)?;
     let disabled_sources = load_disabled_wordbook_sources(&state_repo)?;
 
-    let due_cards = filter_active_cards(cards_repo
-        .get_due_cards(&now, 24)
-        .map_err(|e| format!("Failed to get due cards: {}", e))?, &disabled_sources);
+    let due_cards = filter_active_cards(
+        cards_repo
+            .get_due_cards(&now, 24)
+            .map_err(|e| format!("Failed to get due cards: {}", e))?,
+        &disabled_sources,
+    );
     let today_new_count = count_today_new_words(&logs_repo)?;
-    let new_cards_allowed = config.learning.allow_new_when_no_due
-        && today_new_count < config.learning.daily_new_limit;
+    let new_cards_allowed =
+        config.learning.allow_new_when_no_due && today_new_count < config.learning.daily_new_limit;
     let new_cards = if new_cards_allowed {
-        filter_active_cards(cards_repo
-            .get_new_cards(&now, 24)
-            .map_err(|e| format!("Failed to get new cards: {}", e))?, &disabled_sources)
+        filter_active_cards(
+            cards_repo
+                .get_new_cards(&now, 24)
+                .map_err(|e| format!("Failed to get new cards: {}", e))?,
+            &disabled_sources,
+        )
     } else {
         Vec::new()
     };
@@ -1266,43 +1408,44 @@ pub fn get_next_card(db: State<Database>) -> Result<Option<WordCardData>, String
 
 /// 提交复习结果
 #[tauri::command]
-pub fn submit_review(
-    db: State<Database>,
-    card_id: i64,
-    result: String,
-) -> Result<(), String> {
+pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Result<(), String> {
     let conn = db.get_connection();
     let cards_repo = CardsRepository::new(conn.clone());
     let logs_repo = LogsRepository::new(conn.clone());
     let state_repo = StateRepository::new(conn);
-    
+
     let now = Utc::now();
     let now_str = now.to_rfc3339();
-    
+
     // 获取当前卡片
-    let mut card = cards_repo.get_by_id(card_id)
+    let mut card = cards_repo
+        .get_by_id(card_id)
         .map_err(|e| format!("Failed to get card: {}", e))?
         .ok_or_else(|| "Card not found".to_string())?;
-    
+
     // 计算新的状态
     match result.as_str() {
         "know" => {
             card.stage += 1;
-            card.status = if card.stage >= 5 { "mastered".to_string() } else { "learning".to_string() };
+            card.status = if card.stage >= 5 {
+                "mastered".to_string()
+            } else {
+                "learning".to_string()
+            };
             card.correct_streak += 1;
             card.lifetime_correct += 1;
             card.last_result = Some("know".to_string());
             card.last_seen_at = Some(now_str.clone());
-            
+
             let interval_minutes = match card.stage {
                 0 => 10,
-                1 => 1440,      // 1 day
-                2 => 4320,      // 3 days
-                3 => 10080,     // 7 days
-                4 => 20160,     // 14 days
+                1 => 1440,  // 1 day
+                2 => 4320,  // 3 days
+                3 => 10080, // 7 days
+                4 => 20160, // 14 days
                 _ => 0,
             };
-            
+
             card.due_at = if card.status == "mastered" {
                 None
             } else {
@@ -1317,7 +1460,7 @@ pub fn submit_review(
             card.lifetime_wrong += 1;
             card.last_result = Some("dont_know".to_string());
             card.last_seen_at = Some(now_str.clone());
-            
+
             let interval_minutes = match card.stage {
                 0 => 10,
                 1 => 1440,
@@ -1326,7 +1469,7 @@ pub fn submit_review(
                 4 => 20160,
                 _ => 10,
             };
-            
+
             card.due_at = Some((now + Duration::minutes(interval_minutes)).to_rfc3339());
             card.skip_cooldown_until = None;
         }
@@ -1338,17 +1481,19 @@ pub fn submit_review(
         }
         _ => return Err(format!("Invalid result: {}", result)),
     };
-    
+
     // 更新卡片
-    cards_repo.update(&card, &now_str)
+    cards_repo
+        .update(&card, &now_str)
         .map_err(|e| format!("Failed to update card: {}", e))?;
 
     update_wrong_book(&state_repo, card_id, &result)?;
-    
+
     // 记录日志
-    logs_repo.insert(card_id, &now_str, &result, "manual", None)
+    logs_repo
+        .insert(card_id, &now_str, &result, "manual", None)
         .map_err(|e| format!("Failed to insert log: {}", e))?;
-    
+
     Ok(())
 }
 
@@ -1369,13 +1514,14 @@ pub fn get_today_stats(db: State<Database>) -> Result<TodayStats, String> {
 pub fn pause_scheduler(db: State<Database>, minutes: i64) -> Result<(), String> {
     let conn = db.get_connection();
     let state_repo = StateRepository::new(conn);
-    
+
     let pause_until = Utc::now() + Duration::minutes(minutes);
     let now = now_rfc3339();
-    
-    state_repo.set("pause_until", &pause_until.to_rfc3339(), &now)
+
+    state_repo
+        .set("pause_until", &pause_until.to_rfc3339(), &now)
         .map_err(|e| format!("Failed to set pause state: {}", e))?;
-    
+
     Ok(())
 }
 
@@ -1384,10 +1530,11 @@ pub fn pause_scheduler(db: State<Database>, minutes: i64) -> Result<(), String> 
 pub fn resume_scheduler(db: State<Database>) -> Result<(), String> {
     let conn = db.get_connection();
     let state_repo = StateRepository::new(conn);
-    
-    state_repo.delete("pause_until")
+
+    state_repo
+        .delete("pause_until")
         .map_err(|e| format!("Failed to delete pause state: {}", e))?;
-    
+
     Ok(())
 }
 
@@ -1397,7 +1544,12 @@ mod tests {
     use crate::db::{migration::Migrator, Database};
     use std::env;
 
-    fn sample_word_with_card(card_id: i64, word_id: i64, word: &str, meaning_zh: &str) -> WordWithCard {
+    fn sample_word_with_card(
+        card_id: i64,
+        word_id: i64,
+        word: &str,
+        meaning_zh: &str,
+    ) -> WordWithCard {
         WordWithCard {
             word: Word {
                 id: word_id,

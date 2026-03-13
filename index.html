@@ -275,6 +275,23 @@
           <div class="wordbook-list" id="wordbookList">
             <div class="wordbook-empty">正在读取词库列表...</div>
           </div>
+          <section class="wordbook-preview hidden" id="wordbookPreview">
+            <div class="wordbook-preview-head">
+              <div>
+                <p class="panel-kicker">Word Preview</p>
+                <h3 id="wordbookPreviewTitle">词库预览</h3>
+              </div>
+              <button class="ghost-btn" id="closeWordbookPreviewBtn" type="button">收起预览</button>
+            </div>
+            <p class="hint-text" id="wordbookPreviewMeta">正在读取词条...</p>
+            <div class="wordbook-preview-list" id="wordbookPreviewList">
+              <div class="wordbook-empty">选择一个词库后，可在这里查看词条。</div>
+            </div>
+            <div class="wordbook-preview-actions">
+              <button class="ghost-btn" id="wordbookPreviewPrevBtn" type="button">上一页</button>
+              <button class="ghost-btn" id="wordbookPreviewNextBtn" type="button">下一页</button>
+            </div>
+          </section>
         </article>
 
         <article class="panel">

@@ -24,6 +24,7 @@ import type {
   TodayStats,
   WordbookImportSummary,
   WordbookListItem,
+  WordbookWordItem,
 } from './shared/types';
 
 console.log('Fragment Vocab console booting...');
@@ -96,6 +97,13 @@ const uploadWordbookBtn = document.querySelector('#uploadWordbookBtn') as HTMLBu
 const uploadWordbookFileInput = document.querySelector('#uploadWordbookFileInput') as HTMLInputElement;
 const wordbookUploadHint = document.querySelector('#wordbookUploadHint') as HTMLElement;
 const wordbookList = document.querySelector('#wordbookList') as HTMLElement;
+const wordbookPreview = document.querySelector('#wordbookPreview') as HTMLElement;
+const wordbookPreviewTitle = document.querySelector('#wordbookPreviewTitle') as HTMLElement;
+const wordbookPreviewMeta = document.querySelector('#wordbookPreviewMeta') as HTMLElement;
+const wordbookPreviewList = document.querySelector('#wordbookPreviewList') as HTMLElement;
+const closeWordbookPreviewBtn = document.querySelector('#closeWordbookPreviewBtn') as HTMLButtonElement;
+const wordbookPreviewPrevBtn = document.querySelector('#wordbookPreviewPrevBtn') as HTMLButtonElement;
+const wordbookPreviewNextBtn = document.querySelector('#wordbookPreviewNextBtn') as HTMLButtonElement;
 const downloadExportJsonBtn = document.querySelector('#downloadExportJsonBtn') as HTMLButtonElement;
 const exportSummaryOutput = document.querySelector('#exportSummaryOutput') as HTMLTextAreaElement;
 const exportJsonOutput = document.querySelector('#exportJsonOutput') as HTMLTextAreaElement;
@@ -112,10 +120,16 @@ let currentConfig: AppConfig = createDefaultAppConfig();
 let currentDashboard: DashboardState | null = null;
 let currentTemplates: TeamTemplate[] = [];
 let currentWordbooks: WordbookListItem[] = [];
+let currentWordbookPreviewSource: string | null = null;
+let currentWordbookPreviewWords: WordbookWordItem[] = [];
+let currentWordbookPreviewOffset = 0;
+let isWordbookPreviewLoading = false;
 let currentExportBundle: ExportBundle | null = null;
 let schedulerStarted = false;
 let saveHintTimer: number | null = null;
 let lastErrorMessage: string | null = null;
+
+const WORDBOOK_PREVIEW_PAGE_SIZE = 12;
 
 function cloneConfig(config: AppConfig): AppConfig {
   return JSON.parse(JSON.stringify(config)) as AppConfig;
@@ -409,6 +423,14 @@ function renderWordbooks() {
     sourceBadge.textContent = item.built_in ? '内置词库' : item.source;
     actions.appendChild(sourceBadge);
 
+    const previewButton = document.createElement('button');
+    previewButton.className = 'ghost-btn';
+    previewButton.type = 'button';
+    previewButton.dataset.source = item.source;
+    previewButton.dataset.action = 'preview';
+    previewButton.textContent = currentWordbookPreviewSource === item.source ? '刷新预览' : '查看单词';
+    actions.appendChild(previewButton);
+
     const toggleButton = document.createElement('button');
     toggleButton.className = 'ghost-btn';
     toggleButton.type = 'button';
@@ -417,17 +439,141 @@ function renderWordbooks() {
     toggleButton.textContent = item.enabled ? '停用' : '启用';
     actions.appendChild(toggleButton);
 
-    const deleteButton = document.createElement('button');
-    deleteButton.className = 'ghost-btn';
-    deleteButton.type = 'button';
-    deleteButton.dataset.source = item.source;
-    deleteButton.dataset.action = 'delete';
-    deleteButton.textContent = '删除';
-    actions.appendChild(deleteButton);
+    if (!item.built_in) {
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'ghost-btn';
+      deleteButton.type = 'button';
+      deleteButton.dataset.source = item.source;
+      deleteButton.dataset.action = 'delete';
+      deleteButton.textContent = '删除';
+      actions.appendChild(deleteButton);
+    }
 
     row.append(copy, actions);
     wordbookList.appendChild(row);
   });
+}
+
+function closeWordbookPreview() {
+  currentWordbookPreviewSource = null;
+  currentWordbookPreviewWords = [];
+  currentWordbookPreviewOffset = 0;
+  isWordbookPreviewLoading = false;
+  wordbookPreview.classList.add('hidden');
+  renderWordbooks();
+}
+
+function renderWordbookPreview() {
+  if (!currentWordbookPreviewSource) {
+    wordbookPreview.classList.add('hidden');
+    return;
+  }
+
+  const selectedWordbook = currentWordbooks.find((item) => item.source === currentWordbookPreviewSource);
+  if (!selectedWordbook) {
+    closeWordbookPreview();
+    return;
+  }
+
+  wordbookPreview.classList.remove('hidden');
+  wordbookPreviewTitle.textContent = `${selectedWordbook.display_name} · 词条预览`;
+
+  if (isWordbookPreviewLoading) {
+    wordbookPreviewMeta.textContent = '正在读取词条...';
+    wordbookPreviewList.innerHTML = '<div class="wordbook-empty">正在读取词条...</div>';
+  } else if (!currentWordbookPreviewWords.length) {
+    wordbookPreviewMeta.textContent = `${selectedWordbook.total_words} 个单词 · 当前词库${selectedWordbook.enabled ? '已启用' : '已停用'}`;
+    wordbookPreviewList.innerHTML = '<div class="wordbook-empty">这个词库当前没有可展示的词条。</div>';
+  } else {
+    const start = currentWordbookPreviewOffset + 1;
+    const end = currentWordbookPreviewOffset + currentWordbookPreviewWords.length;
+    wordbookPreviewMeta.textContent = `第 ${start}-${end} / ${selectedWordbook.total_words} 个单词 · 当前词库${selectedWordbook.enabled ? '已启用' : '已停用'}`;
+    wordbookPreviewList.innerHTML = '';
+
+    currentWordbookPreviewWords.forEach((item) => {
+      const card = document.createElement('article');
+      card.className = 'wordbook-preview-item';
+
+      const topline = document.createElement('div');
+      topline.className = 'wordbook-preview-topline';
+
+      const title = document.createElement('strong');
+      title.textContent = item.word;
+      topline.appendChild(title);
+
+      const difficultyBadge = document.createElement('span');
+      difficultyBadge.className = 'wordbook-badge muted';
+      difficultyBadge.textContent = `难度 ${item.difficulty}`;
+      topline.appendChild(difficultyBadge);
+
+      const aux = document.createElement('p');
+      aux.className = 'wordbook-preview-aux';
+      aux.textContent = [item.phonetic, item.part_of_speech].filter(Boolean).join(' · ') || '未提供音标或词性';
+
+      const meaning = document.createElement('p');
+      meaning.className = 'wordbook-preview-meaning';
+      meaning.textContent = item.meaning_zh;
+
+      const bottomline = document.createElement('div');
+      bottomline.className = 'wordbook-preview-bottomline';
+
+      const idBadge = document.createElement('span');
+      idBadge.className = 'wordbook-badge';
+      idBadge.textContent = `#${item.id}`;
+
+      const createdText = document.createElement('span');
+      createdText.className = 'wordbook-preview-aux';
+      createdText.textContent = `导入于 ${formatDateTime(item.created_at)}`;
+
+      bottomline.append(idBadge, createdText);
+      card.append(topline, aux, meaning, bottomline);
+      wordbookPreviewList.appendChild(card);
+    });
+  }
+
+  const hasPrev = currentWordbookPreviewOffset > 0;
+  const hasNext = currentWordbookPreviewOffset + currentWordbookPreviewWords.length < selectedWordbook.total_words;
+  wordbookPreviewPrevBtn.disabled = isWordbookPreviewLoading || !hasPrev;
+  wordbookPreviewNextBtn.disabled = isWordbookPreviewLoading || !hasNext;
+}
+
+async function openWordbookPreview(source: string, offset = 0) {
+  const selectedWordbook = currentWordbooks.find((item) => item.source === source);
+  if (!selectedWordbook) {
+    return;
+  }
+
+  currentWordbookPreviewSource = source;
+  currentWordbookPreviewOffset = Math.max(0, offset);
+  isWordbookPreviewLoading = true;
+  renderWordbooks();
+  renderWordbookPreview();
+
+  try {
+    currentWordbookPreviewWords = await invoke<WordbookWordItem[]>('list_wordbook_words', {
+      source,
+      limit: WORDBOOK_PREVIEW_PAGE_SIZE,
+      offset: currentWordbookPreviewOffset,
+    });
+    renderWordbookPreview();
+  } catch (error) {
+    isWordbookPreviewLoading = false;
+    currentWordbookPreviewWords = [];
+    lastErrorMessage = getErrorMessage(error);
+    renderConsole();
+    wordbookPreview.classList.remove('hidden');
+    wordbookPreviewTitle.textContent = `${selectedWordbook.display_name} · 词条预览`;
+    wordbookPreviewMeta.textContent = '词条读取失败';
+    wordbookPreviewList.innerHTML = `<div class="wordbook-empty">${lastErrorMessage}</div>`;
+    wordbookPreviewPrevBtn.disabled = true;
+    wordbookPreviewNextBtn.disabled = true;
+    setSaveHint('读取词库预览失败，请稍后重试。');
+    return;
+  }
+
+  isWordbookPreviewLoading = false;
+  renderWordbooks();
+  renderWordbookPreview();
 }
 
 function renderStateBanner(snapshot: SchedulerSnapshot) {
@@ -667,6 +813,18 @@ async function loadTeamTemplates() {
 async function loadWordbooks() {
   currentWordbooks = await invoke<WordbookListItem[]>('list_wordbooks');
   renderWordbooks();
+
+  if (!currentWordbookPreviewSource) {
+    return;
+  }
+
+  const selectedWordbook = currentWordbooks.find((item) => item.source === currentWordbookPreviewSource);
+  if (!selectedWordbook) {
+    closeWordbookPreview();
+    return;
+  }
+
+  renderWordbookPreview();
 }
 
 async function generateExportBundle() {
@@ -698,6 +856,9 @@ async function importCustomWordbook(file: File) {
   });
 
   await loadWordbooks();
+  if (currentWordbookPreviewSource === summary.source) {
+    await openWordbookPreview(summary.source, 0);
+  }
   await refreshDashboard();
   currentExportBundle = null;
   wordbookUploadHint.textContent = `已导入 ${summary.imported_count} 个单词，跳过 ${summary.skipped_count} 个重复或无效条目。格式：${summary.format.toUpperCase()} · 来源：${file.name}`;
@@ -712,6 +873,9 @@ async function toggleWordbook(source: string, enabled: boolean) {
     });
     renderWordbooks();
     await refreshDashboard();
+    if (currentWordbookPreviewSource === source) {
+      renderWordbookPreview();
+    }
     setSaveHint(enabled ? '词库已重新启用。' : '词库已停用，之后不会继续出题。');
   } catch (error) {
     lastErrorMessage = getErrorMessage(error);
@@ -723,7 +887,11 @@ async function toggleWordbook(source: string, enabled: boolean) {
 async function deleteWordbookBySource(source: string) {
   try {
     currentWordbooks = await invoke<WordbookListItem[]>('delete_wordbook', { source });
-    renderWordbooks();
+    if (currentWordbookPreviewSource === source) {
+      closeWordbookPreview();
+    } else {
+      renderWordbooks();
+    }
     await refreshDashboard();
     setSaveHint('词库已删除，对应单词和学习记录也已移除。');
   } catch (error) {
@@ -1047,6 +1215,21 @@ function wireControls() {
   uploadWordbookBtn.addEventListener('click', () => {
     uploadWordbookFileInput.click();
   });
+  closeWordbookPreviewBtn.addEventListener('click', () => {
+    closeWordbookPreview();
+  });
+  wordbookPreviewPrevBtn.addEventListener('click', () => {
+    if (!currentWordbookPreviewSource || currentWordbookPreviewOffset <= 0) {
+      return;
+    }
+    void openWordbookPreview(currentWordbookPreviewSource, currentWordbookPreviewOffset - WORDBOOK_PREVIEW_PAGE_SIZE);
+  });
+  wordbookPreviewNextBtn.addEventListener('click', () => {
+    if (!currentWordbookPreviewSource) {
+      return;
+    }
+    void openWordbookPreview(currentWordbookPreviewSource, currentWordbookPreviewOffset + WORDBOOK_PREVIEW_PAGE_SIZE);
+  });
   wordbookList.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null;
     const button = target?.closest<HTMLButtonElement>('button[data-action][data-source]');
@@ -1061,6 +1244,11 @@ function wireControls() {
       return;
     }
 
+    if (action === 'preview') {
+      void openWordbookPreview(source);
+      return;
+    }
+
     if (action === 'toggle') {
       const wordbook = currentWordbooks.find((item) => item.source === source);
       if (!wordbook) {
@@ -1071,7 +1259,11 @@ function wireControls() {
     }
 
     if (action === 'delete') {
-      const confirmed = window.confirm(`确定删除词库“${source}”吗？删除后对应单词和学习记录会一起移除。`);
+      const wordbook = currentWordbooks.find((item) => item.source === source);
+      if (!wordbook || wordbook.built_in) {
+        return;
+      }
+      const confirmed = window.confirm(`确定删除词库“${wordbook.display_name}”吗？删除后对应单词和学习记录会一起移除。`);
       if (!confirmed) {
         return;
       }

@@ -2,10 +2,7 @@
 // 使用 Core Graphics API 获取系统空闲时间
 
 #[cfg(target_os = "macos")]
-use core_graphics::{
-    event::CGEventType,
-    event_source::CGEventSourceStateID,
-};
+use core_graphics::{event::CGEventType, event_source::CGEventSourceStateID};
 
 #[cfg(target_os = "macos")]
 #[link(name = "CoreGraphics", kind = "framework")]
@@ -17,17 +14,17 @@ extern "C" {
 }
 
 /// 获取系统 idle 秒数
-/// 
+///
 /// 返回自上次用户输入事件（键盘、鼠标）以来的秒数
 #[cfg(target_os = "macos")]
 pub fn get_idle_seconds() -> Result<f64, String> {
     let idle_time = unsafe {
         CGEventSourceSecondsSinceLastEventType(
             CGEventSourceStateID::CombinedSessionState,
-            CGEventType::Null
+            CGEventType::Null,
         )
     };
-    
+
     Ok(idle_time)
 }
 
@@ -46,7 +43,7 @@ mod tests {
     fn test_get_idle_seconds() {
         let result = get_idle_seconds();
         assert!(result.is_ok());
-        
+
         let seconds = result.unwrap();
         assert!(seconds >= 0.0);
         println!("Current idle time: {:.2} seconds", seconds);
