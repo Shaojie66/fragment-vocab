@@ -18,8 +18,9 @@ impl StateRepository {
         conn.execute(
             "INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?1, ?2, ?3)",
             (key, value, now),
-        ).context("Failed to set app_state")?;
-        
+        )
+        .context("Failed to set app_state")?;
+
         Ok(())
     }
 
@@ -37,14 +38,15 @@ impl StateRepository {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare("SELECT key, value, updated_at FROM app_state ORDER BY key")?;
 
-        let states = stmt.query_map([], |row| {
-            Ok(AppState {
-                key: row.get(0)?,
-                value: row.get(1)?,
-                updated_at: row.get(2)?,
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
+        let states = stmt
+            .query_map([], |row| {
+                Ok(AppState {
+                    key: row.get(0)?,
+                    value: row.get(1)?,
+                    updated_at: row.get(2)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
 
         Ok(states)
     }
@@ -60,7 +62,7 @@ impl StateRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::db::{Database, migration::Migrator};
+    use crate::db::{migration::Migrator, Database};
     use std::env;
 
     #[test]
@@ -74,9 +76,10 @@ mod tests {
 
         let repo = StateRepository::new(db.get_connection());
         let now = "2026-03-12T02:00:00Z";
-        
-        repo.set("paused_until", "2026-03-12T10:00:00Z", now).unwrap();
-        
+
+        repo.set("paused_until", "2026-03-12T10:00:00Z", now)
+            .unwrap();
+
         let value = repo.get("paused_until").unwrap();
         assert_eq!(value, Some("2026-03-12T10:00:00Z".to_string()));
 
@@ -103,10 +106,10 @@ mod tests {
 
         let repo = StateRepository::new(db.get_connection());
         let now = "2026-03-12T02:00:00Z";
-        
+
         repo.set("test_key", "value1", now).unwrap();
         repo.set("test_key", "value2", now).unwrap();
-        
+
         let value = repo.get("test_key").unwrap();
         assert_eq!(value, Some("value2".to_string()));
 

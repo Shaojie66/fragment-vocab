@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS words (
 CREATE TABLE IF NOT EXISTS srs_cards (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   word_id INTEGER NOT NULL UNIQUE,
-  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'learning', 'review', 'mastered')),
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'learning', 'mastered')),
   stage INTEGER NOT NULL DEFAULT -1,
   due_at TEXT,
   last_seen_at TEXT,

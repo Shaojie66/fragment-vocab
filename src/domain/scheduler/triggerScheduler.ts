@@ -2,50 +2,49 @@
 // 负责定时轮询并判断是否满足弹卡条件
 
 import { invoke } from '@tauri-apps/api/core';
+import { createDefaultAppConfig, getEffectiveReminderConfig } from '../../shared/config';
+import type { AppConfig, SchedulerBlockReason, SchedulerSnapshot } from '../../shared/types';
 
-// 调度配置
-const POLL_INTERVAL_MS = 15 * 1000; // 15 秒轮询一次
-const IDLE_THRESHOLD_SECONDS = 90; // 90 秒空闲阈值
-const FALLBACK_TRIGGER_MINUTES = 25; // 25 分钟兜底触发
-const NIGHT_SILENCE_START = 23; // 23:00 开始静默
-const NIGHT_SILENCE_END = 7; // 07:00 结束静默
+const POLL_INTERVAL_MS = 15 * 1000;
 
-// 调度器状态
 interface SchedulerState {
   isPaused: boolean;
   pauseUntil?: Date;
   lastShowTime?: Date;
   isCardVisible: boolean;
   skipCooldownUntil?: Date;
+  lastBlockReason: SchedulerBlockReason;
 }
 
 export class TriggerScheduler {
+  private config: AppConfig;
   private state: SchedulerState = {
     isPaused: false,
     isCardVisible: false,
+    lastBlockReason: 'idle_too_short',
   };
-  
-  private intervalId?: number;
-  private onTrigger?: () => void;
 
-  /**
-   * 启动调度器
-   * @param onTrigger 触发弹卡时的回调函数
-   */
-  start(onTrigger: () => void) {
+  private intervalId?: number;
+  private onTrigger?: () => void | Promise<void>;
+
+  constructor(config: AppConfig = createDefaultAppConfig()) {
+    this.config = config;
+  }
+
+  start(onTrigger: () => void | Promise<void>) {
     this.onTrigger = onTrigger;
-    
-    // 每 15 秒轮询一次
+
+    if (this.intervalId !== undefined) {
+      window.clearInterval(this.intervalId);
+    }
+
     this.intervalId = window.setInterval(() => {
-      this.checkAndTrigger();
+      void this.checkAndTrigger();
     }, POLL_INTERVAL_MS);
-    
+
     console.log('✅ TriggerScheduler started');
   }
 
-  /**
-   * 停止调度器
-   */
   stop() {
     if (this.intervalId !== undefined) {
       window.clearInterval(this.intervalId);
@@ -54,116 +53,142 @@ export class TriggerScheduler {
     console.log('⏹️  TriggerScheduler stopped');
   }
 
-  /**
-   * 暂停调度（1 小时）
-   */
+  updateConfig(config: AppConfig) {
+    this.config = config;
+  }
+
   pause(durationMinutes: number = 60) {
     const pauseUntil = new Date(Date.now() + durationMinutes * 60 * 1000);
     this.state.isPaused = true;
     this.state.pauseUntil = pauseUntil;
+    this.state.lastBlockReason = 'paused';
     console.log(`⏸️  Paused until ${pauseUntil.toLocaleString()}`);
   }
 
-  /**
-   * 恢复调度
-   */
   resume() {
     this.state.isPaused = false;
     this.state.pauseUntil = undefined;
+    this.state.lastBlockReason = 'idle_too_short';
     console.log('▶️  Resumed');
   }
 
-  /**
-   * 标记卡片已展示
-   */
+  syncPauseUntil(pauseUntil?: string) {
+    if (!pauseUntil) {
+      this.resume();
+      return;
+    }
+
+    const nextPauseUntil = new Date(pauseUntil);
+    if (Number.isNaN(nextPauseUntil.getTime()) || nextPauseUntil <= new Date()) {
+      this.resume();
+      return;
+    }
+
+    this.state.isPaused = true;
+    this.state.pauseUntil = nextPauseUntil;
+    this.state.lastBlockReason = 'paused';
+  }
+
   markCardShown() {
     this.state.lastShowTime = new Date();
     this.state.isCardVisible = true;
+    this.state.lastBlockReason = 'card_visible';
   }
 
-  /**
-   * 标记卡片已隐藏
-   */
   markCardHidden() {
     this.state.isCardVisible = false;
+    this.state.lastBlockReason = 'idle_too_short';
   }
 
-  /**
-   * 检查并触发弹卡
-   */
+  getSnapshot(): SchedulerSnapshot {
+    const effectiveReminder = getEffectiveReminderConfig(this.config);
+
+    return {
+      is_paused: this.state.isPaused,
+      pause_until: this.state.pauseUntil?.toISOString(),
+      is_card_visible: this.state.isCardVisible,
+      last_show_time: this.state.lastShowTime?.toISOString(),
+      last_block_reason: this.state.lastBlockReason,
+      current_mode: effectiveReminder.mode,
+      idle_threshold_sec: effectiveReminder.idle_threshold_sec,
+      fallback_enabled: effectiveReminder.fallback_enabled,
+      fallback_interval_min: effectiveReminder.fallback_interval_min,
+      quiet_hours_start: this.config.schedule.quiet_hours_start,
+      quiet_hours_end: this.config.schedule.quiet_hours_end,
+    };
+  }
+
   private async checkAndTrigger() {
     try {
       const shouldTrigger = await this.shouldTriggerCard();
-      
+
       if (shouldTrigger && this.onTrigger) {
         console.log('🎯 Triggering card display');
-        this.onTrigger();
+        await this.onTrigger();
       }
     } catch (error) {
       console.error('❌ Error in checkAndTrigger:', error);
     }
   }
 
-  /**
-   * 判断是否应该弹卡
-   */
   private async shouldTriggerCard(): Promise<boolean> {
     const now = new Date();
+    const effectiveReminder = getEffectiveReminderConfig(this.config, now);
 
-    // 1. 检查是否已暂停
     if (this.state.isPaused) {
-      // 检查暂停是否已过期
       if (this.state.pauseUntil && now >= this.state.pauseUntil) {
         this.resume();
       } else {
+        this.state.lastBlockReason = 'paused';
         return false;
       }
     }
 
-    // 2. 检查是否在夜间静默时段（23:00-07:00）
-    const hour = now.getHours();
-    if (hour >= NIGHT_SILENCE_START || hour < NIGHT_SILENCE_END) {
+    if (this.isInQuietHours(now)) {
+      this.state.lastBlockReason = 'quiet_hours';
       return false;
     }
 
-    // 3. 检查是否已有浮卡展示
+    if (this.isMainWindowActive()) {
+      this.state.lastBlockReason = 'main_window_active';
+      return false;
+    }
+
     if (this.state.isCardVisible) {
+      this.state.lastBlockReason = 'card_visible';
       return false;
     }
 
-    // 4. 检查是否处于跳过冷却期
     if (this.state.skipCooldownUntil && now < this.state.skipCooldownUntil) {
+      this.state.lastBlockReason = 'idle_too_short';
       return false;
     }
 
-    // 5. 检查是否有可展示的卡片（需要从数据库查询）
-    // 这里简化处理，实际应该调用数据库查询
-    // const hasCard = await this.checkHasAvailableCard();
-    // if (!hasCard) {
-    //   return false;
-    // }
+    const hasCard = await this.checkHasAvailableCard();
+    if (!hasCard) {
+      this.state.lastBlockReason = 'no_card';
+      return false;
+    }
 
-    // 6. 检查 idle 条件（90 秒）
     const idleSeconds = await this.getIdleSeconds();
-    if (idleSeconds >= IDLE_THRESHOLD_SECONDS) {
+    if (idleSeconds >= effectiveReminder.idle_threshold_sec) {
+      this.state.lastBlockReason = 'ready';
       return true;
     }
 
-    // 7. 兜底触发：距离上次展示 >= 25 分钟
-    if (this.state.lastShowTime) {
+    if (effectiveReminder.fallback_enabled && this.state.lastShowTime) {
       const minutesSinceLastShow = (now.getTime() - this.state.lastShowTime.getTime()) / (60 * 1000);
-      if (minutesSinceLastShow >= FALLBACK_TRIGGER_MINUTES) {
+      if (minutesSinceLastShow >= effectiveReminder.fallback_interval_min) {
+        this.state.lastBlockReason = 'ready';
         console.log(`⏰ Fallback trigger: ${minutesSinceLastShow.toFixed(1)} minutes since last show`);
         return true;
       }
     }
 
+    this.state.lastBlockReason = 'idle_too_short';
     return false;
   }
 
-  /**
-   * 获取系统 idle 秒数
-   */
   private async getIdleSeconds(): Promise<number> {
     try {
       const seconds = await invoke<number>('get_idle_seconds');
@@ -174,17 +199,47 @@ export class TriggerScheduler {
     }
   }
 
-  /**
-   * 检查是否有可用卡片（简化版，实际需要查询数据库）
-   */
-  // private async checkHasAvailableCard(): Promise<boolean> {
-  //   // TODO: 实现数据库查询
-  //   // 这里暂时返回 true，实际应该：
-  //   // 1. 查询所有候选卡片
-  //   // 2. 调用 hasAvailableCard() 判断
-  //   return true;
-  // }
+  private async checkHasAvailableCard(): Promise<boolean> {
+    try {
+      const card = await invoke('get_next_card');
+      return card !== null;
+    } catch (error) {
+      console.error('❌ Failed to check available card:', error);
+      return false;
+    }
+  }
+
+  private isInQuietHours(now: Date): boolean {
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const start = this.parseClockToMinutes(this.config.schedule.quiet_hours_start);
+    const end = this.parseClockToMinutes(this.config.schedule.quiet_hours_end);
+
+    if (start === end) {
+      return false;
+    }
+
+    if (start < end) {
+      return currentMinutes >= start && currentMinutes < end;
+    }
+
+    return currentMinutes >= start || currentMinutes < end;
+  }
+
+  private parseClockToMinutes(value: string): number {
+    const [hourRaw, minuteRaw] = value.split(':');
+    const hour = Number(hourRaw);
+    const minute = Number(minuteRaw);
+
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
+      return 0;
+    }
+
+    return hour * 60 + minute;
+  }
+
+  private isMainWindowActive(): boolean {
+    return document.visibilityState === 'visible';
+  }
 }
 
-// 导出单例
 export const triggerScheduler = new TriggerScheduler();

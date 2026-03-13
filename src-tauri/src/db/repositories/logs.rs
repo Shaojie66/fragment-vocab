@@ -13,13 +13,20 @@ impl LogsRepository {
         Self { conn }
     }
 
-    pub fn insert(&self, card_id: i64, shown_at: &str, result: &str, trigger_type: &str, response_ms: Option<i32>) -> Result<i64> {
+    pub fn insert(
+        &self,
+        card_id: i64,
+        shown_at: &str,
+        result: &str,
+        trigger_type: &str,
+        response_ms: Option<i32>,
+    ) -> Result<i64> {
         let conn = self.conn.lock().unwrap();
         conn.execute(
             "INSERT INTO review_logs (card_id, shown_at, result, trigger_type, response_ms) VALUES (?1, ?2, ?3, ?4, ?5)",
             (card_id, shown_at, result, trigger_type, response_ms),
         ).context("Failed to insert review_log")?;
-        
+
         Ok(conn.last_insert_rowid())
     }
 
@@ -30,18 +37,19 @@ impl LogsRepository {
             "SELECT id, card_id, shown_at, result, trigger_type, response_ms, created_at FROM review_logs WHERE card_id = ?1 ORDER BY shown_at DESC LIMIT ?2"
         )?;
 
-        let logs = stmt.query_map([card_id, limit], |row| {
-            Ok(ReviewLog {
-                id: row.get(0)?,
-                card_id: row.get(1)?,
-                shown_at: row.get(2)?,
-                result: row.get(3)?,
-                trigger_type: row.get(4)?,
-                response_ms: row.get(5)?,
-                created_at: row.get(6)?,
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
+        let logs = stmt
+            .query_map([card_id, limit], |row| {
+                Ok(ReviewLog {
+                    id: row.get(0)?,
+                    card_id: row.get(1)?,
+                    shown_at: row.get(2)?,
+                    result: row.get(3)?,
+                    trigger_type: row.get(4)?,
+                    response_ms: row.get(5)?,
+                    created_at: row.get(6)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
 
         Ok(logs)
     }
@@ -49,21 +57,21 @@ impl LogsRepository {
     #[allow(dead_code)]
     pub fn count_by_result(&self, result: &str, since: Option<&str>) -> Result<i64> {
         let conn = self.conn.lock().unwrap();
-        
+
         let count: i64 = if let Some(since_time) = since {
             conn.query_row(
                 "SELECT COUNT(*) FROM review_logs WHERE result = ?1 AND shown_at >= ?2",
                 [result, since_time],
-                |row| row.get(0)
+                |row| row.get(0),
             )?
         } else {
             conn.query_row(
                 "SELECT COUNT(*) FROM review_logs WHERE result = ?1",
                 [result],
-                |row| row.get(0)
+                |row| row.get(0),
             )?
         };
-        
+
         Ok(count)
     }
 
@@ -73,18 +81,19 @@ impl LogsRepository {
             "SELECT id, card_id, shown_at, result, trigger_type, response_ms, created_at FROM review_logs ORDER BY shown_at DESC LIMIT ?1"
         )?;
 
-        let logs = stmt.query_map([limit], |row| {
-            Ok(ReviewLog {
-                id: row.get(0)?,
-                card_id: row.get(1)?,
-                shown_at: row.get(2)?,
-                result: row.get(3)?,
-                trigger_type: row.get(4)?,
-                response_ms: row.get(5)?,
-                created_at: row.get(6)?,
-            })
-        })?
-        .collect::<Result<Vec<_>, _>>()?;
+        let logs = stmt
+            .query_map([limit], |row| {
+                Ok(ReviewLog {
+                    id: row.get(0)?,
+                    card_id: row.get(1)?,
+                    shown_at: row.get(2)?,
+                    result: row.get(3)?,
+                    trigger_type: row.get(4)?,
+                    response_ms: row.get(5)?,
+                    created_at: row.get(6)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
 
         Ok(logs)
     }
@@ -93,7 +102,11 @@ impl LogsRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::db::{Database, migration::Migrator, repositories::{WordsRepository, CardsRepository}};
+    use crate::db::{
+        migration::Migrator,
+        repositories::{CardsRepository, WordsRepository},
+        Database,
+    };
     use std::env;
 
     #[test]
@@ -109,10 +122,14 @@ mod tests {
         let cards_repo = CardsRepository::new(db.get_connection());
         let logs_repo = LogsRepository::new(db.get_connection());
 
-        let word_id = words_repo.insert("test", "测试", "test", None, None, 1).unwrap();
+        let word_id = words_repo
+            .insert("test", "测试", "test", None, None, 1)
+            .unwrap();
         let card_id = cards_repo.insert(word_id).unwrap();
 
-        let log_id = logs_repo.insert(card_id, "2026-03-12T00:00:00Z", "know", "idle", Some(1500)).unwrap();
+        let log_id = logs_repo
+            .insert(card_id, "2026-03-12T00:00:00Z", "know", "idle", Some(1500))
+            .unwrap();
         assert!(log_id > 0);
 
         let logs = logs_repo.get_by_card_id(card_id, 10).unwrap();

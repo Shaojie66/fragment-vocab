@@ -11,8 +11,7 @@ impl Database {
     pub fn new(db_path: PathBuf) -> Result<Self> {
         // 确保父目录存在
         if let Some(parent) = db_path.parent() {
-            std::fs::create_dir_all(parent)
-                .context("Failed to create database directory")?;
+            std::fs::create_dir_all(parent).context("Failed to create database directory")?;
         }
 
         let conn = Connection::open(&db_path)
@@ -48,7 +47,7 @@ mod tests {
     fn test_database_creation() {
         let temp_dir = env::temp_dir();
         let db_path = temp_dir.join("test_fragment_vocab.db");
-        
+
         // 清理可能存在的旧文件
         let _ = std::fs::remove_file(&db_path);
 
@@ -68,11 +67,11 @@ mod tests {
 
         let db = Database::new(db_path.clone()).unwrap();
         let conn = db.conn.lock().unwrap();
-        
+
         let fk_enabled: i32 = conn
             .query_row("PRAGMA foreign_keys", [], |row| row.get(0))
             .unwrap();
-        
+
         assert_eq!(fk_enabled, 1);
 
         drop(conn);
