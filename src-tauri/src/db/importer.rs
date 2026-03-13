@@ -18,11 +18,35 @@ fn default_difficulty() -> i32 {
 
 #[derive(Debug, Clone, Deserialize)]
 struct WordbookEntry {
+    #[serde(
+        alias = "english",
+        alias = "term",
+        alias = "vocab",
+        alias = "单词",
+        alias = "词汇",
+        alias = "英文"
+    )]
     word: String,
+    #[serde(alias = "pronunciation", alias = "ipa", alias = "音标")]
     phonetic: Option<String>,
+    #[serde(alias = "pos", alias = "词性")]
     part_of_speech: Option<String>,
+    #[serde(
+        alias = "meaning",
+        alias = "translation",
+        alias = "definition",
+        alias = "chinese",
+        alias = "中文",
+        alias = "释义",
+        alias = "词义"
+    )]
     meaning_zh: String,
-    #[serde(default = "default_difficulty")]
+    #[serde(
+        default = "default_difficulty",
+        alias = "level",
+        alias = "rank",
+        alias = "难度"
+    )]
     difficulty: i32,
 }
 
@@ -30,7 +54,10 @@ struct WordbookEntry {
 #[serde(untagged)]
 enum JsonWordbookPayload {
     Entries(Vec<WordbookEntry>),
-    Wrapped { words: Vec<WordbookEntry> },
+    Wrapped {
+        #[serde(alias = "entries", alias = "items", alias = "vocabulary")]
+        words: Vec<WordbookEntry>,
+    },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -186,9 +213,21 @@ fn parse_json_wordbook(json_content: &str) -> Result<Vec<WordbookEntry>> {
 fn normalize_header(value: &str) -> String {
     value
         .trim()
+        .trim_start_matches('\u{feff}')
         .to_ascii_lowercase()
-        .replace('-', "_")
-        .replace(' ', "_")
+        .chars()
+        .map(|ch| {
+            if ch.is_ascii_alphanumeric() || ('\u{4e00}'..='\u{9fff}').contains(&ch) {
+                ch
+            } else {
+                '_'
+            }
+        })
+        .collect::<String>()
+        .split('_')
+        .filter(|segment| !segment.is_empty())
+        .collect::<Vec<_>>()
+        .join("_")
 }
 
 fn build_header_index_from_values(
@@ -205,11 +244,30 @@ fn build_header_index_from_values(
             .position(|header| aliases.iter().any(|alias| header == alias))
     };
 
-    let word_index = find_index(&["word", "english", "单词", "词汇"])?;
-    let meaning_index = find_index(&["meaning_zh", "meaning", "中文", "释义", "词义"])?;
-    let phonetic_index = find_index(&["phonetic", "pronunciation", "音标"]);
+    let word_index = find_index(&[
+        "word",
+        "english",
+        "term",
+        "vocab",
+        "vocabulary",
+        "单词",
+        "词汇",
+        "英文",
+    ])?;
+    let meaning_index = find_index(&[
+        "meaning_zh",
+        "meaning",
+        "translation",
+        "definition",
+        "chinese",
+        "chinese_meaning",
+        "中文",
+        "释义",
+        "词义",
+    ])?;
+    let phonetic_index = find_index(&["phonetic", "pronunciation", "ipa", "音标", "发音"]);
     let pos_index = find_index(&["part_of_speech", "pos", "词性"]);
-    let difficulty_index = find_index(&["difficulty", "level", "难度"]);
+    let difficulty_index = find_index(&["difficulty", "level", "rank", "难度"]);
 
     Some((
         word_index,
@@ -491,6 +549,80 @@ mod tests {
 
         let words_repo = WordsRepository::new(db.get_connection());
         assert_eq!(words_repo.count().unwrap(), 2);
+
+        drop(words_repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_import_wordbook_csv_with_alias_headers() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_import_csv_alias.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let csv =
+            "English,Translation,IPA,POS,Level\nabandon,放弃,/əˈbændən/,v.,2\nability,能力,,,1\n";
+        let summary = WordbookImporter::import_from_bytes(
+            &db,
+            csv.as_bytes(),
+            "custom-upload",
+            Some("alias.csv"),
+        )
+        .unwrap();
+
+        assert_eq!(summary.imported_count, 2);
+        assert_eq!(summary.skipped_count, 0);
+
+        let words_repo = WordsRepository::new(db.get_connection());
+        let abandon = words_repo.get_by_word("abandon").unwrap().unwrap();
+        assert_eq!(abandon.meaning_zh, "放弃");
+        assert_eq!(abandon.phonetic.as_deref(), Some("/əˈbændən/"));
+
+        drop(words_repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_import_wordbook_json_with_alias_fields() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_import_json_alias.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let test_json = r#"{
+            "entries": [
+                {
+                    "english": "curate",
+                    "translation": "策展；整理",
+                    "ipa": "/kjʊˈreɪt/",
+                    "pos": "v.",
+                    "level": 3
+                }
+            ]
+        }"#;
+
+        let summary = WordbookImporter::import_from_bytes(
+            &db,
+            test_json.as_bytes(),
+            "custom-json-alias",
+            Some("alias.json"),
+        )
+        .unwrap();
+
+        assert_eq!(summary.imported_count, 1);
+
+        let words_repo = WordsRepository::new(db.get_connection());
+        let word = words_repo.get_by_word("curate").unwrap().unwrap();
+        assert_eq!(word.meaning_zh, "策展；整理");
+        assert_eq!(word.part_of_speech.as_deref(), Some("v."));
+        assert_eq!(word.difficulty, 3);
 
         drop(words_repo);
         drop(db);

@@ -271,7 +271,7 @@
             <button class="ghost-btn" id="uploadWordbookBtn" type="button">上传词库</button>
           </div>
           <input id="uploadWordbookFileInput" class="hidden" type="file" accept="application/json,.json,text/csv,.csv,text/plain,.txt,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-          <p class="hint-text" id="wordbookUploadHint">支持 JSON / CSV / TXT / XLSX。字段至少包含 `word` 和 `meaning_zh`。</p>
+          <p class="hint-text" id="wordbookUploadHint">支持 JSON / CSV / TXT / XLSX。核心字段可用 `word / meaning_zh`，也兼容 `English / Translation`、`单词 / 中文` 这类常见表头。</p>
           <div class="wordbook-list" id="wordbookList">
             <div class="wordbook-empty">正在读取词库列表...</div>
           </div>

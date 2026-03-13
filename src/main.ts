@@ -1302,7 +1302,7 @@ function wireControls() {
       } catch (error) {
         lastErrorMessage = getErrorMessage(error);
         renderConsole();
-        wordbookUploadHint.textContent = '导入失败。请使用 JSON / CSV / TXT / XLSX，并确保包含 word / meaning_zh。';
+        wordbookUploadHint.textContent = '导入失败。请使用 JSON / CSV / TXT / XLSX，并确保至少包含单词列和中文释义列，例如 word/meaning_zh、English/Translation 或 单词/中文。';
         setSaveHint('自定义词库导入失败，请检查文件格式后重试。');
       } finally {
         uploadWordbookFileInput.value = '';
