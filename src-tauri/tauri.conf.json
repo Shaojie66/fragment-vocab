@@ -17,18 +17,21 @@
         "label": "main",
         "title": "Fragment Vocab",
         "url": "index.html",
-        "width": 0,
-        "height": 0,
-        "visible": false,
-        "decorations": false,
-        "skipTaskbar": true
+        "width": 1240,
+        "height": 860,
+        "minWidth": 1080,
+        "minHeight": 760,
+        "visible": true,
+        "decorations": true,
+        "center": true,
+        "skipTaskbar": false
       },
       {
         "label": "card",
         "title": "Word Card",
-        "url": "card.html",
-        "width": 400,
-        "height": 300,
+        "url": "src/card.html",
+        "width": 480,
+        "height": 460,
         "resizable": false,
         "decorations": false,
         "alwaysOnTop": true,
@@ -41,7 +44,7 @@
       {
         "label": "stats",
         "title": "Statistics",
-        "url": "stats.html",
+        "url": "src/stats.html",
         "width": 600,
         "height": 500,
         "resizable": true,
@@ -60,7 +63,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["app"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

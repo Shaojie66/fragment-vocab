@@ -4,6 +4,14 @@ use std::sync::{Arc, Mutex};
 
 use crate::db::models::Word;
 
+#[derive(Debug, Clone)]
+pub struct WordSourceSummary {
+    pub source: String,
+    pub total_words: i64,
+    pub first_created_at: Option<String>,
+    pub last_created_at: Option<String>,
+}
+
 pub struct WordsRepository {
     conn: Arc<Mutex<Connection>>,
 }
@@ -97,6 +105,65 @@ impl WordsRepository {
 
         Ok(words)
     }
+
+    pub fn get_distractors(&self, exclude_word_id: i64, difficulty: i32, limit: i64) -> Result<Vec<Word>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at
+             FROM words
+             WHERE id != ?1
+             ORDER BY ABS(difficulty - ?2) ASC, RANDOM()
+             LIMIT ?3"
+        )?;
+
+        let words = stmt.query_map((exclude_word_id, difficulty, limit), |row| {
+            Ok(Word {
+                id: row.get(0)?,
+                word: row.get(1)?,
+                phonetic: row.get(2)?,
+                part_of_speech: row.get(3)?,
+                meaning_zh: row.get(4)?,
+                source: row.get(5)?,
+                difficulty: row.get(6)?,
+                created_at: row.get(7)?,
+            })
+        })?
+        .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(words)
+    }
+
+    pub fn list_sources(&self) -> Result<Vec<WordSourceSummary>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT source, COUNT(*) AS total_words, MIN(created_at) AS first_created_at, MAX(created_at) AS last_created_at
+             FROM words
+             GROUP BY source
+             ORDER BY last_created_at DESC, source ASC"
+        )?;
+
+        let sources = stmt
+            .query_map([], |row| {
+                Ok(WordSourceSummary {
+                    source: row.get(0)?,
+                    total_words: row.get(1)?,
+                    first_created_at: row.get(2)?,
+                    last_created_at: row.get(3)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(sources)
+    }
+
+    pub fn delete_by_source(&self, source: &str) -> Result<usize> {
+        let conn = self.conn.lock().unwrap();
+        let deleted = conn
+            .execute("DELETE FROM words WHERE source = ?1", [source])
+            .context("Failed to delete words by source")?;
+
+        Ok(deleted)
+    }
 }
 
 #[cfg(test)]
@@ -151,6 +218,58 @@ mod tests {
 
         let words = repo.list(2, 0).unwrap();
         assert_eq!(words.len(), 2);
+
+        drop(repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_get_distractors_excludes_target_word() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_words_distractors.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let repo = WordsRepository::new(db.get_connection());
+
+        let target_id = repo.insert("target", "目标", "test", None, None, 2).unwrap();
+        repo.insert("near-1", "近义1", "test", None, None, 2).unwrap();
+        repo.insert("near-2", "近义2", "test", None, None, 3).unwrap();
+        repo.insert("far-1", "远义1", "test", None, None, 5).unwrap();
+
+        let distractors = repo.get_distractors(target_id, 2, 3).unwrap();
+        assert_eq!(distractors.len(), 3);
+        assert!(distractors.iter().all(|word| word.id != target_id));
+
+        drop(repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_list_sources_and_delete_by_source() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_words_sources.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let repo = WordsRepository::new(db.get_connection());
+        repo.insert("alpha", "阿尔法", "custom-a", None, None, 1).unwrap();
+        repo.insert("beta", "贝塔", "custom-a", None, None, 1).unwrap();
+        repo.insert("gamma", "伽马", "custom-b", None, None, 1).unwrap();
+
+        let sources = repo.list_sources().unwrap();
+        assert_eq!(sources.len(), 2);
+        assert!(sources.iter().any(|item| item.source == "custom-a" && item.total_words == 2));
+
+        let deleted = repo.delete_by_source("custom-a").unwrap();
+        assert_eq!(deleted, 2);
+        assert_eq!(repo.count().unwrap(), 1);
 
         drop(repo);
         drop(db);

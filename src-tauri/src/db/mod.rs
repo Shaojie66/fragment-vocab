@@ -6,4 +6,4 @@ pub mod importer;
 
 pub use connection::Database;
 pub use repositories::*;
-pub use importer::WordbookImporter;
+pub use importer::{WordbookImportSummary, WordbookImporter};

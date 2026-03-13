@@ -3,99 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics</title>
+    <title>Fragment Vocab Stats</title>
     <style>
+        :root {
+            font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            color: #1e2a26;
+            background:
+                radial-gradient(circle at top left, rgba(244, 220, 176, 0.55), transparent 30%),
+                radial-gradient(circle at top right, rgba(157, 206, 180, 0.45), transparent 28%),
+                linear-gradient(180deg, #f3ede2 0%, #edf3ed 55%, #e6efe8 100%);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f5f5f7;
-            padding: 40px;
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
         }
-        
-        .container {
-            max-width: 500px;
+
+        main {
+            width: min(1080px, 100%);
             margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
-        h1 {
-            font-size: 24px;
-            color: #1a1a1a;
-            margin-bottom: 30px;
-            text-align: center;
+
+        .hero,
+        .metric-card,
+        .panel {
+            border-radius: 24px;
+            border: 1px solid rgba(38, 65, 53, 0.12);
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: 0 18px 45px rgba(91, 104, 94, 0.1);
+            backdrop-filter: blur(14px);
         }
-        
-        .stat-item {
+
+        .hero {
             display: flex;
             justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #e5e5e7;
+            gap: 24px;
+            padding: 24px;
         }
-        
-        .stat-item:last-child {
-            border-bottom: none;
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #7a6b4c;
+            font-size: 13px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
-        
-        .stat-label {
-            font-size: 16px;
-            color: #666;
+
+        h1, h2, p {
+            margin: 0;
         }
-        
-        .stat-value {
-            font-size: 18px;
+
+        h1 {
+            font-size: 40px;
+            line-height: 1.05;
+        }
+
+        .hero p {
+            margin-top: 12px;
+            max-width: 640px;
+            color: #5a665f;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-content: flex-start;
+            gap: 12px;
+        }
+
+        button {
+            min-height: 44px;
+            padding: 0 18px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #355f4c, #1f4133);
+            color: #f8f3e8;
+        }
+
+        .ghost-btn {
+            background: rgba(255, 255, 255, 0.66);
+            border-color: rgba(38, 65, 53, 0.12);
+            color: #284237;
+        }
+
+        .status-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(38, 65, 53, 0.12);
+            color: #254337;
+            font-size: 14px;
             font-weight: 600;
-            color: #1a1a1a;
+        }
+
+        .metrics-grid,
+        .panel-grid {
+            display: grid;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .metrics-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .panel-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .metric-card,
+        .panel {
+            padding: 22px;
+        }
+
+        .metric-label {
+            display: block;
+            color: #5c675d;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .metric-value {
+            display: block;
+            margin-top: 14px;
+            font-size: 38px;
+            line-height: 1;
+        }
+
+        .metric-sub {
+            display: block;
+            margin-top: 8px;
+            color: #5a665f;
+            line-height: 1.5;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .panel-kicker {
+            margin: 0 0 8px;
+            color: #7a6b4c;
+            font-size: 13px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .panel h2 {
+            font-size: 28px;
+        }
+
+        .panel-body,
+        .feedback-list {
+            margin-top: 14px;
+            color: #5a665f;
+            line-height: 1.7;
+        }
+
+        .feedback-list {
+            padding-left: 18px;
+        }
+
+        .summary-block {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(247, 243, 235, 0.88);
+        }
+
+        .summary-block strong {
+            display: block;
+            font-size: 18px;
+        }
+
+        .summary-block p {
+            margin-top: 8px;
+            color: #536257;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 980px) {
+            .metrics-grid,
+            .panel-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero {
+                flex-direction: column;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 16px;
+            }
+
+            .metrics-grid,
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>今日统计</h1>
-        
-        <div class="stat-item">
-            <span class="stat-label">展示次数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">认识次数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">不认识次数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">跳过次数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">今日新学词数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">待复习词数</span>
-            <span class="stat-value">0</span>
-        </div>
-        
-        <div class="stat-item">
-            <span class="stat-label">已掌握词数</span>
-            <span class="stat-value">0</span>
-        </div>
-    </div>
-    
+    <main>
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Daily Snapshot</p>
+                <h1>今日统计</h1>
+                <p id="heroSummary">正在读取今日学习状态、推荐策略和最近反馈。</p>
+                <div class="status-row">
+                    <div class="status-chip" id="statusChip">读取中</div>
+                    <div class="status-chip" id="recommendationChip">推荐读取中</div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <button class="ghost-btn" id="refreshBtn" type="button">刷新</button>
+                <button class="primary-btn" id="openMainBtn" type="button">打开主页面</button>
+            </div>
+        </section>
+
+        <section class="metrics-grid">
+            <article class="metric-card">
+                <span class="metric-label">今日学习次数</span>
+                <strong class="metric-value" id="metricTotalReviews">0</strong>
+                <span class="metric-sub">所有作答与跳过都会计入</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">正确率</span>
+                <strong class="metric-value" id="metricAccuracy">0%</strong>
+                <span class="metric-sub">仅按认识 / 不认识计算</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">今日新词</span>
+                <strong class="metric-value" id="metricNewWords">0</strong>
+                <span class="metric-sub">受每日新词上限约束</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">待复习词</span>
+                <strong class="metric-value" id="metricDueCards">0</strong>
+                <span class="metric-sub">下一轮调度优先考虑</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">认识次数</span>
+                <strong class="metric-value" id="metricKnowCount">0</strong>
+                <span class="metric-sub">答对会推动阶段升级</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">不认识次数</span>
+                <strong class="metric-value" id="metricDontKnowCount">0</strong>
+                <span class="metric-sub">答错会回退或保持阶段</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">跳过次数</span>
+                <strong class="metric-value" id="metricSkipCount">0</strong>
+                <span class="metric-sub">跳过会进入冷却而不消失</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">已掌握词数</span>
+                <strong class="metric-value" id="metricMasteredCount">0</strong>
+                <span class="metric-sub">达到 mastered 后不再重复提醒</span>
+            </article>
+        </section>
+
+        <section class="panel-grid">
+            <article class="panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-kicker">Recommendation</p>
+                        <h2>当前推荐</h2>
+                    </div>
+                </div>
+                <p class="panel-body" id="recommendationText">正在读取推荐说明。</p>
+                <div class="summary-block">
+                    <strong id="recommendationMode">建议模式：读取中</strong>
+                    <p id="recommendationReason">最近的跳过率、暂停状态和反馈会影响这里的解释。</p>
+                </div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-kicker">Status</p>
+                        <h2>当前状态</h2>
+                    </div>
+                </div>
+                <div class="summary-block">
+                    <strong id="pauseSummary">未暂停</strong>
+                    <p id="scheduleSummary">静默时间读取中</p>
+                </div>
+                <div class="summary-block">
+                    <strong id="learningSummary">学习计划读取中</strong>
+                    <p id="systemSummary">系统设置读取中</p>
+                </div>
+            </article>
+
+            <article class="panel" style="grid-column: 1 / -1;">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-kicker">Feedback</p>
+                        <h2>最近反馈</h2>
+                    </div>
+                </div>
+                <ul class="feedback-list" id="feedbackList">
+                    <li>暂无反馈记录</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+
     <script type="module" src="/src/stats.ts"></script>
 </body>
 </html>

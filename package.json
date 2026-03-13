@@ -8,6 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "build:mac:app": "npm run tauri build -- --bundles app && npm run sign:mac:app",
+    "package:mac": "bash ./scripts/package-macos.sh",
+    "sign:mac:app": "bash ./scripts/sign-macos-app.sh",
     "test": "vitest run",
     "test:watch": "vitest"
   },

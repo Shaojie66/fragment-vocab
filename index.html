@@ -1,43 +1,407 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/src/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
+    <title>Fragment Vocab</title>
     <script type="module" src="/src/main.ts" defer></script>
   </head>
 
   <body>
-    <main class="container">
-      <h1>Welcome to Tauri</h1>
+    <main class="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Passive Reminder Console</p>
+          <h1>Fragment Vocab</h1>
+          <p class="hero-summary" id="heroSummary">
+            通过主页面管理提醒策略，让系统推荐频率，但始终保留你的调整权。
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button class="ghost-btn" id="openStatsBtn" type="button">打开统计页</button>
+          <button class="ghost-btn" id="pauseOneHourBtn" type="button">暂停 1 小时</button>
+          <button class="ghost-btn" id="pauseTodayBtn" type="button">今日不再提醒</button>
+          <button class="primary-btn" id="resumeBtn" type="button">恢复提醒</button>
+        </div>
+      </header>
 
-      <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/src/assets/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img
-            src="/src/assets/tauri.svg"
-            class="logo tauri"
-            alt="Tauri logo"
-          />
-        </a>
-        <a href="https://www.typescriptlang.org/docs" target="_blank">
-          <img
-            src="/src/assets/typescript.svg"
-            class="logo typescript"
-            alt="typescript logo"
-          />
-        </a>
-      </div>
-      <p>Click on the Tauri logo to learn more about the framework</p>
+      <section class="topline">
+        <div class="status-chip" id="statusChip">启动中</div>
+        <div class="status-chip muted" id="strategyChip">推荐模式</div>
+        <div class="status-chip muted" id="recommendationChip">系统推荐</div>
+      </section>
 
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-      <p id="greet-msg"></p>
+      <section class="state-banner hidden" id="stateBanner">
+        <strong id="stateBannerTitle">状态读取中</strong>
+        <p id="stateBannerBody">正在同步当前提醒状态。</p>
+      </section>
+
+      <section class="overview-grid">
+        <article class="metric-card">
+          <span class="metric-label">今日学习次数</span>
+          <strong class="metric-value" id="metricTotalReviews">0</strong>
+          <span class="metric-sub">轻量判断次数</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">正确率</span>
+          <strong class="metric-value" id="metricAccuracy">0%</strong>
+          <span class="metric-sub">认识 / 不认识</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">今日新词</span>
+          <strong class="metric-value" id="metricNewWords">0</strong>
+          <span class="metric-sub">默认克制引入</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">待复习词</span>
+          <strong class="metric-value" id="metricDueCards">0</strong>
+          <span class="metric-sub">优先于新词</span>
+        </article>
+      </section>
+
+      <section class="panel-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Reminder Strategy</p>
+              <h2>提醒策略</h2>
+            </div>
+            <span class="panel-pill" id="modePill">克制</span>
+          </div>
+          <p class="panel-body" id="recommendationText">
+            默认策略偏克制，优先减少打扰，再逐步建立提醒节奏。
+          </p>
+          <ul class="reason-list" id="recommendationReasonList">
+            <li>系统会根据最近的跳过率、暂停状态和反馈信号解释当前建议。</li>
+          </ul>
+          <div class="form-grid">
+            <label class="field">
+              <span>提醒模式</span>
+              <select id="modeSelect">
+                <option value="gentle">克制</option>
+                <option value="balanced">平衡</option>
+                <option value="intensive">强化</option>
+                <option value="custom">自定义</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>idle 阈值（秒）</span>
+              <input id="idleThresholdInput" type="number" min="30" max="3600" />
+            </label>
+            <label class="field checkbox-field">
+              <input id="fallbackEnabledInput" type="checkbox" />
+              <span>启用兜底提醒</span>
+            </label>
+            <label class="field">
+              <span>兜底频率（分钟）</span>
+              <input id="fallbackIntervalInput" type="number" min="5" max="240" />
+            </label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Learning Plan</p>
+              <h2>学习计划</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            学习计划与提醒频率分离管理，避免为了多学新词而被过度打扰。
+          </p>
+          <div class="form-grid">
+            <label class="field">
+              <span>每日新词上限</span>
+              <input id="dailyNewLimitInput" type="number" min="0" max="100" />
+            </label>
+            <label class="field checkbox-field">
+              <input id="reviewFirstInput" type="checkbox" />
+              <span>优先复习词</span>
+            </label>
+            <label class="field checkbox-field">
+              <input id="allowNewWhenNoDueInput" type="checkbox" />
+              <span>无复习词时引入新词</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Quiet Hours</p>
+              <h2>时间与静默</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            默认静默时段为夜间。该配置直接影响“不提醒”的解释结果。
+          </p>
+          <div class="form-grid">
+            <label class="field">
+              <span>静默开始</span>
+              <input id="quietStartInput" type="time" />
+            </label>
+            <label class="field">
+              <span>静默结束</span>
+              <input id="quietEndInput" type="time" />
+            </label>
+            <label class="field">
+              <span>工作日推荐策略</span>
+              <select id="weekdayProfileInput">
+                <option value="gentle">克制</option>
+                <option value="balanced">平衡</option>
+                <option value="intensive">强化</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>周末推荐策略</span>
+              <select id="weekendProfileInput">
+                <option value="gentle">克制</option>
+                <option value="balanced">平衡</option>
+                <option value="intensive">强化</option>
+              </select>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Card Preferences</p>
+              <h2>卡片偏好</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            首版先接入自动隐藏、音标和快捷键，其他卡片体验为后续预留。
+          </p>
+          <div class="form-grid">
+            <label class="field">
+              <span>自动隐藏（秒）</span>
+              <input id="autoHideInput" type="number" min="5" max="60" />
+            </label>
+            <label class="field">
+              <span>默认展示顺序</span>
+              <select id="revealOrderSelect">
+                <option value="en-first">英文优先</option>
+                <option value="zh-first">中文优先</option>
+              </select>
+            </label>
+            <label class="field checkbox-field">
+              <input id="showPhoneticInput" type="checkbox" />
+              <span>显示音标</span>
+            </label>
+            <label class="field checkbox-field">
+              <input id="allowSkipInput" type="checkbox" />
+              <span>允许跳过</span>
+            </label>
+            <label class="field checkbox-field">
+              <input id="shortcutsEnabledInput" type="checkbox" />
+              <span>启用快捷键</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">System</p>
+              <h2>系统设置</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            系统设置首版先持久化偏好，并尽量与当前桌面行为保持一致。
+          </p>
+          <div class="form-grid">
+            <label class="field checkbox-field">
+              <input id="launchAtLoginInput" type="checkbox" />
+              <span>开机启动</span>
+            </label>
+            <label class="field">
+              <span>启动行为</span>
+              <select id="startBehaviorSelect">
+                <option value="show-main">显示主页面</option>
+                <option value="minimize-to-tray">最小化到托盘</option>
+              </select>
+            </label>
+            <label class="field checkbox-field">
+              <input id="trayEnabledInput" type="checkbox" />
+              <span>启用托盘</span>
+            </label>
+          </div>
+          <p class="hint-text">部分系统设置会在下次启动时完全生效。</p>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Team Templates</p>
+              <h2>团队模板</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            用预设模板快速对齐不同部门的默认节奏，再按团队讨论结果继续微调。
+          </p>
+          <div class="form-grid">
+            <label class="field">
+              <span>模板</span>
+              <select id="teamTemplateSelect"></select>
+            </label>
+          </div>
+          <div class="template-summary">
+            <strong id="teamTemplateName">读取中</strong>
+            <p id="teamTemplateDescription">正在加载模板说明。</p>
+            <p id="teamTemplateSummary">模板参数摘要会显示在这里。</p>
+          </div>
+          <div class="inline-actions">
+            <button class="ghost-btn" id="applyTemplateBtn" type="button">应用模板到当前设置</button>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">My Wordbooks</p>
+              <h2>我的词库</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            管理当前会参与出题的词库。你可以上传自己的 JSON、CSV、TXT 或 XLSX 词表，也可以临时停用或直接删除某个词库。
+          </p>
+          <div class="inline-actions">
+            <button class="ghost-btn" id="uploadWordbookBtn" type="button">上传词库</button>
+          </div>
+          <input id="uploadWordbookFileInput" class="hidden" type="file" accept="application/json,.json,text/csv,.csv,text/plain,.txt,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+          <p class="hint-text" id="wordbookUploadHint">支持 JSON / CSV / TXT / XLSX。字段至少包含 `word` 和 `meaning_zh`。</p>
+          <div class="wordbook-list" id="wordbookList">
+            <div class="wordbook-empty">正在读取词库列表...</div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Feedback Loop</p>
+              <h2>反馈入口</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            用最轻量的反馈收集提醒信号，后续推荐会参考这些输入，但不会覆盖你的自定义设置。
+          </p>
+          <div class="inline-actions">
+            <button class="ghost-btn" id="feedbackTooManyBtn" type="button">提醒太多</button>
+            <button class="ghost-btn" id="feedbackTooFewBtn" type="button">提醒太少</button>
+          </div>
+          <ul class="feedback-list" id="feedbackList">
+            <li>暂无反馈记录</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Export & Share</p>
+              <h2>导出与分享</h2>
+            </div>
+          </div>
+          <p class="panel-body">
+            为团队讨论生成一份当前配置摘要，便于产品、设计和试点同事在同一份参数上评审。
+          </p>
+          <div class="inline-actions">
+            <button class="ghost-btn" id="generateExportBtn" type="button">生成摘要</button>
+            <button class="ghost-btn" id="copyExportSummaryBtn" type="button">复制摘要</button>
+            <button class="ghost-btn" id="copyExportJsonBtn" type="button">复制 JSON</button>
+            <button class="ghost-btn" id="importConfigBtn" type="button">导入 JSON</button>
+            <button class="primary-btn" id="downloadExportJsonBtn" type="button">下载 JSON</button>
+          </div>
+          <input id="importConfigFileInput" class="hidden" type="file" accept="application/json,.json" />
+          <div class="export-grid">
+            <label class="field">
+              <span>配置摘要</span>
+              <textarea id="exportSummaryOutput" rows="7" readonly>点击“生成摘要”后在这里查看。</textarea>
+            </label>
+            <label class="field">
+              <span>配置 JSON</span>
+              <textarea id="exportJsonOutput" rows="7" readonly>点击“生成摘要”后在这里查看。</textarea>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel panel-diagnostic">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Diagnostics</p>
+              <h2>解释与诊断</h2>
+            </div>
+          </div>
+          <dl class="diagnostic-list">
+            <div>
+              <dt>当前状态</dt>
+              <dd id="diagCurrentStatus">启动中</dd>
+            </div>
+            <div>
+              <dt>最近阻塞原因</dt>
+              <dd id="diagBlockReason">等待调度器启动</dd>
+            </div>
+            <div>
+              <dt>下次提醒提示</dt>
+              <dd id="diagNextReminder">读取中</dd>
+            </div>
+            <div>
+              <dt>最近一次展示</dt>
+              <dd id="diagLastShow">暂无</dd>
+            </div>
+          </dl>
+        </article>
+      </section>
+
+      <footer class="save-bar">
+        <p id="saveHint">默认使用系统推荐。你可以直接覆盖，之后也能一键恢复。</p>
+        <div class="save-actions">
+          <button class="ghost-btn" id="restoreRecommendedBtn" type="button">恢复推荐值</button>
+          <button class="primary-btn" id="saveConfigBtn" type="button">保存设置</button>
+        </div>
+      </footer>
     </main>
+
+    <div class="onboarding-backdrop hidden" id="onboardingBackdrop">
+      <section class="onboarding-card" aria-labelledby="onboardingTitle">
+        <p class="eyebrow">First-Time Setup</p>
+        <h2 id="onboardingTitle">先完成一次最小设置</h2>
+        <p class="panel-body">
+          Fragment Vocab 是被动提醒工具。先确定你的新词目标、提醒时间段和推荐强度，后面都可以在主页面继续调。
+        </p>
+
+        <div class="form-grid onboarding-grid">
+          <label class="field">
+            <span>每日新词目标</span>
+            <input id="onboardingDailyNewInput" type="number" min="0" max="100" value="10" />
+          </label>
+          <label class="field">
+            <span>提醒偏好</span>
+            <select id="onboardingModeSelect">
+              <option value="gentle">克制</option>
+              <option value="balanced">平衡</option>
+              <option value="intensive">强化</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>静默开始</span>
+            <input id="onboardingQuietStartInput" type="time" value="23:00" />
+          </label>
+          <label class="field">
+            <span>静默结束</span>
+            <input id="onboardingQuietEndInput" type="time" value="07:00" />
+          </label>
+          <label class="field checkbox-field onboarding-checkbox">
+            <input id="onboardingLaunchAtLoginInput" type="checkbox" />
+            <span>开机自动启动</span>
+          </label>
+        </div>
+
+        <div class="onboarding-actions">
+          <button class="primary-btn" id="completeOnboardingBtn" type="button">完成设置并开始使用</button>
+        </div>
+      </section>
+    </div>
   </body>
 </html>
