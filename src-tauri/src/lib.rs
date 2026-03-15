@@ -41,6 +41,50 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
     }
 
     if let Some(window) = app.get_webview_window("card") {
+        // 根据鼠标位置定位窗口
+        if let Ok(Some(monitor)) = window.current_monitor() {
+            let screen_size = monitor.size();
+            let window_width = 480;
+            let window_height = 460;
+            let margin = 1000;
+            let margin_bottom = 1000;
+            let offset = 20;
+
+            // 定义安全区域边界
+            let safe_left = margin;
+            let safe_right = (screen_size.width as i32) - margin;
+            let safe_top = margin;
+            let safe_bottom = (screen_size.height as i32) - margin_bottom;
+
+            // 获取鼠标位置
+            let (mouse_x, mouse_y) = window.cursor_position()
+                .map(|pos| (pos.x as i32, pos.y as i32))
+                .unwrap_or_else(|_| {
+                    (screen_size.width as i32 / 2, screen_size.height as i32 / 2)
+                });
+
+            // 尝试放在鼠标右下方
+            let mut x = mouse_x + offset;
+            let mut y = mouse_y + offset;
+
+            // 如果右侧超出安全区域，尝试放在鼠标左侧
+            if x + window_width > safe_right {
+                x = mouse_x - window_width - offset;
+            }
+
+            // 如果下方超出安全区域，尝试放在鼠标上方
+            if y + window_height > safe_bottom {
+                y = mouse_y - window_height - offset;
+            }
+
+            // 确保窗口完全在安全区域内
+            x = x.max(safe_left).min(safe_right - window_width);
+            y = y.max(safe_top).min(safe_bottom - window_height);
+
+            let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x, y }));
+        }
+
+        let _ = window.set_always_on_top(true);
         focus_window(&window);
         let _ = window.emit("card-window-shown", ());
     }

@@ -53,6 +53,8 @@ const pauseOneHourBtn = document.querySelector('#pauseOneHourBtn') as HTMLButton
 const pauseTodayBtn = document.querySelector('#pauseTodayBtn') as HTMLButtonElement;
 const resumeBtn = document.querySelector('#resumeBtn') as HTMLButtonElement;
 const openStatsBtn = document.querySelector('#openStatsBtn') as HTMLButtonElement;
+const startSchedulerBtn = document.querySelector('#startSchedulerBtn') as HTMLButtonElement;
+const stopSchedulerBtn = document.querySelector('#stopSchedulerBtn') as HTMLButtonElement;
 const saveConfigBtn = document.querySelector('#saveConfigBtn') as HTMLButtonElement;
 const restoreRecommendedBtn = document.querySelector('#restoreRecommendedBtn') as HTMLButtonElement;
 
@@ -629,9 +631,6 @@ function renderStateBanner(snapshot: SchedulerSnapshot) {
 
 function syncReminderFieldStates(mode: ReminderMode) {
   const isCustomMode = mode === 'custom';
-  idleThresholdInput.disabled = !isCustomMode;
-  fallbackEnabledInput.disabled = !isCustomMode;
-  fallbackIntervalInput.disabled = !isCustomMode;
   weekdayProfileInput.disabled = isCustomMode;
   weekendProfileInput.disabled = isCustomMode;
 }
@@ -646,12 +645,10 @@ function syncSystemFieldStates() {
 }
 
 function populateForm(config: AppConfig) {
-  const effectiveReminder = getEffectiveReminderConfig(config);
-
   modeSelect.value = config.reminder.mode;
-  idleThresholdInput.value = String(effectiveReminder.idle_threshold_sec);
-  fallbackEnabledInput.checked = effectiveReminder.fallback_enabled;
-  fallbackIntervalInput.value = String(effectiveReminder.fallback_interval_min);
+  idleThresholdInput.value = String(config.reminder.idle_threshold_sec);
+  fallbackEnabledInput.checked = config.reminder.fallback_enabled;
+  fallbackIntervalInput.value = String(config.reminder.fallback_interval_min);
 
   dailyNewLimitInput.value = String(config.learning.daily_new_limit);
   reviewFirstInput.checked = config.learning.review_first;
@@ -688,17 +685,25 @@ function readConfigFromForm(): AppConfig {
   const mode = modeSelect.value as ReminderMode;
   let config = cloneConfig(currentConfig);
 
-  if (mode !== 'custom') {
-    config = applyModePreset(config, mode);
-  } else {
-    config.reminder.idle_threshold_sec = readNumberInput(idleThresholdInput, config.reminder.idle_threshold_sec);
-    config.reminder.fallback_enabled = fallbackEnabledInput.checked;
-    config.reminder.fallback_interval_min = readNumberInput(
-      fallbackIntervalInput,
-      config.reminder.fallback_interval_min,
-    );
+  // 读取用户输入的提醒参数
+  const userIdleThreshold = readNumberInput(idleThresholdInput, config.reminder.idle_threshold_sec);
+  const userFallbackEnabled = fallbackEnabledInput.checked;
+  const userFallbackInterval = readNumberInput(fallbackIntervalInput, config.reminder.fallback_interval_min);
+
+  console.log('📝 readConfigFromForm - mode:', mode);
+  console.log('📝 readConfigFromForm - userIdleThreshold:', userIdleThreshold);
+  console.log('📝 readConfigFromForm - userFallbackInterval:', userFallbackInterval);
+
+  if (mode === 'custom') {
     config.reminder.mode = 'custom';
     config.reminder.using_recommended = false;
+    config.reminder.idle_threshold_sec = userIdleThreshold;
+    config.reminder.fallback_enabled = userFallbackEnabled;
+    config.reminder.fallback_interval_min = userFallbackInterval;
+    console.log('✅ Applied custom mode:', config.reminder);
+  } else {
+    config = applyModePreset(config, mode);
+    console.log('✅ Applied preset mode:', mode, config.reminder);
   }
 
   config.learning.daily_new_limit = readNumberInput(dailyNewLimitInput, config.learning.daily_new_limit);
@@ -972,11 +977,15 @@ async function saveConfig() {
   try {
     const previousConfig = cloneConfig(currentConfig);
     const nextConfig = readConfigFromForm();
+    console.log('💾 saveConfig - nextConfig.reminder:', nextConfig.reminder);
+
     const requestedLaunchAtLogin = nextConfig.system.launch_at_login;
     const launchAtLogin = await syncLaunchAtLogin(requestedLaunchAtLogin);
     nextConfig.system.launch_at_login = launchAtLogin;
 
     currentConfig = await invoke<AppConfig>('update_app_config', { config: nextConfig });
+    console.log('✅ saveConfig - backend returned:', currentConfig.reminder);
+
     currentExportBundle = null;
     triggerScheduler.updateConfig(currentConfig);
     populateForm(currentConfig);
@@ -1036,9 +1045,10 @@ async function completeOnboarding() {
     currentExportBundle = null;
     await refreshDashboard();
 
-    if (!schedulerStarted) {
-      initScheduler();
-    }
+    // 不再自动启动调度器，需要用户手动点击"开始提醒"按钮
+    // if (!schedulerStarted) {
+    //   initScheduler();
+    // }
 
     if (launchAtLogin !== requestedLaunchAtLogin) {
       setSaveHint('首次设置已完成，但开机启动未能按预期更新。');
@@ -1088,11 +1098,14 @@ async function resumeScheduler() {
 }
 
 function initScheduler() {
+  console.log('🚀 initScheduler called, schedulerStarted:', schedulerStarted);
+
   if (schedulerStarted) {
+    console.log('⚠️  Scheduler already started, skipping');
     return;
   }
 
-  triggerScheduler.updateConfig(currentConfig);
+  // 不再在这里更新配置，由调用方负责
   triggerScheduler.syncPauseUntil(currentDashboard?.pause_until);
   triggerScheduler.start(async () => {
     await invoke('show_card_window');
@@ -1100,7 +1113,7 @@ function initScheduler() {
     renderConsole();
   });
 
-  void listen('card-hidden', async () => {
+  void listen('card-window-hidden', async () => {
     triggerScheduler.markCardHidden();
     await refreshDashboard();
   });
@@ -1114,6 +1127,7 @@ function initScheduler() {
   });
 
   schedulerStarted = true;
+  console.log('✅ Scheduler initialized and started');
 }
 
 function wireControls() {
@@ -1139,6 +1153,18 @@ function wireControls() {
     currentConfig.reminder.using_recommended = false;
     syncReminderFieldStates('custom');
     renderConsole();
+  });
+
+  [idleThresholdInput, fallbackEnabledInput, fallbackIntervalInput].forEach((input) => {
+    input.addEventListener('change', () => {
+      if (modeSelect.value !== 'custom') {
+        modeSelect.value = 'custom';
+        currentConfig.reminder.mode = 'custom';
+        currentConfig.reminder.using_recommended = false;
+        syncReminderFieldStates('custom');
+        setSaveHint('已切换到自定义模式，保存后生效。');
+      }
+    });
   });
 
   trayEnabledInput.addEventListener('change', () => {
@@ -1169,6 +1195,38 @@ function wireControls() {
   });
   resumeBtn.addEventListener('click', () => {
     void resumeScheduler();
+  });
+  startSchedulerBtn.addEventListener('click', async () => {
+    console.log('🔵 开始提醒按钮被点击');
+
+    // 先读取表单配置
+    const newConfig = readConfigFromForm();
+    console.log('📝 读取的新配置:', newConfig.reminder);
+
+    // 尝试保存配置
+    await saveConfig();
+
+    // 如果调度器已经启动，先停止再重新启动
+    if (schedulerStarted) {
+      triggerScheduler.stop();
+      schedulerStarted = false;
+    }
+
+    // 使用新配置更新调度器（不依赖currentConfig）
+    triggerScheduler.updateConfig(newConfig);
+    console.log('🔄 调度器配置已更新为:', newConfig.reminder);
+
+    initScheduler();
+    startSchedulerBtn.style.display = 'none';
+    stopSchedulerBtn.style.display = 'inline-block';
+    renderConsole();
+  });
+  stopSchedulerBtn.addEventListener('click', () => {
+    triggerScheduler.stop();
+    schedulerStarted = false;
+    startSchedulerBtn.style.display = 'inline-block';
+    stopSchedulerBtn.style.display = 'none';
+    renderConsole();
   });
   applyTemplateBtn.addEventListener('click', () => {
     void applySelectedTemplate();
@@ -1342,9 +1400,10 @@ async function bootstrap() {
   populateOnboarding(currentConfig);
   renderConsole();
   wireControls();
-  if (!currentDashboard?.needs_onboarding) {
-    initScheduler();
-  }
+  // 不再自动启动调度器，需要用户手动点击"开始提醒"按钮
+  // if (!currentDashboard?.needs_onboarding) {
+  //   initScheduler();
+  // }
   window.setInterval(() => {
     void refreshDashboard();
   }, 30000);

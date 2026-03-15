@@ -103,6 +103,39 @@ async function showMainWindowFromCard() {
   await invoke('show_main_window');
 }
 
+function showDailyGoalComplete(currentLimit: number) {
+  clearAllTimers();
+  modeBadgeEl.textContent = '今日目标达成';
+  promptEl.textContent = `🎉 恭喜完成今日任务！`;
+  promptHintEl.textContent = `已学习 ${currentLimit} 个新词`;
+  promptHintEl.hidden = false;
+  optionsEl.innerHTML = '';
+  answerPanelEl.hidden = true;
+  btnContinue.hidden = true;
+  btnSkip.hidden = true;
+  btnNotInterested.hidden = true;
+  setFeedbackStatus('');
+
+  const increaseBtn = document.createElement('button');
+  increaseBtn.className = 'option-btn';
+  increaseBtn.textContent = '调高目标继续挑战';
+  increaseBtn.onclick = async () => {
+    const newLimit = currentLimit + 10;
+    const config = await invoke<AppConfig>('get_app_config');
+    config.learning.daily_new_limit = newLimit;
+    await invoke('update_app_config', { config });
+    await hideCardWindow();
+  };
+
+  const finishBtn = document.createElement('button');
+  finishBtn.className = 'option-btn';
+  finishBtn.textContent = '今天就到这里';
+  finishBtn.onclick = () => void hideCardWindow();
+
+  optionsEl.appendChild(increaseBtn);
+  optionsEl.appendChild(finishBtn);
+}
+
 function markSelectedOptions(selectedOptionId: string, correctOptionId: string) {
   getOptionButtons().forEach((button) => {
     const isSelected = button.dataset.optionId === selectedOptionId;
@@ -117,7 +150,6 @@ function markSelectedOptions(selectedOptionId: string, correctOptionId: string) 
 function renderAnswerPanel(card: WordCardData) {
   answerTitleEl.textContent = card.explanation_title;
   answerDetailEl.textContent = card.explanation_detail;
-  answerPanelEl.hidden = false;
 }
 
 async function persistReview(result: 'know' | 'dont_know' | 'skip'): Promise<boolean> {
@@ -216,6 +248,17 @@ async function loadAndShowCard() {
 
     const card = await invoke<WordCardData | null>('get_next_card');
     if (!card) {
+      try {
+        const stats = await invoke<any>('get_today_stats');
+        if (stats.new_words_today >= config.learning.daily_new_limit && stats.due_cards_count === 0) {
+          showDailyGoalComplete(config.learning.daily_new_limit);
+          isLoadingCard = false;
+          return;
+        }
+      } catch (error) {
+        console.error('Failed to check daily stats:', error);
+      }
+
       setFeedbackStatus('当前没有可学习卡片');
       await delay(700);
       await hideCardWindow();
@@ -228,10 +271,10 @@ async function loadAndShowCard() {
     promptEl.textContent = card.prompt;
     promptHintEl.textContent = card.prompt_hint ?? '';
     promptHintEl.hidden = !card.prompt_hint;
-    renderOptions(card);
-    renderAnswerPanel(card);
     answerPanelEl.hidden = true;
     btnContinue.hidden = true;
+    renderOptions(card);
+    renderAnswerPanel(card);
     setFeedbackStatus('选对才会计入掌握进度，选错会加入错题集。');
     setOptionButtonsDisabled(false);
     syncActionButtons();
@@ -277,6 +320,7 @@ async function handleOptionSelect(optionId: string) {
   }
 
   renderAnswerPanel(currentCard);
+  answerPanelEl.hidden = false;
   setFeedbackStatus('回答错误，已加入错题集，之后会再次出现。');
   const saved = await persistReview('dont_know');
   if (!saved) {
@@ -289,6 +333,10 @@ async function handleOptionSelect(optionId: string) {
 
   btnContinue.hidden = false;
   syncActionButtons();
+
+  closeDelayTimer = window.setTimeout(() => {
+    void hideCardWindow();
+  }, 5000);
 }
 
 async function handleSkip() {

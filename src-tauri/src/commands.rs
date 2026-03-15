@@ -589,9 +589,9 @@ fn normalize_app_config(config: AppConfig) -> AppConfig {
         "gentle" | "balanced" | "intensive" | "custom" => normalized.reminder.mode,
         _ => "gentle".to_string(),
     };
-    normalized.reminder.idle_threshold_sec = normalized.reminder.idle_threshold_sec.clamp(30, 3600);
+    normalized.reminder.idle_threshold_sec = normalized.reminder.idle_threshold_sec.clamp(5, 3600);
     normalized.reminder.fallback_interval_min =
-        normalized.reminder.fallback_interval_min.clamp(5, 240);
+        normalized.reminder.fallback_interval_min.clamp(1, 240);
 
     if normalized.schedule.quiet_hours_start.len() != 5 {
         normalized.schedule.quiet_hours_start = "23:00".to_string();

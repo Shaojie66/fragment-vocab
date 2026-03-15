@@ -19,6 +19,8 @@
           </p>
         </div>
         <div class="hero-actions">
+          <button class="primary-btn" id="startSchedulerBtn" type="button">开始提醒</button>
+          <button class="ghost-btn" id="stopSchedulerBtn" type="button" style="display:none;">停止提醒</button>
           <button class="ghost-btn" id="openStatsBtn" type="button">打开统计页</button>
           <button class="ghost-btn" id="pauseOneHourBtn" type="button">暂停 1 小时</button>
           <button class="ghost-btn" id="pauseTodayBtn" type="button">今日不再提醒</button>
@@ -70,7 +72,7 @@
             <span class="panel-pill" id="modePill">克制</span>
           </div>
           <p class="panel-body" id="recommendationText">
-            默认策略偏克制，优先减少打扰，再逐步建立提醒节奏。
+            当你停止操作一段时间后，会弹出单词卡片。如果长时间没弹卡，也会定时提醒你，确保不会忘记学习。
           </p>
           <ul class="reason-list" id="recommendationReasonList">
             <li>系统会根据最近的跳过率、暂停状态和反馈信号解释当前建议。</li>
@@ -86,16 +88,16 @@
               </select>
             </label>
             <label class="field">
-              <span>idle 阈值（秒）</span>
-              <input id="idleThresholdInput" type="number" min="30" max="3600" />
+              <span>空闲多久后提醒（秒）</span>
+              <input id="idleThresholdInput" type="number" min="5" max="3600" />
             </label>
             <label class="field checkbox-field">
               <input id="fallbackEnabledInput" type="checkbox" />
               <span>启用兜底提醒</span>
             </label>
             <label class="field">
-              <span>兜底频率（分钟）</span>
-              <input id="fallbackIntervalInput" type="number" min="5" max="240" />
+              <span>最长间隔提醒（分钟）</span>
+              <input id="fallbackIntervalInput" type="number" min="1" max="240" />
             </label>
           </div>
         </article>
@@ -108,7 +110,7 @@
             </div>
           </div>
           <p class="panel-body">
-            学习计划与提醒频率分离管理，避免为了多学新词而被过度打扰。
+            控制每天学多少新词，以及是否优先复习旧词。
           </p>
           <div class="form-grid">
             <label class="field">
@@ -133,8 +135,8 @@
               <h2>时间与静默</h2>
             </div>
           </div>
-          <p class="panel-body">
-            默认静默时段为夜间。该配置直接影响“不提醒”的解释结果。
+          <p class=”panel-body”>
+            设置晚上不打扰的时间段，比如睡觉时不弹卡。工作日和周末可以用不同的提醒频率。
           </p>
           <div class="form-grid">
             <label class="field">

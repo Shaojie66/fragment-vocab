@@ -5,7 +5,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { createDefaultAppConfig, getEffectiveReminderConfig } from '../../shared/config';
 import type { AppConfig, SchedulerBlockReason, SchedulerSnapshot } from '../../shared/types';
 
-const POLL_INTERVAL_MS = 15 * 1000;
+const POLL_INTERVAL_MS = 5 * 1000;
 
 interface SchedulerState {
   isPaused: boolean;
@@ -135,44 +135,49 @@ export class TriggerScheduler {
     const now = new Date();
     const effectiveReminder = getEffectiveReminderConfig(this.config, now);
 
+    console.log('🔍 Checking trigger conditions...');
+
     if (this.state.isPaused) {
       if (this.state.pauseUntil && now >= this.state.pauseUntil) {
         this.resume();
       } else {
         this.state.lastBlockReason = 'paused';
+        console.log('❌ Blocked: paused');
         return false;
       }
     }
 
-    if (this.isInQuietHours(now)) {
-      this.state.lastBlockReason = 'quiet_hours';
+    if (this.isMainWindowActive()) {
+      this.state.lastBlockReason = 'main_window_active';
+      console.log('❌ Blocked: main window active');
       return false;
     }
 
-    if (this.isMainWindowActive()) {
-      this.state.lastBlockReason = 'main_window_active';
+    if (this.isInQuietHours(now)) {
+      this.state.lastBlockReason = 'quiet_hours';
+      console.log('❌ Blocked: quiet hours');
       return false;
     }
 
     if (this.state.isCardVisible) {
       this.state.lastBlockReason = 'card_visible';
-      return false;
-    }
-
-    if (this.state.skipCooldownUntil && now < this.state.skipCooldownUntil) {
-      this.state.lastBlockReason = 'idle_too_short';
+      console.log('❌ Blocked: card visible');
       return false;
     }
 
     const hasCard = await this.checkHasAvailableCard();
     if (!hasCard) {
       this.state.lastBlockReason = 'no_card';
+      console.log('❌ Blocked: no card available');
       return false;
     }
 
     const idleSeconds = await this.getIdleSeconds();
+    console.log(`⏱️  Idle: ${idleSeconds}s, Required: ${effectiveReminder.idle_threshold_sec}s`);
+
     if (idleSeconds >= effectiveReminder.idle_threshold_sec) {
       this.state.lastBlockReason = 'ready';
+      console.log('✅ Ready: idle time sufficient');
       return true;
     }
 
@@ -238,7 +243,7 @@ export class TriggerScheduler {
   }
 
   private isMainWindowActive(): boolean {
-    return document.visibilityState === 'visible';
+    return document.hasFocus();
   }
 }
 
