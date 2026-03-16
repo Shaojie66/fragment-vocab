@@ -190,7 +190,7 @@ describe('TriggerScheduler', () => {
 
   describe('main window activity', () => {
     it('主页面处于活动状态时不触发浮卡', async () => {
-      visibilityState = 'visible';
+      vi.spyOn(document, 'hasFocus').mockReturnValue(true);
       vi.mocked(invoke).mockResolvedValue(100);
 
       const shouldTrigger = await (scheduler as any).shouldTriggerCard();
