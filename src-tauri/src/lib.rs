@@ -46,22 +46,21 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
             let screen_size = monitor.size();
             let window_width = 480;
             let window_height = 460;
-            let margin = 1000;
-            let margin_bottom = 1000;
+            let margin_x = 24;
+            let margin_y = 24;
             let offset = 20;
 
             // 定义安全区域边界
-            let safe_left = margin;
-            let safe_right = (screen_size.width as i32) - margin;
-            let safe_top = margin;
-            let safe_bottom = (screen_size.height as i32) - margin_bottom;
+            let safe_left = margin_x;
+            let safe_right = (screen_size.width as i32) - margin_x;
+            let safe_top = margin_y;
+            let safe_bottom = (screen_size.height as i32) - margin_y;
 
             // 获取鼠标位置
-            let (mouse_x, mouse_y) = window.cursor_position()
+            let (mouse_x, mouse_y) = window
+                .cursor_position()
                 .map(|pos| (pos.x as i32, pos.y as i32))
-                .unwrap_or_else(|_| {
-                    (screen_size.width as i32 / 2, screen_size.height as i32 / 2)
-                });
+                .unwrap_or_else(|_| (screen_size.width as i32 / 2, screen_size.height as i32 / 2));
 
             // 尝试放在鼠标右下方
             let mut x = mouse_x + offset;
@@ -78,10 +77,13 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
             }
 
             // 确保窗口完全在安全区域内
-            x = x.max(safe_left).min(safe_right - window_width);
-            y = y.max(safe_top).min(safe_bottom - window_height);
+            let max_x = (safe_right - window_width).max(safe_left);
+            let max_y = (safe_bottom - window_height).max(safe_top);
+            x = x.max(safe_left).min(max_x);
+            y = y.max(safe_top).min(max_y);
 
-            let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x, y }));
+            let _ =
+                window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x, y }));
         }
 
         let _ = window.set_always_on_top(true);

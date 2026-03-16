@@ -130,6 +130,7 @@ let currentExportBundle: ExportBundle | null = null;
 let schedulerStarted = false;
 let saveHintTimer: number | null = null;
 let lastErrorMessage: string | null = null;
+let schedulerUnlistenFns: Array<() => void> = [];
 
 const WORDBOOK_PREVIEW_PAGE_SIZE = 12;
 
@@ -973,18 +974,16 @@ async function refreshDashboard() {
   renderConsole();
 }
 
-async function saveConfig() {
+async function saveConfig(): Promise<boolean> {
   try {
     const previousConfig = cloneConfig(currentConfig);
     const nextConfig = readConfigFromForm();
-    console.log('💾 saveConfig - nextConfig.reminder:', nextConfig.reminder);
 
     const requestedLaunchAtLogin = nextConfig.system.launch_at_login;
     const launchAtLogin = await syncLaunchAtLogin(requestedLaunchAtLogin);
     nextConfig.system.launch_at_login = launchAtLogin;
 
     currentConfig = await invoke<AppConfig>('update_app_config', { config: nextConfig });
-    console.log('✅ saveConfig - backend returned:', currentConfig.reminder);
 
     currentExportBundle = null;
     triggerScheduler.updateConfig(currentConfig);
@@ -997,7 +996,7 @@ async function saveConfig() {
 
     if (launchAtLogin !== requestedLaunchAtLogin) {
       setSaveHint('设置已保存，但开机启动未能按预期更新。');
-      return;
+      return true;
     }
 
     setSaveHint(
@@ -1005,10 +1004,12 @@ async function saveConfig() {
         ? '设置已保存。启动行为和托盘开关会在下次启动时完全生效。'
         : '设置已保存，调度器会按新配置继续运行。',
     );
+    return true;
   } catch (error) {
     lastErrorMessage = getErrorMessage(error);
     renderConsole();
     setSaveHint('保存失败，请检查当前配置后重试。');
+    return false;
   }
 }
 
@@ -1097,15 +1098,11 @@ async function resumeScheduler() {
   }
 }
 
-function initScheduler() {
-  console.log('🚀 initScheduler called, schedulerStarted:', schedulerStarted);
-
+async function initScheduler() {
   if (schedulerStarted) {
-    console.log('⚠️  Scheduler already started, skipping');
     return;
   }
 
-  // 不再在这里更新配置，由调用方负责
   triggerScheduler.syncPauseUntil(currentDashboard?.pause_until);
   triggerScheduler.start(async () => {
     await invoke('show_card_window');
@@ -1113,21 +1110,28 @@ function initScheduler() {
     renderConsole();
   });
 
-  void listen('card-window-hidden', async () => {
+  schedulerUnlistenFns.push(await listen('card-window-hidden', async () => {
     triggerScheduler.markCardHidden();
     await refreshDashboard();
-  });
+  }));
 
-  void listen('scheduler-paused', async (event) => {
+  schedulerUnlistenFns.push(await listen('scheduler-paused', async (event) => {
     const minutes = Number(event.payload);
     if (!Number.isNaN(minutes) && minutes > 0) {
       triggerScheduler.pause(minutes);
       await refreshDashboard();
     }
-  });
+  }));
 
   schedulerStarted = true;
-  console.log('✅ Scheduler initialized and started');
+}
+
+function stopScheduler() {
+  triggerScheduler.stop();
+  schedulerStarted = false;
+  schedulerUnlistenFns.splice(0).forEach((unlisten) => {
+    unlisten();
+  });
 }
 
 function wireControls() {
@@ -1197,33 +1201,23 @@ function wireControls() {
     void resumeScheduler();
   });
   startSchedulerBtn.addEventListener('click', async () => {
-    console.log('🔵 开始提醒按钮被点击');
-
-    // 先读取表单配置
-    const newConfig = readConfigFromForm();
-    console.log('📝 读取的新配置:', newConfig.reminder);
-
-    // 尝试保存配置
-    await saveConfig();
-
-    // 如果调度器已经启动，先停止再重新启动
-    if (schedulerStarted) {
-      triggerScheduler.stop();
-      schedulerStarted = false;
+    const saved = await saveConfig();
+    if (!saved) {
+      return;
     }
 
-    // 使用新配置更新调度器（不依赖currentConfig）
-    triggerScheduler.updateConfig(newConfig);
-    console.log('🔄 调度器配置已更新为:', newConfig.reminder);
+    if (schedulerStarted) {
+      stopScheduler();
+    }
 
-    initScheduler();
+    triggerScheduler.updateConfig(currentConfig);
+    await initScheduler();
     startSchedulerBtn.style.display = 'none';
     stopSchedulerBtn.style.display = 'inline-block';
     renderConsole();
   });
   stopSchedulerBtn.addEventListener('click', () => {
-    triggerScheduler.stop();
-    schedulerStarted = false;
+    stopScheduler();
     startSchedulerBtn.style.display = 'inline-block';
     stopSchedulerBtn.style.display = 'none';
     renderConsole();
