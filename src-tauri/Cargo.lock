@@ -1196,6 +1196,7 @@ dependencies = [
  "chrono",
  "core-graphics 0.23.2",
  "csv",
+ "encoding_rs",
  "rusqlite",
  "serde",
  "serde_json",
