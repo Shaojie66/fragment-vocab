@@ -94,3 +94,33 @@ Supports flexible field names for compatibility:
 
 Tests use Vitest with jsdom environment. Domain logic (scheduler, SRS, card selector) has comprehensive unit tests.
 
+## gstack
+
+Use the `/browse` skill from gstack for all web browsing, never use `mcp__claude-in-chrome__*` tools.
+
+### Available skills
+
+- `/office-hours` - YC Office Hours: reframe your product before you write code
+- `/plan-ceo-review` - CEO/Founder: rethink the problem, find the 10-star product
+- `/plan-eng-review` - Eng Manager: lock in architecture, data flow, diagrams, edge cases
+- `/plan-design-review` - Senior Designer: rate design dimensions, AI slop detection
+- `/design-consultation` - Design Partner: build a complete design system from scratch
+- `/review` - Staff Engineer: find production bugs, auto-fix obvious issues
+- `/ship` - Release Engineer: sync main, run tests, push, open PR
+- `/browse` - QA Engineer: real Chromium browser automation (~100ms/command)
+- `/qa` - QA Lead: test app, find bugs, fix with atomic commits, generate regression tests
+- `/qa-only` - QA Reporter: same methodology as /qa but report only
+- `/design-review` - Designer Who Codes: audit design then fix what it finds
+- `/setup-browser-cookies` - Session Manager: import cookies from real browser
+- `/retro` - Eng Manager: team-aware weekly retro with per-person breakdowns
+- `/investigate` - Debugger: systematic root-cause debugging
+- `/document-release` - Technical Writer: update all docs to match shipped changes
+- `/codex` - Second Opinion: independent review from OpenAI Codex CLI
+- `/careful` - Safety Guardrails: warns before destructive commands
+- `/freeze` - Edit Lock: restrict file edits to one directory
+- `/guard` - Full Safety: `/careful` + `/freeze` combined
+- `/unfreeze` - Unlock: remove the `/freeze` boundary
+- `/gstack-upgrade` - Self-Updater: upgrade gstack to latest version
+
+If gstack skills aren't working, run `cd .claude/skills && ./setup` to build the binary and register skills.
+

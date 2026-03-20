@@ -3,13 +3,15 @@ use std::collections::HashSet;
 use base64::Engine;
 use chrono::{DateTime, Datelike, Duration, Local, Utc};
 use serde::{Deserialize, Serialize};
-use tauri::State;
+use tauri::{State, Manager};
 
 use crate::db::{
     models::{Word, WordWithCard},
-    CardsRepository, Database, LogsRepository, StateRepository, WordSourceSummary,
+    CardsRepository, Database, LogsRepository, PetsRepository, StateRepository, WordSourceSummary,
     WordbookImportSummary, WordbookImporter, WordsRepository,
 };
+use crate::db::pet_model::PetState;
+use crate::pet::PetEngine;
 
 const APP_CONFIG_KEY: &str = "app_config";
 const ONBOARDING_COMPLETED_KEY: &str = "onboarding_completed";
@@ -1494,6 +1496,9 @@ pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Resul
         .insert(card_id, &now_str, &result, "manual", None)
         .map_err(|e| format!("Failed to insert log: {}", e))?;
 
+    // 更新宠物状态
+    let _ = update_pet_on_study(&db);
+
     Ok(())
 }
 
@@ -1536,6 +1541,71 @@ pub fn resume_scheduler(db: State<Database>) -> Result<(), String> {
         .map_err(|e| format!("Failed to delete pause state: {}", e))?;
 
     Ok(())
+}
+
+// ============================================================================
+// Pet Commands
+// ============================================================================
+
+/// Get the current pet state
+#[tauri::command]
+pub fn get_pet_state(db: State<Database>) -> Result<PetState, String> {
+    let conn = db.get_connection();
+    let pets_repo = PetsRepository::new(conn);
+
+    pets_repo
+        .get_or_create()
+        .map_err(|e| format!("Failed to get pet state: {}", e))
+}
+
+/// Internal function to update pet after a study action
+pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
+    let conn = db.get_connection();
+    let pets_repo = PetsRepository::new(conn);
+
+    let mut pet = pets_repo
+        .get_or_create()
+        .map_err(|e| format!("Failed to get pet: {}", e))?;
+
+    // Process the study action
+    PetEngine::process_study_action(&mut pet);
+
+    // Save updated pet
+    pets_repo
+        .update(&pet)
+        .map_err(|e| format!("Failed to update pet: {}", e))?;
+
+    Ok(pet)
+}
+
+/// Initialize pet on app startup - process daily health check
+pub fn init_pet_on_startup(db: &Database) -> Result<(), String> {
+    let conn = db.get_connection();
+    let pets_repo = PetsRepository::new(conn);
+
+    let mut pet = pets_repo
+        .get_or_create()
+        .map_err(|e| format!("Failed to get pet: {}", e))?;
+
+    // Process daily health check (decay health, check streak)
+    PetEngine::process_daily_health_check(&mut pet);
+
+    // Save updated pet
+    pets_repo
+        .update(&pet)
+        .map_err(|e| format!("Failed to update pet: {}", e))?;
+
+    Ok(())
+}
+
+/// Show the pet window
+#[tauri::command]
+pub fn show_pet_window(app: tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("pet") {
+        // Position in top-left corner, below menu bar
+        let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x: 20, y: 30 }));
+        let _ = window.show();
+    }
 }
 
 #[cfg(test)]

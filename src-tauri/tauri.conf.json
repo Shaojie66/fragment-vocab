@@ -50,6 +50,19 @@
         "resizable": true,
         "visible": false,
         "center": true
+      },
+      {
+        "label": "pet",
+        "title": "Pixel Pet",
+        "url": "src/pet.html",
+        "width": 200,
+        "height": 200,
+        "resizable": false,
+        "decorations": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "center": false
       }
     ],
     "security": {

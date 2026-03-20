@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Pet</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --slime-color: #4ade80;
+      --slime-blush: #f9a8d4;
+      --saturate: 1;
+      --opacity: 1;
+    }
+
+    body {
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: move;
+      user-select: none;
+      -webkit-app-region: drag;
+    }
+
+    .pet-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Pixel Slime CSS */
+    .slime {
+      width: var(--size, 40px);
+      height: var(--size, 40px);
+      background: var(--slime-color);
+      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+      position: relative;
+      filter: saturate(var(--saturate)) opacity(var(--opacity));
+      animation: bounce 1.5s ease-in-out infinite;
+      transition: width 0.5s ease, height 0.5s ease, background-color 0.3s ease;
+      box-shadow:
+        inset 0 -10px 20px rgba(0, 0, 0, 0.1),
+        inset 0 5px 10px rgba(255, 255, 255, 0.2);
+      -webkit-app-region: no-drag;
+      cursor: pointer;
+    }
+
+    /* Eyes */
+    .slime::before {
+      content: '';
+      position: absolute;
+      top: 30%;
+      left: 25%;
+      width: 8px;
+      height: 8px;
+      background: #1a1a1a;
+      border-radius: 50%;
+      box-shadow: calc(var(--size, 40px) * 0.25) 0 0 #1a1a1a;
+    }
+
+    /* Mouth and blush (for evolved stages) */
+    .slime::after {
+      content: '';
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      height: 3px;
+      background: #1a1a1a;
+      border-radius: 2px;
+      opacity: 0;
+    }
+
+    .slime.evolved::after {
+      opacity: 1;
+    }
+
+    /* Evolution stages */
+    .slime.stage-0 {
+      --size: 40px;
+      --slime-color: #a3e635;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .slime.stage-1 {
+      --size: 60px;
+      --slime-color: #4ade80;
+    }
+
+    .slime.stage-2 {
+      --size: 90px;
+      --slime-color: #22c55e;
+    }
+
+    .slime.stage-3 {
+      --size: 120px;
+      --slime-color: #16a34a;
+    }
+
+    .slime.stage-4 {
+      --size: 150px;
+      --slime-color: #15803d;
+      --slime-blush: #f9a8d4;
+    }
+
+    /* Blush circles for evolved stages */
+    .blush {
+      position: absolute;
+      width: 20%;
+      height: 10%;
+      background: var(--slime-blush);
+      border-radius: 50%;
+      opacity: 0;
+      top: 50%;
+      filter: saturate(var(--saturate)) opacity(calc(var(--opacity) * 0.6));
+    }
+
+    .blush.left {
+      left: 10%;
+    }
+
+    .blush.right {
+      right: 10%;
+    }
+
+    .slime.stage-3 .blush,
+    .slime.stage-4 .blush {
+      opacity: 0.7;
+    }
+
+    /* Evolution animation */
+    @keyframes evolve {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .slime.evolving {
+      animation: evolve 1s ease-in-out;
+    }
+
+    /* Glow for egg */
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px rgba(163, 230, 53, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(163, 230, 53, 0.8); }
+    }
+
+    /* Bounce animation */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(calc(var(--size, 40px) * -0.15)); }
+    }
+
+    /* Hunger states */
+    .slime.hungry {
+      animation-duration: 3s;
+    }
+
+    .slime.very-hungry {
+      animation-duration: 5s;
+      filter: saturate(0.3) opacity(0.5);
+    }
+
+    /* Celebration animation */
+    @keyframes celebrate {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(-5deg); }
+      75% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .slime.celebrating {
+      animation: celebrate 0.5s ease-in-out 3;
+    }
+  </style>
+</head>
+<body>
+  <div class="pet-container">
+    <div class="slime stage-0" id="slime">
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./pet.ts"></script>
+</body>
+</html>

@@ -8,6 +8,7 @@ use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 mod commands;
 mod db;
 mod idle;
+mod pet;
 
 // 编译期内嵌词库
 const IELTS_CORE_WORDBOOK: &str = include_str!("../../assets/wordbooks/ielts-core-3000.json");
@@ -319,6 +320,10 @@ pub fn run() {
             match setup_database(app) {
                 Ok(db) => {
                     println!("✅ Database initialized successfully");
+
+                    // Initialize pet on startup (before managing db)
+                    let _ = commands::init_pet_on_startup(&db);
+
                     let app_config = {
                         let state_repo = db::StateRepository::new(db.get_connection());
                         match commands::load_app_config(&state_repo) {
@@ -337,6 +342,9 @@ pub fn run() {
                     let app_handle = app.handle().clone();
                     hide_auxiliary_windows(&app_handle);
                     apply_startup_behavior(&app_handle, &app_config);
+
+                    // Show pet window on startup
+                    commands::show_pet_window(app_handle.clone());
 
                     let delayed_handle = app_handle.clone();
                     std::thread::spawn(move || {
@@ -433,6 +441,8 @@ pub fn run() {
             commands::get_next_card,
             commands::submit_review,
             commands::get_today_stats,
+            commands::get_pet_state,
+            commands::show_pet_window,
             commands::pause_scheduler,
             commands::resume_scheduler,
         ])

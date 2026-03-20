@@ -12,6 +12,12 @@ impl Migrator {
         db.execute_migration(migration_sql)
             .context("Failed to run 001_init.sql migration")?;
 
+        // 读取 002_pets.sql
+        let pets_migration_sql = include_str!("../../migrations/002_pets.sql");
+
+        db.execute_migration(pets_migration_sql)
+            .context("Failed to run 002_pets.sql migration")?;
+
         println!("✅ Database migrations completed successfully");
         Ok(())
     }

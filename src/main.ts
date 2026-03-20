@@ -748,6 +748,11 @@ function readOnboardingConfig(): AppConfig {
 }
 
 async function syncLaunchAtLogin(enabled: boolean): Promise<boolean> {
+  // Guard: skip if not running in Tauri environment or if invoke is not ready
+  if (typeof window !== 'undefined' && !(window as any).__TAURI__) {
+    console.warn('非 Tauri 环境，跳过自动启动同步');
+    return enabled;
+  }
   try {
     const current = await isAutostartEnabled();
 
