@@ -199,6 +199,10 @@ fn update_pet_on_review(db: &Database) {
 
 #[tauri::command]
 pub fn get_next_card(db: State<Database>) -> Result<Option<WordCardData>, String> {
+    get_next_card_for_db(db.inner())
+}
+
+pub fn get_next_card_for_db(db: &Database) -> Result<Option<WordCardData>, String> {
     let conn = db.get_connection();
     let cards_repo = CardsRepository::new(conn.clone());
     let logs_repo = LogsRepository::new(conn.clone());
@@ -259,6 +263,10 @@ pub fn get_next_card(db: State<Database>) -> Result<Option<WordCardData>, String
 
 #[tauri::command]
 pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Result<(), String> {
+    submit_review_for_db(db.inner(), card_id, &result)
+}
+
+pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result<(), String> {
     let now = Utc::now();
     let now_str = now.to_rfc3339();
 
@@ -298,7 +306,7 @@ pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Resul
             .ok_or_else(|| "Card not found".to_string())?
         };
 
-        match result.as_str() {
+        match result {
             "know" => {
                 card.stage += 1;
                 card.status = if card.stage >= 5 {
@@ -391,7 +399,7 @@ pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Resul
             .map(|v| v.into_iter().collect())
             .unwrap_or_default();
 
-        match result.as_str() {
+        match result {
             "dont_know" => {
                 wrong_book.insert(card_id);
             }
@@ -415,7 +423,7 @@ pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Resul
         tx.execute(
             "INSERT INTO review_logs (card_id, shown_at, result, trigger_type, response_ms) \
              VALUES (?1, ?2, ?3, ?4, ?5)",
-            (card_id, &now_str, &result, "manual", Option::<i32>::None),
+            (card_id, &now_str, result, "manual", Option::<i32>::None),
         )
         .map_err(|e| format!("Failed to insert log: {}", e))?;
 

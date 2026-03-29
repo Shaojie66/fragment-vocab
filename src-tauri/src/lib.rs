@@ -6,8 +6,8 @@ use tauri::{
 };
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 
-mod commands;
-mod db;
+pub mod commands;
+pub mod db;
 mod idle;
 mod logging;
 mod pet;
@@ -170,6 +170,11 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
 
     // 初始化日志系统
     logging::init(&app_data_dir);
+
+    // 启动时自动备份数据库
+    if let Err(e) = db::backup::create_backup(&app_data_dir) {
+        warn!("Database backup failed: {}", e);
+    }
 
     let db_path = app_data_dir.join("fragment-vocab.db");
     info!("Database path: {:?}", db_path);
@@ -457,6 +462,8 @@ pub fn run() {
             commands::pet::show_pet_window,
             commands::config::pause_scheduler,
             commands::config::resume_scheduler,
+            commands::backup::list_backups,
+            commands::backup::restore_backup,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

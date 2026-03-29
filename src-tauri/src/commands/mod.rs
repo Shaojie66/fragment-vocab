@@ -1,5 +1,6 @@
 mod types;
 mod utils;
+pub mod backup;
 pub mod config;
 pub mod pet;
 pub mod review;

@@ -24,6 +24,10 @@ pub fn import_custom_wordbook(
 
 #[tauri::command]
 pub fn list_wordbooks(db: State<Database>) -> Result<Vec<WordbookListItem>, String> {
+    list_wordbooks_for_db(db.inner())
+}
+
+pub fn list_wordbooks_for_db(db: &Database) -> Result<Vec<WordbookListItem>, String> {
     let conn = db.get_connection();
     let words_repo = WordsRepository::new(conn.clone());
     let state_repo = StateRepository::new(conn);
@@ -72,15 +76,23 @@ pub fn set_wordbook_enabled(
     source: String,
     enabled: bool,
 ) -> Result<Vec<WordbookListItem>, String> {
+    set_wordbook_enabled_for_db(db.inner(), &source, enabled)
+}
+
+pub fn set_wordbook_enabled_for_db(
+    db: &Database,
+    source: &str,
+    enabled: bool,
+) -> Result<Vec<WordbookListItem>, String> {
     let conn = db.get_connection();
     let words_repo = WordsRepository::new(conn.clone());
     let state_repo = StateRepository::new(conn);
     let mut disabled_sources = load_disabled_wordbook_sources(&state_repo)?;
 
     if enabled {
-        disabled_sources.remove(&source);
+        disabled_sources.remove(source);
     } else {
-        disabled_sources.insert(source.clone());
+        disabled_sources.insert(source.to_string());
     }
 
     persist_disabled_wordbook_sources(&state_repo, &disabled_sources)?;
@@ -96,6 +108,13 @@ pub fn delete_wordbook(
     db: State<Database>,
     source: String,
 ) -> Result<Vec<WordbookListItem>, String> {
+    delete_wordbook_for_db(db.inner(), &source)
+}
+
+pub fn delete_wordbook_for_db(
+    db: &Database,
+    source: &str,
+) -> Result<Vec<WordbookListItem>, String> {
     if source == "ielts-core" {
         return Err("内置词库不能删除，只能停用。".to_string());
     }
@@ -108,7 +127,7 @@ pub fn delete_wordbook(
     words_repo
         .delete_by_source(&source)
         .map_err(|e| format!("Failed to delete wordbook: {}", e))?;
-    disabled_sources.remove(&source);
+    disabled_sources.remove(source);
     persist_disabled_wordbook_sources(&state_repo, &disabled_sources)?;
 
     let sources = words_repo
