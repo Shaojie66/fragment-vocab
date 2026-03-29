@@ -44,6 +44,14 @@ pub struct TodayStats {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DayStats {
+    pub date: String,
+    pub total_reviews: i64,
+    pub correct_count: i64,
+    pub new_words: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReminderConfig {
     pub mode: String,
     pub using_recommended: bool,
@@ -107,6 +115,8 @@ pub struct CardConfig {
     pub reveal_order: String,
     pub allow_skip: bool,
     pub shortcuts_enabled: bool,
+    #[serde(default)]
+    pub auto_pronounce: bool,
 }
 
 impl Default for CardConfig {
@@ -117,6 +127,7 @@ impl Default for CardConfig {
             reveal_order: "en-first".to_string(),
             allow_skip: true,
             shortcuts_enabled: true,
+            auto_pronounce: false,
         }
     }
 }
@@ -211,4 +222,17 @@ pub struct WordbookWordItem {
     pub meaning_zh: String,
     pub difficulty: i32,
     pub created_at: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WrongBookWord {
+    pub card_id: i64,
+    pub word_id: i64,
+    pub word: String,
+    pub phonetic: Option<String>,
+    pub part_of_speech: Option<String>,
+    pub meaning_zh: String,
+    pub lifetime_wrong: i32,
+    pub lifetime_correct: i32,
+    pub last_result: Option<String>,
 }

@@ -2,7 +2,7 @@ use base64::Engine;
 use tauri::State;
 
 use crate::db::{
-    Database, StateRepository, WordbookImporter, WordbookImportSummary, WordsRepository,
+    Database, StateRepository, WordbookImportSummary, WordbookImporter, WordsRepository,
 };
 
 use super::types::*;

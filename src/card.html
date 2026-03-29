@@ -77,11 +77,38 @@
             gap: 6px;
         }
 
+        .prompt-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
         .prompt {
+            flex: 1;
             font-size: 28px;
             line-height: 1.18;
             font-weight: 700;
             color: #1c1714;
+        }
+
+        .speak-btn {
+            flex-shrink: 0;
+            border: none;
+            border-radius: 999px;
+            background: rgba(38, 35, 31, 0.08);
+            color: #5b4d42;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .speak-btn:disabled {
+            cursor: default;
+            opacity: 0.45;
         }
 
         .prompt-hint {
@@ -249,7 +276,10 @@
         </div>
 
         <section class="prompt-wrap">
-            <div class="prompt" id="prompt"></div>
+            <div class="prompt-row">
+                <div class="prompt" id="prompt"></div>
+                <button class="speak-btn" id="btnSpeak" type="button" aria-label="朗读单词">Speak</button>
+            </div>
             <div class="prompt-hint" id="promptHint" hidden></div>
         </section>
 

@@ -67,7 +67,13 @@ struct WordbookEntry {
 enum JsonWordbookPayload {
     Entries(Vec<WordbookEntry>),
     Wrapped {
-        #[serde(alias = "entries", alias = "items", alias = "vocabulary", alias = "data", alias = "list")]
+        #[serde(
+            alias = "entries",
+            alias = "items",
+            alias = "vocabulary",
+            alias = "data",
+            alias = "list"
+        )]
         words: Vec<WordbookEntry>,
     },
 }
@@ -87,7 +93,8 @@ pub struct WordbookImportSummary {
 
 fn detect_encoding_and_convert(raw_bytes: &[u8]) -> Result<(String, String)> {
     // UTF-8 BOM
-    if raw_bytes.len() >= 3 && raw_bytes[0] == 0xEF && raw_bytes[1] == 0xBB && raw_bytes[2] == 0xBF {
+    if raw_bytes.len() >= 3 && raw_bytes[0] == 0xEF && raw_bytes[1] == 0xBB && raw_bytes[2] == 0xBF
+    {
         let content = String::from_utf8_lossy(raw_bytes).trim().to_string();
         return Ok(("UTF-8".to_string(), content));
     }
@@ -159,7 +166,10 @@ fn detect_format(file_name: Option<&str>, raw_content: Option<&str>) -> Result<S
             return Ok("tsv".to_string());
         }
 
-        if lines.iter().any(|l| l.contains(" - ") || l.contains(':') || l.contains('：')) {
+        if lines
+            .iter()
+            .any(|l| l.contains(" - ") || l.contains(':') || l.contains('：'))
+        {
             return Ok("txt".to_string());
         }
     }
@@ -179,7 +189,12 @@ fn normalize_header(value: &str) -> String {
         .trim_start_matches('\u{feff}')
         .to_ascii_lowercase()
         .chars()
-        .filter(|c| c.is_ascii_alphanumeric() || *c == '_' || *c == '-' || ('\u{4e00}'..='\u{9fff}').contains(c))
+        .filter(|c| {
+            c.is_ascii_alphanumeric()
+                || *c == '_'
+                || *c == '-'
+                || ('\u{4e00}'..='\u{9fff}').contains(c)
+        })
         .collect()
 }
 
@@ -216,7 +231,10 @@ fn detect_txt_separator(content: &str) -> &'static str {
     let lines: Vec<&str> = content.lines().take(10).collect();
 
     let tab_count = lines.iter().map(|l| l.matches('\t').count()).sum::<usize>();
-    let arrow_count = lines.iter().map(|l| l.matches(" - ").count()).sum::<usize>();
+    let arrow_count = lines
+        .iter()
+        .map(|l| l.matches(" - ").count())
+        .sum::<usize>();
     let colon_count = lines.iter().map(|l| l.matches(':').count()).sum::<usize>();
     let cn_colon_count = lines.iter().map(|l| l.matches('：').count()).sum::<usize>();
 
@@ -257,7 +275,9 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
         lines[0].split(sep_char).map(str::trim).collect()
     };
 
-    let has_header = first_line_parts.iter().any(|p| match_field_type(p).is_some());
+    let has_header = first_line_parts
+        .iter()
+        .any(|p| match_field_type(p).is_some());
     let start_idx = if has_header { 1 } else { 0 };
 
     // Determine column mapping
@@ -300,17 +320,29 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
                 vec![&trimmed[..pos].trim(), &trimmed[pos + 3..].trim()]
             } else {
                 // Fall back to tab or colon
-                let tab_parts: Vec<&str> = trimmed.split('\t').map(str::trim).filter(|s| !s.is_empty()).collect();
+                let tab_parts: Vec<&str> = trimmed
+                    .split('\t')
+                    .map(str::trim)
+                    .filter(|s| !s.is_empty())
+                    .collect();
                 if tab_parts.len() >= 2 {
                     tab_parts
                 } else if trimmed.contains(':') {
-                    trimmed.split(':').map(str::trim).filter(|s| !s.is_empty()).collect()
+                    trimmed
+                        .split(':')
+                        .map(str::trim)
+                        .filter(|s| !s.is_empty())
+                        .collect()
                 } else {
                     continue;
                 }
             }
         } else {
-            let primary_parts: Vec<&str> = line.split(sep_char).map(str::trim).filter(|s| !s.is_empty()).collect();
+            let primary_parts: Vec<&str> = line
+                .split(sep_char)
+                .map(str::trim)
+                .filter(|s| !s.is_empty())
+                .collect();
             if primary_parts.len() >= 2 {
                 primary_parts
             } else if trimmed.find(" - ").is_some() {
@@ -322,7 +354,11 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
                 }
             } else if sep_char == '\t' && trimmed.contains(':') {
                 // Fall back to colon
-                trimmed.split(':').map(str::trim).filter(|s| !s.is_empty()).collect()
+                trimmed
+                    .split(':')
+                    .map(str::trim)
+                    .filter(|s| !s.is_empty())
+                    .collect()
             } else {
                 continue;
             }
@@ -341,11 +377,19 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
 
         let phonetic = parts.get(phonetic_idx).and_then(|s| {
             let trimmed = s.trim();
-            if trimmed.is_empty() { None } else { Some(trimmed.to_string()) }
+            if trimmed.is_empty() {
+                None
+            } else {
+                Some(trimmed.to_string())
+            }
         });
         let part_of_speech = parts.get(pos_idx).and_then(|s| {
             let trimmed = s.trim();
-            if trimmed.is_empty() { None } else { Some(trimmed.to_string()) }
+            if trimmed.is_empty() {
+                None
+            } else {
+                Some(trimmed.to_string())
+            }
         });
         let difficulty = parts
             .get(diff_idx)
@@ -421,8 +465,16 @@ fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
     let mut entries = Vec::new();
 
     for record in records.iter().skip(start_idx) {
-        let word = record.get(word_idx).map(|s| s.as_str()).unwrap_or("").trim();
-        let meaning_zh = record.get(meaning_idx).map(|s| s.as_str()).unwrap_or("").trim();
+        let word = record
+            .get(word_idx)
+            .map(|s| s.as_str())
+            .unwrap_or("")
+            .trim();
+        let meaning_zh = record
+            .get(meaning_idx)
+            .map(|s| s.as_str())
+            .unwrap_or("")
+            .trim();
 
         if word.is_empty() || meaning_zh.is_empty() {
             continue;
@@ -532,15 +584,31 @@ fn parse_xlsx(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<WordbookE
         let mut entries = Vec::new();
 
         for row in rows.iter().skip(start_idx) {
-            let word = row.get(word_idx).map(|s| s.trim()).unwrap_or("").to_string();
-            let meaning_zh = row.get(meaning_idx).map(|s| s.trim()).unwrap_or("").to_string();
+            let word = row
+                .get(word_idx)
+                .map(|s| s.trim())
+                .unwrap_or("")
+                .to_string();
+            let meaning_zh = row
+                .get(meaning_idx)
+                .map(|s| s.trim())
+                .unwrap_or("")
+                .to_string();
 
             if word.is_empty() && meaning_zh.is_empty() {
                 continue;
             }
 
-            let phonetic = row.get(phonetic_idx).map(|s| s.trim()).filter(|s| !s.is_empty()).map(String::from);
-            let part_of_speech = row.get(pos_idx).map(|s| s.trim()).filter(|s| !s.is_empty()).map(String::from);
+            let phonetic = row
+                .get(phonetic_idx)
+                .map(|s| s.trim())
+                .filter(|s| !s.is_empty())
+                .map(String::from);
+            let part_of_speech = row
+                .get(pos_idx)
+                .map(|s| s.trim())
+                .filter(|s| !s.is_empty())
+                .map(String::from);
             let difficulty = row
                 .get(diff_idx)
                 .and_then(|s| s.trim().parse::<i32>().ok())
@@ -632,7 +700,11 @@ impl WordbookImporter {
                 continue;
             }
 
-            let phonetic = entry.phonetic.as_deref().map(str::trim).filter(|v| !v.is_empty());
+            let phonetic = entry
+                .phonetic
+                .as_deref()
+                .map(str::trim)
+                .filter(|v| !v.is_empty());
             let part_of_speech = entry
                 .part_of_speech
                 .as_deref()

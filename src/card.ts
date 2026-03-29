@@ -23,6 +23,7 @@ const btnSkip = document.getElementById('btnSkip') as HTMLButtonElement;
 const btnNotInterested = document.getElementById('btnNotInterested') as HTMLButtonElement;
 const btnContinue = document.getElementById('btnContinue') as HTMLButtonElement;
 const btnSettings = document.getElementById('btnSettings') as HTMLButtonElement;
+const btnSpeak = document.getElementById('btnSpeak') as HTMLButtonElement;
 
 function clearTimer(timer: number | null) {
   if (timer !== null) {
@@ -61,6 +62,7 @@ function syncActionButtons() {
   btnNotInterested.disabled = isSubmitting || hasAnswered;
   btnContinue.disabled = isSubmitting;
   btnSettings.disabled = isSubmitting;
+  btnSpeak.disabled = isSubmitting || !currentCard;
 }
 
 function getModeLabel(card: WordCardData): string {
@@ -188,6 +190,19 @@ function applyCardPreferences(config: AppConfig) {
   syncActionButtons();
 }
 
+async function speakCurrentWord() {
+  const text = currentCard?.word?.trim();
+  if (!text) {
+    return;
+  }
+
+  try {
+    await invoke('speak_word', { text });
+  } catch (error) {
+    console.error('单词朗读失败:', error);
+  }
+}
+
 function renderOptions(card: WordCardData) {
   optionsEl.innerHTML = '';
 
@@ -278,6 +293,9 @@ async function loadAndShowCard() {
     setFeedbackStatus('选对才会计入掌握进度，选错会加入错题集。');
     setOptionButtonsDisabled(false);
     syncActionButtons();
+    if (config.card.auto_pronounce) {
+      void speakCurrentWord();
+    }
     scheduleAutoHide(config);
   } catch (error) {
     console.error('加载卡片失败:', error);
@@ -413,6 +431,10 @@ btnContinue.addEventListener('click', () => {
 
 btnSettings.addEventListener('click', () => {
   void showMainWindowFromCard();
+});
+
+btnSpeak.addEventListener('click', () => {
+  void speakCurrentWord();
 });
 
 document.addEventListener('keydown', (event) => {

@@ -94,6 +94,7 @@ export interface CardPreferences {
   reveal_order: RevealOrder;
   allow_skip: boolean;
   shortcuts_enabled: boolean;
+  auto_pronounce: boolean;
 }
 
 export interface SystemPreferences {
@@ -119,6 +120,13 @@ export interface TodayStats {
   due_cards_count: number;
   mastered_count: number;
   accuracy: number;
+}
+
+export interface DayStats {
+  date: string;
+  total_reviews: number;
+  correct_count: number;
+  new_words: number;
 }
 
 export interface DashboardState {

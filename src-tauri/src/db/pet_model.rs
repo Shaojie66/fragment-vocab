@@ -3,12 +3,12 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PetState {
     pub id: i64,
-    pub stage: u8,              // 0-4 (egg, hatchling, juvenile, adult, fully-evolved)
-    pub health: f64,            // 0.0 - 1.0
-    pub experience: u32,        // Cumulative experience
-    pub current_streak: u32,   // Consecutive study days
+    pub stage: u8,           // 0-4 (egg, hatchling, juvenile, adult, fully-evolved)
+    pub health: f64,         // 0.0 - 1.0
+    pub experience: u32,     // Cumulative experience
+    pub current_streak: u32, // Consecutive study days
     pub vitality_multiplier: f64, // 1.0 - 3.0
-    pub last_study_at: Option<String>,  // ISO timestamp
+    pub last_study_at: Option<String>, // ISO timestamp
     pub last_review_at: Option<String>, // ISO timestamp
     pub created_at: String,
     pub updated_at: String,
@@ -39,8 +39,8 @@ pub const STAGE_NAMES: [&str; 5] = ["蛋", "幼体", "青少年", "成体", "完
 
 /// Vitality multiplier thresholds (consecutive days)
 pub const VITALITY_THRESHOLDS: [(u32, f64); 4] = [
-    (1, 1.0),   // 1 day = 1.0x
-    (7, 1.5),   // 7 days = 1.5x
-    (14, 2.0),  // 14 days = 2.0x
-    (30, 3.0),  // 30 days = 3.0x
+    (1, 1.0),  // 1 day = 1.0x
+    (7, 1.5),  // 7 days = 1.5x
+    (14, 2.0), // 14 days = 2.0x
+    (30, 3.0), // 30 days = 3.0x
 ];

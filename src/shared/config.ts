@@ -50,6 +50,7 @@ export function createDefaultAppConfig(): AppConfig {
       reveal_order: 'en-first',
       allow_skip: true,
       shortcuts_enabled: true,
+      auto_pronounce: false,
     },
     system: {
       launch_at_login: false,

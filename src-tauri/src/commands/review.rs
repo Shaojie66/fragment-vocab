@@ -272,7 +272,9 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
 
     {
         let conn_arc = db.get_connection();
-        let mut conn = conn_arc.lock().map_err(|_| "db lock poisoned".to_string())?;
+        let mut conn = conn_arc
+            .lock()
+            .map_err(|_| "db lock poisoned".to_string())?;
         let tx = conn
             .transaction()
             .map_err(|e| format!("Failed to begin transaction: {}", e))?;

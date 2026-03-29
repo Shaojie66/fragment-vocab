@@ -2,6 +2,7 @@ use anyhow::{Context, Result};
 use rusqlite::Connection;
 use std::sync::{Arc, Mutex};
 
+use crate::commands::DayStats;
 use crate::db::models::ReviewLog;
 
 pub struct LogsRepository {
@@ -96,6 +97,47 @@ impl LogsRepository {
             .collect::<Result<Vec<_>, _>>()?;
 
         Ok(logs)
+    }
+
+    pub fn get_history_stats(&self, since_utc: &str) -> Result<Vec<DayStats>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "WITH first_reviews AS (
+                SELECT
+                    card_id,
+                    MIN(shown_at) AS first_shown_at
+                FROM review_logs
+                WHERE result IN ('know', 'dont_know')
+                GROUP BY card_id
+            )
+            SELECT
+                date(rl.shown_at, 'localtime') AS day,
+                COUNT(*) AS total_reviews,
+                SUM(CASE WHEN rl.result = 'know' THEN 1 ELSE 0 END) AS correct_count,
+                COUNT(DISTINCT CASE
+                    WHEN fr.first_shown_at IS NOT NULL
+                     AND date(fr.first_shown_at, 'localtime') = date(rl.shown_at, 'localtime')
+                    THEN rl.card_id
+                END) AS new_words
+            FROM review_logs rl
+            LEFT JOIN first_reviews fr ON fr.card_id = rl.card_id
+            WHERE rl.shown_at >= ?1
+            GROUP BY day
+            ORDER BY day ASC",
+        )?;
+
+        let rows = stmt
+            .query_map([since_utc], |row| {
+                Ok(DayStats {
+                    date: row.get(0)?,
+                    total_reviews: row.get(1)?,
+                    correct_count: row.get(2)?,
+                    new_words: row.get(3)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(rows)
     }
 
     /// Count cards whose first-ever log entry falls on or after `day_start_utc`.

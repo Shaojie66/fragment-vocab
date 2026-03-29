@@ -57,7 +57,8 @@ fn import_json_wordbook(db: &Database, source: &str, file_name: &str, json: &str
 }
 
 fn find_wordbook<'a>(items: &'a [WordbookListItem], source: &str) -> &'a WordbookListItem {
-    items.iter()
+    items
+        .iter()
         .find(|item| item.source == source)
         .unwrap_or_else(|| panic!("missing wordbook source: {source}"))
 }

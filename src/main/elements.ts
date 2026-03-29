@@ -25,6 +25,7 @@ export const mainElements = {
   showPhoneticInput: queryRequiredElement<HTMLInputElement>('#showPhoneticInput'),
   allowSkipInput: queryRequiredElement<HTMLInputElement>('#allowSkipInput'),
   shortcutsEnabledInput: queryRequiredElement<HTMLInputElement>('#shortcutsEnabledInput'),
+  autoPronounceInput: queryRequiredElement<HTMLInputElement>('#autoPronounceInput'),
   launchAtLoginInput: queryRequiredElement<HTMLInputElement>('#launchAtLoginInput'),
   startBehaviorSelect: queryRequiredElement<HTMLSelectElement>('#startBehaviorSelect'),
   trayEnabledInput: queryRequiredElement<HTMLInputElement>('#trayEnabledInput'),

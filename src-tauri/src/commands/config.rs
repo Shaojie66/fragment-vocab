@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use chrono::{DateTime, Datelike, Duration, Local, Utc};
 use tauri::State;
 
-use crate::db::{Database, LogsRepository, CardsRepository, StateRepository};
+use crate::db::{CardsRepository, Database, LogsRepository, StateRepository};
 
 use super::types::*;
 use super::utils::*;
@@ -372,21 +372,41 @@ pub fn build_export_bundle(
         app_config.schedule.quiet_hours_start,
         app_config.schedule.quiet_hours_end,
         recommended_mode_label(
-            app_config.schedule.weekday_profile.as_deref().unwrap_or("gentle")
+            app_config
+                .schedule
+                .weekday_profile
+                .as_deref()
+                .unwrap_or("gentle")
         ),
         recommended_mode_label(
-            app_config.schedule.weekend_profile.as_deref().unwrap_or("balanced")
+            app_config
+                .schedule
+                .weekend_profile
+                .as_deref()
+                .unwrap_or("balanced")
         ),
         app_config.learning.daily_new_limit,
         app_config.card.auto_hide_sec,
-        if app_config.system.tray_enabled { "开启" } else { "关闭" },
-        if app_config.system.start_behavior == "show-main" { "显示主页面" } else { "最小化到托盘" },
+        if app_config.system.tray_enabled {
+            "开启"
+        } else {
+            "关闭"
+        },
+        if app_config.system.start_behavior == "show-main" {
+            "显示主页面"
+        } else {
+            "最小化到托盘"
+        },
         pause_summary,
         today_stats.total_reviews,
         today_stats.accuracy,
         today_stats.new_words_today,
         today_stats.due_cards_count,
-        if feedback_summary.is_empty() { "暂无".to_string() } else { feedback_summary },
+        if feedback_summary.is_empty() {
+            "暂无".to_string()
+        } else {
+            feedback_summary
+        },
         recommendation.explanation,
     );
     let config_json = serde_json::to_string_pretty(app_config)
@@ -494,6 +514,21 @@ pub fn load_today_stats(
         mastered_count,
         accuracy,
     })
+}
+
+#[tauri::command]
+pub fn get_history_stats(db: State<Database>, days: i64) -> Result<Vec<DayStats>, String> {
+    if days <= 0 {
+        return Err("days must be greater than 0".to_string());
+    }
+
+    let logs_repo = LogsRepository::new(db.get_connection());
+    let start_day = local_day_start(Local::now() - Duration::days(days - 1));
+    let since_utc = start_day.with_timezone(&Utc).to_rfc3339();
+
+    logs_repo
+        .get_history_stats(&since_utc)
+        .map_err(|e| format!("Failed to load history stats: {}", e))
 }
 
 // ============================================================================

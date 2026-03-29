@@ -22,6 +22,5 @@ pub fn restore_backup(
     file_name: String,
 ) -> Result<(), String> {
     let dir = get_app_data_dir(&app)?;
-    backup::restore_backup(&dir, &file_name)
-        .map_err(|e| format!("Failed to restore backup: {}", e))
+    backup::restore_backup(&dir, &file_name).map_err(|e| format!("Failed to restore backup: {}", e))
 }

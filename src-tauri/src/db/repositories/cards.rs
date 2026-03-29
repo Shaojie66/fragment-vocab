@@ -207,6 +207,64 @@ impl CardsRepository {
 
         Ok(cards)
     }
+
+    /// Get words with cards by a set of card IDs.
+    /// Used for the wrong book feature.
+    pub fn get_words_by_card_ids(&self, card_ids: &[i64]) -> Result<Vec<WordWithCard>> {
+        if card_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        let conn = self.conn.lock().unwrap();
+        let placeholders = card_ids.iter().map(|_| "?").collect::<Vec<_>>().join(",");
+        let sql = format!(
+            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.source, w.difficulty, w.created_at,
+                    c.id, c.word_id, c.status, c.stage, c.due_at, c.last_seen_at, c.last_result, c.correct_streak, c.lifetime_correct, c.lifetime_wrong, c.skip_cooldown_until, c.updated_at
+             FROM srs_cards c
+             JOIN words w ON c.word_id = w.id
+             WHERE c.id IN ({})
+             ORDER BY c.lifetime_wrong DESC, c.updated_at DESC",
+            placeholders
+        );
+        let mut stmt = conn.prepare(&sql)?;
+        let params: Vec<Box<dyn rusqlite::ToSql>> = card_ids
+            .iter()
+            .map(|id| Box::new(*id) as Box<dyn rusqlite::ToSql>)
+            .collect();
+
+        let cards = stmt
+            .query_map(rusqlite::params_from_iter(params.iter()), |row| {
+                Ok(WordWithCard {
+                    word: crate::db::models::Word {
+                        id: row.get(0)?,
+                        word: row.get(1)?,
+                        phonetic: row.get(2)?,
+                        part_of_speech: row.get(3)?,
+                        meaning_zh: row.get(4)?,
+                        source: row.get(5)?,
+                        difficulty: row.get(6)?,
+                        created_at: row.get(7)?,
+                    },
+                    card: SrsCard {
+                        id: row.get(8)?,
+                        word_id: row.get(9)?,
+                        status: row.get(10)?,
+                        stage: row.get(11)?,
+                        due_at: row.get(12)?,
+                        last_seen_at: row.get(13)?,
+                        last_result: row.get(14)?,
+                        correct_streak: row.get(15)?,
+                        lifetime_correct: row.get(16)?,
+                        lifetime_wrong: row.get(17)?,
+                        skip_cooldown_until: row.get(18)?,
+                        updated_at: row.get(19)?,
+                    },
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(cards)
+    }
 }
 
 #[cfg(test)]

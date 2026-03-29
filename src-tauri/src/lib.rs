@@ -11,6 +11,7 @@ pub mod db;
 mod idle;
 mod logging;
 mod pet;
+mod tts;
 
 // 编译期内嵌词库
 const IELTS_CORE_WORDBOOK: &str = include_str!("../../assets/wordbooks/ielts-core-3000.json");
@@ -153,6 +154,11 @@ fn show_stats_window(app: tauri::AppHandle) {
 #[tauri::command]
 fn get_idle_seconds() -> Result<f64, String> {
     idle::get_idle_seconds()
+}
+
+#[tauri::command]
+fn speak_word(text: String) -> Result<(), String> {
+    tts::speak_word(&text)
 }
 
 fn emit_card_shortcut_if_visible(app: &tauri::AppHandle, event_name: &str) {
@@ -443,6 +449,7 @@ pub fn run() {
             hide_card_window,
             show_stats_window,
             get_idle_seconds,
+            speak_word,
             commands::config::get_app_config,
             commands::config::update_app_config,
             commands::config::complete_onboarding,
@@ -450,6 +457,7 @@ pub fn run() {
             commands::config::list_team_templates,
             commands::config::record_feedback,
             commands::config::get_export_bundle,
+            commands::config::get_history_stats,
             commands::wordbook::import_custom_wordbook,
             commands::wordbook::list_wordbooks,
             commands::wordbook::list_wordbook_words,
@@ -464,6 +472,8 @@ pub fn run() {
             commands::config::resume_scheduler,
             commands::backup::list_backups,
             commands::backup::restore_backup,
+            commands::wrong_book::get_wrong_book_words,
+            commands::wrong_book::remove_from_wrong_book,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

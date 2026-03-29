@@ -1,5 +1,5 @@
-use chrono::{DateTime, Local};
 use crate::db::pet_model::{PetState, EVOLUTION_THRESHOLDS, VITALITY_THRESHOLDS};
+use chrono::{DateTime, Local};
 
 /// PetEngine handles all pet state calculations
 pub struct PetEngine;
@@ -98,10 +98,10 @@ impl PetEngine {
     pub fn get_slime_size(stage: u8) -> u32 {
         match stage {
             0 => 40,  // egg
-            1 => 60,   // hatchling
-            2 => 90,   // juvenile
-            3 => 120,  // adult
-            _ => 150,  // fully evolved
+            1 => 60,  // hatchling
+            2 => 90,  // juvenile
+            3 => 120, // adult
+            _ => 150, // fully evolved
         }
     }
 

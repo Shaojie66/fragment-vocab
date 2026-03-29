@@ -48,6 +48,7 @@ export function populateForm(config: AppConfig) {
   mainElements.showPhoneticInput.checked = config.card.show_phonetic;
   mainElements.allowSkipInput.checked = config.card.allow_skip;
   mainElements.shortcutsEnabledInput.checked = config.card.shortcuts_enabled;
+  mainElements.autoPronounceInput.checked = config.card.auto_pronounce;
 
   mainElements.launchAtLoginInput.checked = config.system.launch_at_login;
   mainElements.startBehaviorSelect.value = config.system.start_behavior;
@@ -103,6 +104,7 @@ export function readConfigFromForm(): AppConfig {
   config.card.show_phonetic = mainElements.showPhoneticInput.checked;
   config.card.allow_skip = mainElements.allowSkipInput.checked;
   config.card.shortcuts_enabled = mainElements.shortcutsEnabledInput.checked;
+  config.card.auto_pronounce = mainElements.autoPronounceInput.checked;
 
   config.system.launch_at_login = mainElements.launchAtLoginInput.checked;
   config.system.start_behavior = mainElements.startBehaviorSelect.value as AppConfig['system']['start_behavior'];

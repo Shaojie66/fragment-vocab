@@ -2,11 +2,9 @@ use std::collections::HashSet;
 
 use chrono::{DateTime, Local, Utc};
 
-use crate::db::{
-    models::WordWithCard, StateRepository, WordSourceSummary,
-};
+use crate::db::{models::WordWithCard, StateRepository, WordSourceSummary};
 
-use super::types::{WordbookListItem};
+use super::types::WordbookListItem;
 
 pub const APP_CONFIG_KEY: &str = "app_config";
 pub const ONBOARDING_COMPLETED_KEY: &str = "onboarding_completed";
@@ -82,7 +80,9 @@ pub fn display_name_for_source(source: &str) -> String {
         .join(" ")
 }
 
-pub fn load_disabled_wordbook_sources(state_repo: &StateRepository) -> Result<HashSet<String>, String> {
+pub fn load_disabled_wordbook_sources(
+    state_repo: &StateRepository,
+) -> Result<HashSet<String>, String> {
     let raw = state_repo
         .get(DISABLED_WORDBOOK_SOURCES_KEY)
         .map_err(|e| format!("Failed to get disabled wordbook sources: {}", e))?;

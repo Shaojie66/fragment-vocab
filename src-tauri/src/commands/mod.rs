@@ -1,10 +1,11 @@
-mod types;
-mod utils;
 pub mod backup;
 pub mod config;
 pub mod pet;
 pub mod review;
+mod types;
+mod utils;
 pub mod wordbook;
+pub mod wrong_book;
 
 // Re-export types for lib.rs
 pub use types::*;

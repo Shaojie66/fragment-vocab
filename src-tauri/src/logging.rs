@@ -28,8 +28,9 @@ fn cleanup_old_logs(app_data_dir: &PathBuf) {
         .map(|e| e.path())
         .filter(|p| {
             p.extension().map_or(false, |ext| ext == "log")
-                && p.file_name()
-                    .map_or(false, |n| n.to_string_lossy().starts_with("fragment-vocab-"))
+                && p.file_name().map_or(false, |n| {
+                    n.to_string_lossy().starts_with("fragment-vocab-")
+                })
         })
         .collect();
 
@@ -50,9 +51,7 @@ pub fn init(app_data_dir: &PathBuf) {
 
     cleanup_old_logs(app_data_dir);
 
-    let config = ConfigBuilder::new()
-        .set_time_format_rfc3339()
-        .build();
+    let config = ConfigBuilder::new().set_time_format_rfc3339().build();
 
     let mut loggers: Vec<Box<dyn SharedLogger>> = vec![TermLogger::new(
         LevelFilter::Info,
