@@ -1,3 +1,4 @@
+use log::{debug, error, info, warn};
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
@@ -8,6 +9,7 @@ use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 mod commands;
 mod db;
 mod idle;
+mod logging;
 mod pet;
 
 // 编译期内嵌词库
@@ -166,8 +168,11 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
     let app_data_dir = app.path().app_data_dir()?;
     std::fs::create_dir_all(&app_data_dir)?;
 
+    // 初始化日志系统
+    logging::init(&app_data_dir);
+
     let db_path = app_data_dir.join("fragment-vocab.db");
-    println!("📁 Database path: {:?}", db_path);
+    info!("Database path: {:?}", db_path);
 
     // 创建数据库连接
     let db = Database::new(db_path)?;
@@ -180,13 +185,13 @@ fn setup_database(app: &tauri::App<impl Runtime>) -> Result<Database, Box<dyn st
     let word_count = words_repo.count()?;
 
     if word_count == 0 {
-        println!("📚 Importing embedded wordbook...");
+        info!("Importing embedded wordbook...");
         match db::WordbookImporter::import_from_embedded(&db, IELTS_CORE_WORDBOOK, "ielts-core") {
-            Ok(count) => println!("✅ Imported {} words", count),
-            Err(e) => eprintln!("⚠️  Failed to import wordbook: {}", e),
+            Ok(count) => info!("Imported {} words", count),
+            Err(e) => warn!("Failed to import wordbook: {}", e),
         }
     } else {
-        println!("✅ Database already contains {} words", word_count);
+        debug!("Database already contains {} words", word_count);
     }
 
     Ok(db)
@@ -227,7 +232,7 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
                 }
             }
             "pause" => {
-                println!("暂停 1 小时");
+                info!("Pausing scheduler for 1 hour");
                 // 调用暂停命令并发送事件通知前端
                 if let Some(db) = app.try_state::<Database>() {
                     let _ = commands::pause_scheduler(db.clone(), 60);
@@ -238,7 +243,7 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
                 }
             }
             "no_more_today" => {
-                println!("今日不再提醒");
+                info!("Silencing reminders for rest of today");
                 // 计算到今天结束的分钟数
                 let now = chrono::Local::now();
                 let end_of_day = now.date_naive().and_hms_opt(23, 59, 59).unwrap();
@@ -282,7 +287,7 @@ fn setup_tray(app: &tauri::App<tauri::Wry>) -> tauri::Result<()> {
                             stats.due_cards_count
                         );
 
-                        println!("📊 {}", stats_text);
+                        debug!("{}", stats_text);
                     }
                 }
             }
@@ -313,7 +318,7 @@ pub fn run() {
             // 初始化数据库
             match setup_database(app) {
                 Ok(db) => {
-                    println!("✅ Database initialized successfully");
+                    info!("Database initialized successfully");
 
                     // Initialize pet on startup (before managing db)
                     let _ = commands::init_pet_on_startup(&db);
@@ -323,7 +328,7 @@ pub fn run() {
                         match commands::load_app_config(&state_repo) {
                             Ok(config) => config,
                             Err(error) => {
-                                eprintln!("❌ Failed to load app config: {}", error);
+                                error!("Failed to load app config: {}", error);
                                 return Err(error.into());
                             }
                         }
@@ -360,7 +365,7 @@ pub fn run() {
                     });
                 }
                 Err(e) => {
-                    eprintln!("❌ Failed to initialize database: {}", e);
+                    error!("Failed to initialize database: {}", e);
                     return Err(e.into());
                 }
             }
@@ -423,7 +428,7 @@ pub fn run() {
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+4");
             let _ = app.global_shortcut().register("CmdOrCtrl+Shift+Escape");
 
-            println!("✅ Global shortcuts registered (Cmd+Shift+1/2/3/4/Esc)");
+            info!("Global shortcuts registered (Cmd+Shift+1/2/3/4/Esc)");
 
             Ok(())
         })

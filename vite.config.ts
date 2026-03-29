@@ -9,6 +9,7 @@ export default defineConfig(async () => ({
   test: {
     globals: true,
     environment: 'jsdom',
+    exclude: ['**/node_modules/**', '**/.claude/**'],
   },
   build: {
     rollupOptions: {
