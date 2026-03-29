@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { DashboardState, DayStats, FeedbackRecord } from './shared/types';
+import type { DashboardState, DayStats, FeedbackRecord, StreakStats } from './shared/types';
+import { applyThemePreference, getThemeLabel } from './shared/theme';
 
 interface WrongBookWord {
   card_id: number;
@@ -25,6 +26,8 @@ const metricKnowCount = document.querySelector('#metricKnowCount') as HTMLElemen
 const metricDontKnowCount = document.querySelector('#metricDontKnowCount') as HTMLElement;
 const metricSkipCount = document.querySelector('#metricSkipCount') as HTMLElement;
 const metricMasteredCount = document.querySelector('#metricMasteredCount') as HTMLElement;
+const metricCurrentStreak = document.querySelector('#metricCurrentStreak') as HTMLElement;
+const metricLongestStreak = document.querySelector('#metricLongestStreak') as HTMLElement;
 
 const recommendationText = document.querySelector('#recommendationText') as HTMLElement;
 const recommendationMode = document.querySelector('#recommendationMode') as HTMLElement;
@@ -101,6 +104,11 @@ function setRangeButtons(days: number) {
   range30Btn.classList.toggle('is-active', days === 30);
 }
 
+function getThemeColor(name: string, fallback: string): string {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+}
+
 function renderHistoryEmpty(message: string) {
   historyChartContainer.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
 }
@@ -130,14 +138,21 @@ function renderHistoryChart(stats: DayStats[]) {
   const labels: string[] = [];
   const dots: string[] = [];
   const grid: string[] = [];
+  const gridColor = getThemeColor('--chart-grid', 'rgba(38, 65, 53, 0.12)');
+  const axisColor = getThemeColor('--chart-axis', 'rgba(38, 65, 53, 0.22)');
+  const labelColor = getThemeColor('--chart-label', '#667169');
+  const captionColor = getThemeColor('--chart-caption', '#94674c');
+  const chartLineColor = getThemeColor('--chart-line', '#c46d2d');
+  const chartBarStart = getThemeColor('--chart-bar-start', '#2f5d4a');
+  const chartBarEnd = getThemeColor('--chart-bar-end', '#81b997');
 
   for (let index = 0; index <= gridLines; index += 1) {
     const ratio = index / gridLines;
     const y = paddingTop + plotHeight - ratio * plotHeight;
     const value = Math.round(maxReviews * ratio);
     grid.push(
-      `<line x1="${paddingLeft}" y1="${y}" x2="${width - paddingRight}" y2="${y}" stroke="rgba(38, 65, 53, 0.12)" stroke-width="1" />`,
-      `<text x="${paddingLeft - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#6a746d">${value}</text>`,
+      `<line x1="${paddingLeft}" y1="${y}" x2="${width - paddingRight}" y2="${y}" stroke="${gridColor}" stroke-width="1" />`,
+      `<text x="${paddingLeft - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="${labelColor}">${value}</text>`,
     );
   }
 
@@ -159,13 +174,13 @@ function renderHistoryChart(stats: DayStats[]) {
 
     ratePoints.push(`${pointX},${pointY}`);
     dots.push(
-      `<circle cx="${pointX}" cy="${pointY}" r="3.5" fill="#c46d2d">
+      `<circle cx="${pointX}" cy="${pointY}" r="3.5" fill="${chartLineColor}">
         <title>${escapeHtml(tooltip)}</title>
       </circle>`,
     );
 
     labels.push(
-      `<text x="${centerX}" y="${height - 18}" text-anchor="middle" font-size="11" fill="#667169">${formatShortDate(item.date)}</text>`,
+      `<text x="${centerX}" y="${height - 18}" text-anchor="middle" font-size="11" fill="${labelColor}">${formatShortDate(item.date)}</text>`,
     );
   });
 
@@ -175,17 +190,17 @@ function renderHistoryChart(stats: DayStats[]) {
     <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="每日复习次数柱状图和正确率折线图">
       <defs>
         <linearGradient id="reviewBarGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#2f5d4a" />
-          <stop offset="100%" stop-color="#81b997" />
+          <stop offset="0%" stop-color="${chartBarStart}" />
+          <stop offset="100%" stop-color="${chartBarEnd}" />
         </linearGradient>
       </defs>
       ${grid.join('')}
-      <line x1="${paddingLeft}" y1="${paddingTop + plotHeight}" x2="${width - paddingRight}" y2="${paddingTop + plotHeight}" stroke="rgba(38, 65, 53, 0.22)" stroke-width="1" />
+      <line x1="${paddingLeft}" y1="${paddingTop + plotHeight}" x2="${width - paddingRight}" y2="${paddingTop + plotHeight}" stroke="${axisColor}" stroke-width="1" />
       ${bars.join('')}
-      <polyline fill="none" stroke="#c46d2d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${linePath}" />
+      <polyline fill="none" stroke="${chartLineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${linePath}" />
       ${dots.join('')}
       ${labels.join('')}
-      <text x="${width - paddingRight}" y="${paddingTop - 4}" text-anchor="end" font-size="11" fill="#94674c">正确率</text>
+      <text x="${width - paddingRight}" y="${paddingTop - 4}" text-anchor="end" font-size="11" fill="${captionColor}">正确率</text>
     </svg>
   `;
 }
@@ -251,6 +266,7 @@ function renderFeedback(records: FeedbackRecord[] = []) {
 
 function renderDashboard(state: DashboardState) {
   const { today_stats: stats, app_config: config, recommendation, pause_until } = state;
+  applyThemePreference(config.system.theme);
 
   metricTotalReviews.textContent = String(stats.total_reviews);
   metricAccuracy.textContent = `${stats.accuracy.toFixed(0)}%`;
@@ -260,6 +276,7 @@ function renderDashboard(state: DashboardState) {
   metricDontKnowCount.textContent = String(stats.dont_know_count);
   metricSkipCount.textContent = String(stats.skip_count);
   metricMasteredCount.textContent = String(stats.mastered_count);
+  metricCurrentStreak.textContent = String(state.current_streak);
 
   statusChip.textContent = pause_until ? `已暂停至 ${formatDateTime(pause_until)}` : '运行中';
   recommendationChip.textContent = recommendation.source === 'adaptive' ? '动态推荐' : '默认推荐';
@@ -274,24 +291,33 @@ function renderDashboard(state: DashboardState) {
   pauseSummary.textContent = pause_until ? `暂停到 ${formatDateTime(pause_until)}` : '当前未暂停';
   scheduleSummary.textContent = `静默时间 ${config.schedule.quiet_hours_start} - ${config.schedule.quiet_hours_end}，工作日 ${config.schedule.weekday_profile ?? 'gentle'} / 周末 ${config.schedule.weekend_profile ?? 'balanced'}`;
   learningSummary.textContent = `每日新词 ${config.learning.daily_new_limit}，${config.learning.review_first ? '优先复习词' : '允许新词优先'}`;
-  systemSummary.textContent = `${config.system.start_behavior === 'show-main' ? '启动显示主页面' : '启动最小化到托盘'}，托盘${config.system.tray_enabled ? '开启' : '关闭'}，开机启动${config.system.launch_at_login ? '开启' : '关闭'}`;
+  systemSummary.textContent = `${config.system.start_behavior === 'show-main' ? '启动显示主页面' : '启动最小化到托盘'}，托盘${config.system.tray_enabled ? '开启' : '关闭'}，开机启动${config.system.launch_at_login ? '开启' : '关闭'}，主题${getThemeLabel(config.system.theme)}`;
 
   renderFeedback(state.recent_feedback);
 }
 
+function renderStreakStats(stats: StreakStats) {
+  metricCurrentStreak.textContent = String(stats.current_streak);
+  metricLongestStreak.textContent = String(stats.longest_streak);
+}
+
 async function loadStats() {
   try {
-    const [dashboard, history] = await Promise.all([
+    const [dashboard, history, streak] = await Promise.all([
       invoke<DashboardState>('get_dashboard_state'),
       invoke<DayStats[]>('get_history_stats', { days: selectedHistoryRange }),
+      invoke<StreakStats>('get_streak_stats'),
     ]);
     renderDashboard(dashboard);
+    renderStreakStats(streak);
     renderHistoryChart(normalizeHistoryStats(history, selectedHistoryRange));
   } catch (error) {
     console.error('加载统计页失败:', error);
     heroSummary.textContent = '统计页读取失败，请稍后重试或返回主页面查看当前状态。';
     statusChip.textContent = '读取失败';
     recommendationChip.textContent = '请重试';
+    metricCurrentStreak.textContent = '0';
+    metricLongestStreak.textContent = '0';
     renderHistoryEmpty('学习历史趋势读取失败，请稍后刷新重试。');
   }
 }
@@ -343,7 +369,7 @@ function renderWrongBook(words: WrongBookWord[]) {
       (w) => `
     <div class="wrong-book-item" data-card-id="${w.card_id}">
       <div>
-        <div class="wrong-book-word">${w.word}${w.phonetic ? ` <span style="color:#7a6b4c;font-weight:400;font-size:14px">${w.phonetic}</span>` : ''}</div>
+        <div class="wrong-book-word">${w.word}${w.phonetic ? ` <span class="wrong-book-phonetic">${w.phonetic}</span>` : ''}</div>
         <div class="wrong-book-meaning">${w.part_of_speech ? `${w.part_of_speech} ` : ''}${w.meaning_zh}</div>
         <div class="wrong-book-meta">错 ${w.lifetime_wrong} 次 · 对 ${w.lifetime_correct} 次</div>
       </div>

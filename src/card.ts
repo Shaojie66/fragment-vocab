@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { emit, listen } from '@tauri-apps/api/event';
 import type { AppConfig, WordCardData } from './shared/types';
+import { applyThemePreference } from './shared/theme';
 
 let currentCard: WordCardData | null = null;
 let currentConfig: AppConfig | null = null;
@@ -9,7 +10,9 @@ let closeDelayTimer: number | null = null;
 let isLoadingCard = false;
 let isSubmitting = false;
 let hasAnswered = false;
+const CARD_WINDOW_ANIMATION_MS = 160;
 
+const cardShellEl = document.getElementById('cardShell') as HTMLElement;
 const modeBadgeEl = document.getElementById('modeBadge') as HTMLElement;
 const promptEl = document.getElementById('prompt') as HTMLElement;
 const promptHintEl = document.getElementById('promptHint') as HTMLElement;
@@ -17,6 +20,8 @@ const optionsEl = document.getElementById('options') as HTMLElement;
 const answerPanelEl = document.getElementById('answerPanel') as HTMLElement;
 const answerTitleEl = document.getElementById('answerTitle') as HTMLElement;
 const answerDetailEl = document.getElementById('answerDetail') as HTMLElement;
+const answerExampleEl = document.getElementById('answerExample') as HTMLElement;
+const answerExampleTextEl = document.getElementById('answerExampleText') as HTMLElement;
 const feedbackStatusEl = document.getElementById('feedbackStatus') as HTMLElement;
 
 const btnSkip = document.getElementById('btnSkip') as HTMLButtonElement;
@@ -40,6 +45,36 @@ function clearAllTimers() {
 
 function setFeedbackStatus(message: string) {
   feedbackStatusEl.textContent = message;
+}
+
+function areAnimationsEnabled(config: AppConfig | null = currentConfig): boolean {
+  return config?.card.animations_enabled ?? true;
+}
+
+function triggerCardShowAnimation(config: AppConfig | null = currentConfig) {
+  cardShellEl.classList.remove('card-shell-exit');
+
+  if (!areAnimationsEnabled(config)) {
+    cardShellEl.classList.remove('card-shell-enter');
+    return;
+  }
+
+  cardShellEl.classList.remove('card-shell-enter');
+  void cardShellEl.offsetWidth;
+  cardShellEl.classList.add('card-shell-enter');
+}
+
+function triggerCardCloseAnimation(config: AppConfig | null = currentConfig) {
+  cardShellEl.classList.remove('card-shell-enter');
+
+  if (!areAnimationsEnabled(config)) {
+    cardShellEl.classList.remove('card-shell-exit');
+    return;
+  }
+
+  cardShellEl.classList.remove('card-shell-exit');
+  void cardShellEl.offsetWidth;
+  cardShellEl.classList.add('card-shell-exit');
 }
 
 function isSkipAllowed(): boolean {
@@ -83,6 +118,9 @@ function resetCardState() {
   answerPanelEl.hidden = true;
   answerTitleEl.textContent = '';
   answerDetailEl.textContent = '';
+  answerExampleEl.hidden = true;
+  answerExampleTextEl.textContent = '';
+  btnNotInterested.hidden = false;
   btnContinue.hidden = true;
   setFeedbackStatus('');
   syncActionButtons();
@@ -92,9 +130,29 @@ async function delay(ms: number) {
   await new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+async function hideCardWindowAfterAnimation() {
+  clearTimer(closeDelayTimer);
+  closeDelayTimer = null;
+
+  if (!areAnimationsEnabled()) {
+    await hideCardWindow();
+    return;
+  }
+
+  triggerCardCloseAnimation();
+  await new Promise<void>((resolve) => {
+    closeDelayTimer = window.setTimeout(() => {
+      closeDelayTimer = null;
+      resolve();
+    }, CARD_WINDOW_ANIMATION_MS);
+  });
+  await hideCardWindow();
+}
+
 async function hideCardWindow() {
   clearAllTimers();
   resetCardState();
+  cardShellEl.classList.remove('card-shell-enter', 'card-shell-exit');
   await invoke('hide_card_window');
   await emit('card-hidden');
 }
@@ -126,13 +184,13 @@ function showDailyGoalComplete(currentLimit: number) {
     const config = await invoke<AppConfig>('get_app_config');
     config.learning.daily_new_limit = newLimit;
     await invoke('update_app_config', { config });
-    await hideCardWindow();
+    await hideCardWindowAfterAnimation();
   };
 
   const finishBtn = document.createElement('button');
   finishBtn.className = 'option-btn';
   finishBtn.textContent = '今天就到这里';
-  finishBtn.onclick = () => void hideCardWindow();
+  finishBtn.onclick = () => void hideCardWindowAfterAnimation();
 
   optionsEl.appendChild(increaseBtn);
   optionsEl.appendChild(finishBtn);
@@ -152,6 +210,8 @@ function markSelectedOptions(selectedOptionId: string, correctOptionId: string) 
 function renderAnswerPanel(card: WordCardData) {
   answerTitleEl.textContent = card.explanation_title;
   answerDetailEl.textContent = card.explanation_detail;
+  answerExampleTextEl.textContent = card.example_sentence ?? '';
+  answerExampleEl.hidden = !card.example_sentence;
 }
 
 async function persistReview(result: 'know' | 'dont_know' | 'skip'): Promise<boolean> {
@@ -187,6 +247,7 @@ async function persistReview(result: 'know' | 'dont_know' | 'skip'): Promise<boo
 
 function applyCardPreferences(config: AppConfig) {
   currentConfig = config;
+  applyThemePreference(config.system.theme);
   syncActionButtons();
 }
 
@@ -247,7 +308,7 @@ function scheduleAutoHide(config: AppConfig) {
   }, autoHideDelay);
 }
 
-async function loadAndShowCard() {
+async function loadAndShowCard(initialConfig?: AppConfig) {
   if (isLoadingCard) {
     return;
   }
@@ -258,7 +319,7 @@ async function loadAndShowCard() {
   syncActionButtons();
 
   try {
-    const config = await invoke<AppConfig>('get_app_config');
+    const config = initialConfig ?? await invoke<AppConfig>('get_app_config');
     applyCardPreferences(config);
 
     const card = await invoke<WordCardData | null>('get_next_card');
@@ -276,7 +337,7 @@ async function loadAndShowCard() {
 
       setFeedbackStatus('当前没有可学习卡片');
       await delay(700);
-      await hideCardWindow();
+      await hideCardWindowAfterAnimation();
       return;
     }
 
@@ -302,7 +363,7 @@ async function loadAndShowCard() {
     resetCardState();
     setFeedbackStatus('加载失败，稍后会再试');
     await delay(700);
-    await hideCardWindow();
+    await hideCardWindowAfterAnimation();
   } finally {
     isLoadingCard = false;
   }
@@ -332,7 +393,7 @@ async function handleOptionSelect(optionId: string) {
     }
 
     closeDelayTimer = window.setTimeout(() => {
-      void hideCardWindow();
+      void hideCardWindowAfterAnimation();
     }, 800);
     return;
   }
@@ -353,7 +414,7 @@ async function handleOptionSelect(optionId: string) {
   syncActionButtons();
 
   closeDelayTimer = window.setTimeout(() => {
-    void hideCardWindow();
+    void hideCardWindowAfterAnimation();
   }, 5000);
 }
 
@@ -364,7 +425,7 @@ async function handleSkip() {
 
   const saved = await persistReview('skip');
   if (saved) {
-    await hideCardWindow();
+    await hideCardWindowAfterAnimation();
   }
 }
 
@@ -426,7 +487,7 @@ btnNotInterested.addEventListener('click', () => {
 });
 
 btnContinue.addEventListener('click', () => {
-  void hideCardWindow();
+  void hideCardWindowAfterAnimation();
 });
 
 btnSettings.addEventListener('click', () => {
@@ -495,8 +556,17 @@ listen('shortcut-skip', () => {
   void handleSkip();
 });
 
-listen('card-window-shown', () => {
-  void loadAndShowCard();
+listen('card-window-shown', async () => {
+  try {
+    const config = await invoke<AppConfig>('get_app_config');
+    applyCardPreferences(config);
+    triggerCardShowAnimation(config);
+    void loadAndShowCard(config);
+  } catch (error) {
+    console.error('读取卡片配置失败:', error);
+    triggerCardShowAnimation();
+    void loadAndShowCard();
+  }
 });
 
 listen('card-window-hidden', () => {

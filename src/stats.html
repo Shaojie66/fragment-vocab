@@ -5,13 +5,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fragment Vocab Stats</title>
     <style>
-        :root {
+        html {
+            color-scheme: light;
             font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", sans-serif;
-            color: #1e2a26;
-            background:
-                radial-gradient(circle at top left, rgba(244, 220, 176, 0.55), transparent 30%),
-                radial-gradient(circle at top right, rgba(157, 206, 180, 0.45), transparent 28%),
-                linear-gradient(180deg, #f3ede2 0%, #edf3ed 55%, #e6efe8 100%);
+            --bg-primary: #e6efe8;
+            --bg-gradient-top-left: rgba(244, 220, 176, 0.55);
+            --bg-gradient-top-right: rgba(157, 206, 180, 0.45);
+            --bg-gradient-bottom: #f3ede2;
+            --bg-gradient-mid: #edf3ed;
+            --bg-gradient-end: #e6efe8;
+            --bg-card: rgba(255, 255, 255, 0.74);
+            --bg-card-muted: rgba(247, 243, 235, 0.88);
+            --bg-card-strong: rgba(255, 255, 255, 0.78);
+            --bg-button: rgba(255, 255, 255, 0.66);
+            --bg-chart-top: rgba(255, 255, 255, 0.72);
+            --bg-chart-bottom: rgba(243, 237, 226, 0.76);
+            --bg-chart-overlay: rgba(255, 255, 255, 0.54);
+            --text-primary: #1e2a26;
+            --text-secondary: #5a665f;
+            --text-tertiary: #536257;
+            --text-muted: #5c675d;
+            --text-accent: #7a6b4c;
+            --text-button: #284237;
+            --text-pill: #254337;
+            --text-range: #486054;
+            --accent: #355f4c;
+            --accent-strong: #1f4133;
+            --accent-text: #f8f3e8;
+            --border-color: rgba(38, 65, 53, 0.12);
+            --border-soft: rgba(38, 65, 53, 0.08);
+            --shadow-card: rgba(91, 104, 94, 0.1);
+            --chart-bar-start: #355f4c;
+            --chart-bar-end: #76af8f;
+            --chart-line: #c46d2d;
+            --chart-grid: rgba(38, 65, 53, 0.12);
+            --chart-axis: rgba(38, 65, 53, 0.22);
+            --chart-label: #667169;
+            --chart-caption: #94674c;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html:not([data-theme="light"]) {
+                color-scheme: dark;
+                --bg-primary: #0f1713;
+                --bg-gradient-top-left: rgba(181, 145, 73, 0.18);
+                --bg-gradient-top-right: rgba(72, 116, 93, 0.2);
+                --bg-gradient-bottom: #151d18;
+                --bg-gradient-mid: #101914;
+                --bg-gradient-end: #0f1713;
+                --bg-card: rgba(20, 29, 24, 0.78);
+                --bg-card-muted: rgba(31, 43, 36, 0.88);
+                --bg-card-strong: rgba(24, 35, 29, 0.82);
+                --bg-button: rgba(24, 35, 29, 0.82);
+                --bg-chart-top: rgba(27, 38, 32, 0.86);
+                --bg-chart-bottom: rgba(22, 31, 26, 0.9);
+                --bg-chart-overlay: rgba(18, 27, 22, 0.76);
+                --text-primary: #ebf1eb;
+                --text-secondary: #b8c5ba;
+                --text-tertiary: #a8b7aa;
+                --text-muted: #96a699;
+                --text-accent: #d1bb79;
+                --text-button: #d6e3d7;
+                --text-pill: #d6e3d7;
+                --text-range: #c3d2c5;
+                --accent: #6d9d79;
+                --accent-strong: #4c6e55;
+                --accent-text: #f7f2e2;
+                --border-color: rgba(185, 203, 188, 0.16);
+                --border-soft: rgba(185, 203, 188, 0.12);
+                --shadow-card: rgba(0, 0, 0, 0.28);
+                --chart-bar-start: #699c7a;
+                --chart-bar-end: #a6c7a3;
+                --chart-line: #d1aa67;
+                --chart-grid: rgba(185, 203, 188, 0.16);
+                --chart-axis: rgba(185, 203, 188, 0.24);
+                --chart-label: #aab9ac;
+                --chart-caption: #e8d6a3;
+            }
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --bg-primary: #0f1713;
+            --bg-gradient-top-left: rgba(181, 145, 73, 0.18);
+            --bg-gradient-top-right: rgba(72, 116, 93, 0.2);
+            --bg-gradient-bottom: #151d18;
+            --bg-gradient-mid: #101914;
+            --bg-gradient-end: #0f1713;
+            --bg-card: rgba(20, 29, 24, 0.78);
+            --bg-card-muted: rgba(31, 43, 36, 0.88);
+            --bg-card-strong: rgba(24, 35, 29, 0.82);
+            --bg-button: rgba(24, 35, 29, 0.82);
+            --bg-chart-top: rgba(27, 38, 32, 0.86);
+            --bg-chart-bottom: rgba(22, 31, 26, 0.9);
+            --bg-chart-overlay: rgba(18, 27, 22, 0.76);
+            --text-primary: #ebf1eb;
+            --text-secondary: #b8c5ba;
+            --text-tertiary: #a8b7aa;
+            --text-muted: #96a699;
+            --text-accent: #d1bb79;
+            --text-button: #d6e3d7;
+            --text-pill: #d6e3d7;
+            --text-range: #c3d2c5;
+            --accent: #6d9d79;
+            --accent-strong: #4c6e55;
+            --accent-text: #f7f2e2;
+            --border-color: rgba(185, 203, 188, 0.16);
+            --border-soft: rgba(185, 203, 188, 0.12);
+            --shadow-card: rgba(0, 0, 0, 0.28);
+            --chart-bar-start: #699c7a;
+            --chart-bar-end: #a6c7a3;
+            --chart-line: #d1aa67;
+            --chart-grid: rgba(185, 203, 188, 0.16);
+            --chart-axis: rgba(185, 203, 188, 0.24);
+            --chart-label: #aab9ac;
+            --chart-caption: #e8d6a3;
         }
 
         * {
@@ -22,6 +130,11 @@
             margin: 0;
             min-height: 100vh;
             padding: 24px;
+            color: var(--text-primary);
+            background:
+                radial-gradient(circle at top left, var(--bg-gradient-top-left), transparent 30%),
+                radial-gradient(circle at top right, var(--bg-gradient-top-right), transparent 28%),
+                linear-gradient(180deg, var(--bg-gradient-bottom) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%);
         }
 
         main {
@@ -33,9 +146,9 @@
         .metric-card,
         .panel {
             border-radius: 24px;
-            border: 1px solid rgba(38, 65, 53, 0.12);
-            background: rgba(255, 255, 255, 0.74);
-            box-shadow: 0 18px 45px rgba(91, 104, 94, 0.1);
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            box-shadow: 0 18px 45px var(--shadow-card);
             backdrop-filter: blur(14px);
         }
 
@@ -48,7 +161,7 @@
 
         .eyebrow {
             margin: 0 0 8px;
-            color: #7a6b4c;
+            color: var(--text-accent);
             font-size: 13px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -66,7 +179,7 @@
         .hero p {
             margin-top: 12px;
             max-width: 640px;
-            color: #5a665f;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
@@ -88,14 +201,14 @@
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #355f4c, #1f4133);
-            color: #f8f3e8;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: var(--accent-text);
         }
 
         .ghost-btn {
-            background: rgba(255, 255, 255, 0.66);
-            border-color: rgba(38, 65, 53, 0.12);
-            color: #284237;
+            background: var(--bg-button);
+            border-color: var(--border-color);
+            color: var(--text-button);
         }
 
         .status-row {
@@ -110,9 +223,9 @@
             align-items: center;
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid rgba(38, 65, 53, 0.12);
-            color: #254337;
+            background: var(--bg-card-strong);
+            border: 1px solid var(--border-color);
+            color: var(--text-pill);
             font-size: 14px;
             font-weight: 600;
         }
@@ -139,7 +252,7 @@
 
         .metric-label {
             display: block;
-            color: #5c675d;
+            color: var(--text-muted);
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -155,7 +268,7 @@
         .metric-sub {
             display: block;
             margin-top: 8px;
-            color: #5a665f;
+            color: var(--text-secondary);
             line-height: 1.5;
         }
 
@@ -168,7 +281,7 @@
 
         .panel-kicker {
             margin: 0 0 8px;
-            color: #7a6b4c;
+            color: var(--text-accent);
             font-size: 13px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -181,7 +294,7 @@
         .panel-body,
         .feedback-list {
             margin-top: 14px;
-            color: #5a665f;
+            color: var(--text-secondary);
             line-height: 1.7;
         }
 
@@ -193,7 +306,7 @@
             margin-top: 18px;
             padding: 16px 18px;
             border-radius: 18px;
-            background: rgba(247, 243, 235, 0.88);
+            background: var(--bg-card-muted);
         }
 
         .summary-block strong {
@@ -203,7 +316,7 @@
 
         .summary-block p {
             margin-top: 8px;
-            color: #536257;
+            color: var(--text-tertiary);
             line-height: 1.6;
         }
 
@@ -228,23 +341,23 @@
             display: inline-flex;
             padding: 4px;
             border-radius: 999px;
-            background: rgba(247, 243, 235, 0.88);
+            background: var(--bg-card-muted);
         }
 
         .range-btn {
             min-height: 36px;
             padding: 0 14px;
-            color: #486054;
+            color: var(--text-range);
             background: transparent;
         }
 
         .range-btn.is-active {
-            background: linear-gradient(135deg, #355f4c, #1f4133);
-            color: #f8f3e8;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: var(--accent-text);
         }
 
         .chart-legend {
-            color: #5a665f;
+            color: var(--text-secondary);
             font-size: 13px;
         }
 
@@ -264,13 +377,13 @@
             width: 12px;
             height: 12px;
             border-radius: 4px;
-            background: linear-gradient(180deg, #355f4c, #76af8f);
+            background: linear-gradient(180deg, var(--chart-bar-start), var(--chart-bar-end));
         }
 
         .legend-line {
             width: 18px;
             height: 0;
-            border-top: 2px solid #c46d2d;
+            border-top: 2px solid var(--chart-line);
         }
 
         .chart-shell {
@@ -279,9 +392,9 @@
             padding: 18px;
             border-radius: 20px;
             background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(243, 237, 226, 0.76)),
-                rgba(255, 255, 255, 0.54);
-            border: 1px solid rgba(38, 65, 53, 0.08);
+                linear-gradient(180deg, var(--bg-chart-top), var(--bg-chart-bottom)),
+                var(--bg-chart-overlay);
+            border: 1px solid var(--border-soft);
         }
 
         .chart-shell svg {
@@ -295,7 +408,7 @@
             display: grid;
             place-items: center;
             text-align: center;
-            color: #5a665f;
+            color: var(--text-secondary);
             line-height: 1.7;
         }
 
@@ -342,23 +455,29 @@
             justify-content: space-between;
             padding: 12px 16px;
             border-radius: 14px;
-            background: rgba(247, 243, 235, 0.88);
+            background: var(--bg-card-muted);
         }
 
         .wrong-book-word {
             font-weight: 600;
             font-size: 16px;
-            color: #1e2a26;
+            color: var(--text-primary);
+        }
+
+        .wrong-book-phonetic {
+            color: var(--text-accent);
+            font-weight: 400;
+            font-size: 14px;
         }
 
         .wrong-book-meaning {
-            color: #5a665f;
+            color: var(--text-secondary);
             font-size: 14px;
             margin-top: 2px;
         }
 
         .wrong-book-meta {
-            color: #7a6b4c;
+            color: var(--text-accent);
             font-size: 12px;
             margin-top: 4px;
         }
@@ -368,14 +487,14 @@
             padding: 0 12px;
             font-size: 13px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.66);
-            border: 1px solid rgba(38, 65, 53, 0.12);
-            color: #284237;
+            background: var(--bg-button);
+            border: 1px solid var(--border-color);
+            color: var(--text-button);
             cursor: pointer;
         }
 
         .wrong-book-empty {
-            color: #5a665f;
+            color: var(--text-secondary);
             line-height: 1.7;
             margin-top: 14px;
         }
@@ -439,6 +558,16 @@
                 <span class="metric-label">已掌握词数</span>
                 <strong class="metric-value" id="metricMasteredCount">0</strong>
                 <span class="metric-sub">达到 mastered 后不再重复提醒</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">当前连续天数</span>
+                <strong class="metric-value" id="metricCurrentStreak">0</strong>
+                <span class="metric-sub">今天完成至少 1 次复习才会延续</span>
+            </article>
+            <article class="metric-card">
+                <span class="metric-label">最长连续天数</span>
+                <strong class="metric-value" id="metricLongestStreak">0</strong>
+                <span class="metric-sub">历史上保持过的最长学习连击</span>
             </article>
         </section>
 

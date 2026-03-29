@@ -140,6 +140,22 @@ impl LogsRepository {
         Ok(rows)
     }
 
+    pub fn get_review_dates(&self) -> Result<Vec<String>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT date(shown_at, 'localtime') AS day
+             FROM review_logs
+             GROUP BY day
+             ORDER BY day ASC",
+        )?;
+
+        let dates = stmt
+            .query_map([], |row| row.get(0))?
+            .collect::<Result<Vec<String>, _>>()?;
+
+        Ok(dates)
+    }
+
     /// Count cards whose first-ever log entry falls on or after `day_start_utc`.
     /// This distinguishes genuinely new words from due-card reviews.
     pub fn count_new_cards_since(&self, day_start_utc: &str) -> Result<i64> {
@@ -197,6 +213,53 @@ mod tests {
 
         let count = logs_repo.count_by_result("know", None).unwrap();
         assert_eq!(count, 1);
+
+        drop(logs_repo);
+        drop(cards_repo);
+        drop(words_repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_get_review_dates_groups_same_day_logs() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_logs_repo_review_dates.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let words_repo = WordsRepository::new(db.get_connection());
+        let cards_repo = CardsRepository::new(db.get_connection());
+        let logs_repo = LogsRepository::new(db.get_connection());
+
+        let word_id = words_repo
+            .insert("test", "测试", "test", None, None, 1)
+            .unwrap();
+        let card_id = cards_repo.insert(word_id).unwrap();
+
+        logs_repo
+            .insert(card_id, "2026-03-10T01:00:00Z", "know", "idle", Some(800))
+            .unwrap();
+        logs_repo
+            .insert(
+                card_id,
+                "2026-03-10T08:00:00Z",
+                "dont_know",
+                "idle",
+                Some(900),
+            )
+            .unwrap();
+        logs_repo
+            .insert(card_id, "2026-03-12T03:00:00Z", "know", "idle", Some(700))
+            .unwrap();
+
+        let dates = logs_repo.get_review_dates().unwrap();
+        assert_eq!(
+            dates,
+            vec!["2026-03-10".to_string(), "2026-03-12".to_string()]
+        );
 
         drop(logs_repo);
         drop(cards_repo);

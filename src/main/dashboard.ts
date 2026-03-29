@@ -200,6 +200,7 @@ function renderMetrics(stats: TodayStats | undefined) {
   mainElements.metricAccuracy.textContent = `${(stats?.accuracy ?? 0).toFixed(0)}%`;
   mainElements.metricNewWords.textContent = String(stats?.new_words_today ?? 0);
   mainElements.metricDueCards.textContent = String(stats?.due_cards_count ?? 0);
+  mainElements.metricCurrentStreak.textContent = String(mainState.currentDashboard?.current_streak ?? 0);
 }
 
 function renderStateBanner(snapshot: SchedulerSnapshot) {

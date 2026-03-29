@@ -3,6 +3,7 @@ import type {
   AppConfig,
   DashboardState,
   ExportBundle,
+  SearchResult,
   TeamTemplate,
   WordbookListItem,
   WordbookWordItem,
@@ -17,6 +18,9 @@ export interface MainState {
   currentWordbookPreviewWords: WordbookWordItem[];
   currentWordbookPreviewOffset: number;
   isWordbookPreviewLoading: boolean;
+  currentWordbookSearchQuery: string;
+  currentWordbookSearchResults: SearchResult[];
+  isWordbookSearchLoading: boolean;
   currentExportBundle: ExportBundle | null;
   lastErrorMessage: string | null;
 }
@@ -30,6 +34,9 @@ export const mainState: MainState = {
   currentWordbookPreviewWords: [],
   currentWordbookPreviewOffset: 0,
   isWordbookPreviewLoading: false,
+  currentWordbookSearchQuery: '',
+  currentWordbookSearchResults: [],
+  isWordbookSearchLoading: false,
   currentExportBundle: null,
   lastErrorMessage: null,
 };

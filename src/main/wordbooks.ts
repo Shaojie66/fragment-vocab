@@ -1,10 +1,12 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { WordbookImportSummary, WordbookListItem, WordbookWordItem } from '../shared/types';
+import type { SearchResult, WordbookImportSummary, WordbookListItem, WordbookWordItem } from '../shared/types';
 import { mainElements } from './elements';
 import { fileToBase64, formatDateTime, getErrorMessage } from './helpers';
 import { mainState } from './state';
 
 const WORDBOOK_PREVIEW_PAGE_SIZE = 12;
+const WORDBOOK_SEARCH_LIMIT = 20;
+const WORDBOOK_SEARCH_DEBOUNCE_MS = 300;
 
 interface WordbookDependencies {
   refreshDashboard: () => Promise<void>;
@@ -13,6 +15,155 @@ interface WordbookDependencies {
 }
 
 let dependencies: WordbookDependencies | null = null;
+let searchDebounceTimer: number | null = null;
+let activeSearchRequestId = 0;
+
+function getStatusLabel(status: SearchResult['status']) {
+  if (status === 'learning') {
+    return '学习中';
+  }
+
+  if (status === 'mastered') {
+    return '已掌握';
+  }
+
+  return '新词';
+}
+
+function getStatusBadgeClass(status: SearchResult['status']) {
+  return `wordbook-badge status-${status}`;
+}
+
+function renderWordSearch() {
+  const query = mainState.currentWordbookSearchQuery.trim();
+  mainElements.wordbookSearchInput.value = mainState.currentWordbookSearchQuery;
+
+  if (!query) {
+    mainElements.wordbookSearchMeta.textContent = '输入关键词后，会在全部词库中搜索英文或中文释义。';
+    mainElements.wordbookSearchResults.innerHTML = '<div class="wordbook-empty">开始输入后，会在这里显示匹配的词条。</div>';
+    return;
+  }
+
+  if (mainState.isWordbookSearchLoading) {
+    mainElements.wordbookSearchMeta.textContent = `正在搜索“${query}”...`;
+    mainElements.wordbookSearchResults.innerHTML = '<div class="wordbook-empty">正在搜索词条...</div>';
+    return;
+  }
+
+  if (!mainState.currentWordbookSearchResults.length) {
+    mainElements.wordbookSearchMeta.textContent = `没有找到与“${query}”相关的词条。`;
+    mainElements.wordbookSearchResults.innerHTML = '<div class="wordbook-empty">没有匹配结果，请尝试更换关键词。</div>';
+    return;
+  }
+
+  mainElements.wordbookSearchMeta.textContent = `找到 ${mainState.currentWordbookSearchResults.length} 条与“${query}”相关的结果。`;
+  mainElements.wordbookSearchResults.innerHTML = '';
+
+  mainState.currentWordbookSearchResults.forEach((item) => {
+    const card = document.createElement('article');
+    card.className = 'wordbook-search-item';
+
+    const topline = document.createElement('div');
+    topline.className = 'wordbook-search-topline';
+
+    const titleWrap = document.createElement('div');
+    const title = document.createElement('strong');
+    title.textContent = item.word;
+    titleWrap.appendChild(title);
+
+    const aux = document.createElement('p');
+    aux.className = 'wordbook-preview-aux';
+    aux.textContent = [item.phonetic, item.part_of_speech].filter(Boolean).join(' · ') || '未提供音标或词性';
+    titleWrap.appendChild(aux);
+
+    const statusBadge = document.createElement('span');
+    statusBadge.className = getStatusBadgeClass(item.status);
+    statusBadge.textContent = getStatusLabel(item.status);
+
+    topline.append(titleWrap, statusBadge);
+
+    const meaning = document.createElement('p');
+    meaning.className = 'wordbook-search-meaning';
+    meaning.textContent = item.meaning_zh;
+
+    const meta = document.createElement('div');
+    meta.className = 'wordbook-search-meta';
+
+    const sourceBadge = document.createElement('span');
+    sourceBadge.className = 'wordbook-badge muted';
+    sourceBadge.textContent = item.source;
+    meta.appendChild(sourceBadge);
+
+    card.append(topline, meaning, meta);
+    mainElements.wordbookSearchResults.appendChild(card);
+  });
+}
+
+async function runWordSearch(query: string) {
+  const normalizedQuery = query.trim();
+  const requestId = activeSearchRequestId;
+  mainState.currentWordbookSearchQuery = query;
+
+  if (!normalizedQuery) {
+    mainState.isWordbookSearchLoading = false;
+    mainState.currentWordbookSearchResults = [];
+    renderWordSearch();
+    return;
+  }
+
+  mainState.isWordbookSearchLoading = true;
+  renderWordSearch();
+
+  try {
+    const results = await invoke<SearchResult[]>('search_words', {
+      query: normalizedQuery,
+      limit: WORDBOOK_SEARCH_LIMIT,
+    });
+
+    if (requestId !== activeSearchRequestId) {
+      return;
+    }
+
+    mainState.currentWordbookSearchResults = results;
+    mainState.lastErrorMessage = null;
+  } catch (error) {
+    if (requestId !== activeSearchRequestId) {
+      return;
+    }
+
+    mainState.isWordbookSearchLoading = false;
+    mainState.currentWordbookSearchResults = [];
+    mainState.lastErrorMessage = getErrorMessage(error);
+    dependencies?.renderDashboard();
+    mainElements.wordbookSearchMeta.textContent = '搜索失败';
+    mainElements.wordbookSearchResults.innerHTML = `<div class="wordbook-empty">${mainState.lastErrorMessage}</div>`;
+    dependencies?.setSaveHint('词条搜索失败，请稍后重试。');
+    return;
+  }
+
+  if (requestId !== activeSearchRequestId) {
+    return;
+  }
+
+  mainState.isWordbookSearchLoading = false;
+  renderWordSearch();
+}
+
+function scheduleWordSearch(query: string) {
+  activeSearchRequestId += 1;
+  mainState.currentWordbookSearchQuery = query;
+
+  if (searchDebounceTimer !== null) {
+    window.clearTimeout(searchDebounceTimer);
+  }
+
+  searchDebounceTimer = window.setTimeout(() => {
+    searchDebounceTimer = null;
+    void runWordSearch(query);
+  }, WORDBOOK_SEARCH_DEBOUNCE_MS);
+
+  renderWordSearch();
+}
 
 export function renderWordbooks() {
   if (!mainState.currentWordbooks.length) {
@@ -201,6 +352,7 @@ async function openWordbookPreview(source: string, offset = 0) {
 
 export async function loadWordbooks() {
   mainState.currentWordbooks = await invoke<WordbookListItem[]>('list_wordbooks');
+  renderWordSearch();
   renderWordbooks();
 
   if (!mainState.currentWordbookPreviewSource) {
@@ -278,9 +430,13 @@ async function deleteWordbookBySource(source: string) {
 
 export function initializeWordbooks(nextDependencies: WordbookDependencies) {
   dependencies = nextDependencies;
+  renderWordSearch();
 
   mainElements.uploadWordbookBtn.addEventListener('click', () => {
     mainElements.uploadWordbookFileInput.click();
+  });
+  mainElements.wordbookSearchInput.addEventListener('input', () => {
+    scheduleWordSearch(mainElements.wordbookSearchInput.value);
   });
   mainElements.closeWordbookPreviewBtn.addEventListener('click', () => {
     closeWordbookPreview();

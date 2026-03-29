@@ -44,6 +44,10 @@ pub fn normalize_app_config(config: AppConfig) -> AppConfig {
         "show-main" | "minimize-to-tray" => normalized.system.start_behavior,
         _ => "show-main".to_string(),
     };
+    normalized.system.theme = match normalized.system.theme.as_str() {
+        "auto" | "light" | "dark" => normalized.system.theme,
+        _ => "auto".to_string(),
+    };
 
     if !normalized.system.tray_enabled && normalized.system.start_behavior == "minimize-to-tray" {
         normalized.system.start_behavior = "show-main".to_string();
@@ -516,6 +520,66 @@ pub fn load_today_stats(
     })
 }
 
+pub fn load_streak_stats(logs_repo: &LogsRepository) -> Result<StreakStats, String> {
+    let review_dates = logs_repo
+        .get_review_dates()
+        .map_err(|e| format!("Failed to load review dates: {}", e))?;
+
+    if review_dates.is_empty() {
+        return Ok(StreakStats {
+            current_streak: 0,
+            longest_streak: 0,
+        });
+    }
+
+    let parsed_dates = review_dates
+        .iter()
+        .map(|value| {
+            chrono::NaiveDate::parse_from_str(value, "%Y-%m-%d")
+                .map_err(|e| format!("Failed to parse review date {}: {}", value, e))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    let mut longest_streak = 1_i64;
+    let mut running_streak = 1_i64;
+
+    for window in parsed_dates.windows(2) {
+        let previous = window[0];
+        let current = window[1];
+
+        if current == previous + Duration::days(1) {
+            running_streak += 1;
+        } else {
+            running_streak = 1;
+        }
+
+        longest_streak = longest_streak.max(running_streak);
+    }
+
+    let today = Local::now().date_naive();
+    let mut current_streak = 0_i64;
+
+    if parsed_dates.last().copied() == Some(today) {
+        current_streak = 1;
+
+        for window in parsed_dates.windows(2).rev() {
+            let previous = window[0];
+            let current = window[1];
+
+            if current == previous + Duration::days(1) {
+                current_streak += 1;
+            } else {
+                break;
+            }
+        }
+    }
+
+    Ok(StreakStats {
+        current_streak,
+        longest_streak,
+    })
+}
+
 #[tauri::command]
 pub fn get_history_stats(db: State<Database>, days: i64) -> Result<Vec<DayStats>, String> {
     if days <= 0 {
@@ -529,6 +593,12 @@ pub fn get_history_stats(db: State<Database>, days: i64) -> Result<Vec<DayStats>
     logs_repo
         .get_history_stats(&since_utc)
         .map_err(|e| format!("Failed to load history stats: {}", e))
+}
+
+#[tauri::command]
+pub fn get_streak_stats(db: State<Database>) -> Result<StreakStats, String> {
+    let logs_repo = LogsRepository::new(db.get_connection());
+    load_streak_stats(&logs_repo)
 }
 
 // ============================================================================
@@ -569,6 +639,7 @@ pub fn get_dashboard_state(db: State<Database>) -> Result<DashboardState, String
     let app_config = load_app_config(&state_repo)?;
     let disabled_sources = load_disabled_wordbook_sources(&state_repo)?;
     let today_stats = load_today_stats(&logs_repo, &cards_repo, &disabled_sources)?;
+    let streak_stats = load_streak_stats(&logs_repo)?;
     let pause_until = state_repo
         .get("pause_until")
         .map_err(|e| format!("Failed to get pause state: {}", e))?;
@@ -580,6 +651,7 @@ pub fn get_dashboard_state(db: State<Database>) -> Result<DashboardState, String
     Ok(DashboardState {
         app_config,
         today_stats,
+        current_streak: streak_stats.current_streak,
         pause_until,
         needs_onboarding,
         recommendation,

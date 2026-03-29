@@ -52,6 +52,8 @@ struct WordbookEntry {
         alias = "解释"
     )]
     meaning_zh: String,
+    #[serde(alias = "example", alias = "example_sentence", alias = "例句")]
+    example_sentence: Option<String>,
     #[serde(
         default = "default_difficulty",
         alias = "level",
@@ -219,6 +221,9 @@ fn match_field_type(header: &str) -> Option<&'static str> {
         // Difficulty
         "difficulty" | "level" | "rank" | "难度" | "等级" => Some("difficulty"),
 
+        // Example sentence
+        "example" | "example_sentence" | "例句" => Some("example_sentence"),
+
         _ => None,
     }
 }
@@ -285,14 +290,16 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
     let mut meaning_idx = 1usize;
     let mut phonetic_idx = 2usize;
     let mut pos_idx = 3usize;
-    let mut diff_idx = 4usize;
+    let mut example_sentence_idx = 4usize;
+    let mut diff_idx = 5usize;
 
     if has_header {
         word_idx = 0;
         meaning_idx = 1;
         phonetic_idx = 2;
         pos_idx = 3;
-        diff_idx = 4;
+        example_sentence_idx = 4;
+        diff_idx = 5;
 
         for (idx, part) in first_line_parts.iter().enumerate() {
             match match_field_type(part) {
@@ -300,6 +307,7 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
                 Some("meaning_zh") => meaning_idx = idx,
                 Some("phonetic") => phonetic_idx = idx,
                 Some("part_of_speech") => pos_idx = idx,
+                Some("example_sentence") => example_sentence_idx = idx,
                 Some("difficulty") => diff_idx = idx,
                 _ => {}
             }
@@ -391,6 +399,14 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
                 Some(trimmed.to_string())
             }
         });
+        let example_sentence = parts.get(example_sentence_idx).and_then(|s| {
+            let trimmed = s.trim();
+            if trimmed.is_empty() {
+                None
+            } else {
+                Some(trimmed.to_string())
+            }
+        });
         let difficulty = parts
             .get(diff_idx)
             .and_then(|s| s.parse::<i32>().ok())
@@ -401,6 +417,7 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
             meaning_zh: meaning_zh.to_string(),
             phonetic,
             part_of_speech,
+            example_sentence,
             difficulty,
         });
     }
@@ -443,7 +460,8 @@ fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
     let mut meaning_idx = 1usize;
     let mut phonetic_idx = 2usize;
     let mut pos_idx = 3usize;
-    let mut diff_idx = 4usize;
+    let mut example_sentence_idx = 4usize;
+    let mut diff_idx = 5usize;
     let mut has_header = false;
 
     for (idx, cell) in first_row.iter().enumerate() {
@@ -454,6 +472,7 @@ fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
                 "meaning_zh" => meaning_idx = idx,
                 "phonetic" => phonetic_idx = idx,
                 "part_of_speech" => pos_idx = idx,
+                "example_sentence" => example_sentence_idx = idx,
                 "difficulty" => diff_idx = idx,
                 _ => {}
             }
@@ -482,6 +501,10 @@ fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
 
         let phonetic = record.get(phonetic_idx).filter(|s| !s.is_empty()).cloned();
         let part_of_speech = record.get(pos_idx).filter(|s| !s.is_empty()).cloned();
+        let example_sentence = record
+            .get(example_sentence_idx)
+            .filter(|s| !s.is_empty())
+            .cloned();
         let difficulty = record
             .get(diff_idx)
             .and_then(|s| s.parse::<i32>().ok())
@@ -492,6 +515,7 @@ fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
             meaning_zh: meaning_zh.to_string(),
             phonetic,
             part_of_speech,
+            example_sentence,
             difficulty,
         });
     }
@@ -562,7 +586,8 @@ fn parse_xlsx(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<WordbookE
         let mut meaning_idx = 1usize;
         let mut phonetic_idx = 2usize;
         let mut pos_idx = 3usize;
-        let mut diff_idx = 4usize;
+        let mut example_sentence_idx = 4usize;
+        let mut diff_idx = 5usize;
         let mut has_header = false;
 
         for (idx, cell) in rows[0].iter().enumerate() {
@@ -573,6 +598,7 @@ fn parse_xlsx(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<WordbookE
                     "meaning_zh" => meaning_idx = idx,
                     "phonetic" => phonetic_idx = idx,
                     "part_of_speech" => pos_idx = idx,
+                    "example_sentence" => example_sentence_idx = idx,
                     "difficulty" => diff_idx = idx,
                     _ => {}
                 }
@@ -609,6 +635,11 @@ fn parse_xlsx(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<WordbookE
                 .map(|s| s.trim())
                 .filter(|s| !s.is_empty())
                 .map(String::from);
+            let example_sentence = row
+                .get(example_sentence_idx)
+                .map(|s| s.trim())
+                .filter(|s| !s.is_empty())
+                .map(String::from);
             let difficulty = row
                 .get(diff_idx)
                 .and_then(|s| s.trim().parse::<i32>().ok())
@@ -619,6 +650,7 @@ fn parse_xlsx(raw_bytes: &[u8], file_name: Option<&str>) -> Result<Vec<WordbookE
                 meaning_zh,
                 phonetic,
                 part_of_speech,
+                example_sentence,
                 difficulty,
             });
         }
@@ -710,11 +742,24 @@ impl WordbookImporter {
                 .as_deref()
                 .map(str::trim)
                 .filter(|v| !v.is_empty());
+            let example_sentence = entry
+                .example_sentence
+                .as_deref()
+                .map(str::trim)
+                .filter(|v| !v.is_empty());
 
             tx.execute(
-                "INSERT INTO words (word, phonetic, part_of_speech, meaning_zh, source, difficulty) \
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-                (word, phonetic, part_of_speech, meaning_zh, source, entry.difficulty.max(1)),
+                "INSERT INTO words (word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty) \
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+                (
+                    word,
+                    phonetic,
+                    part_of_speech,
+                    meaning_zh,
+                    example_sentence,
+                    source,
+                    entry.difficulty.max(1),
+                ),
             )?;
             let word_id = tx.last_insert_rowid();
 
@@ -781,12 +826,16 @@ mod tests {
 
     #[test]
     fn test_parse_csv_with_header() {
-        let csv = "word,meaning_zh\nabandon,放弃\nability,能力\n";
+        let csv = "word,meaning_zh,example\nabandon,放弃,He had to abandon ship.\nability,能力,\n";
         let entries = parse_csv(csv);
 
         assert_eq!(entries.len(), 2);
         assert_eq!(entries[0].word, "abandon");
         assert_eq!(entries[0].meaning_zh, "放弃");
+        assert_eq!(
+            entries[0].example_sentence.as_deref(),
+            Some("He had to abandon ship.")
+        );
     }
 
     #[test]
@@ -797,5 +846,7 @@ mod tests {
         assert_eq!(match_field_type("中文"), Some("meaning_zh"));
         assert_eq!(match_field_type("phonetic"), Some("phonetic"));
         assert_eq!(match_field_type("音标"), Some("phonetic"));
+        assert_eq!(match_field_type("example"), Some("example_sentence"));
+        assert_eq!(match_field_type("例句"), Some("example_sentence"));
     }
 }

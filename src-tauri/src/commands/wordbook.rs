@@ -71,6 +71,26 @@ pub fn list_wordbook_words(
 }
 
 #[tauri::command]
+pub fn search_words(
+    db: State<Database>,
+    query: String,
+    limit: i64,
+) -> Result<Vec<SearchResult>, String> {
+    let normalized_query = query.trim();
+
+    if normalized_query.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    let conn = db.get_connection();
+    let words_repo = WordsRepository::new(conn);
+
+    words_repo
+        .search_words(normalized_query, limit)
+        .map_err(|e| format!("Failed to search words: {}", e))
+}
+
+#[tauri::command]
 pub fn set_wordbook_enabled(
     db: State<Database>,
     source: String,

@@ -1,5 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
+import { applyThemePreference } from './shared/theme';
+import type { AppConfig } from './shared/types';
 
 interface PetState {
   id: number;
@@ -80,7 +82,11 @@ function triggerCelebration() {
 // Load and display pet state
 async function loadPetState() {
   try {
-    const pet = await invoke<PetState>('get_pet_state');
+    const [pet, config] = await Promise.all([
+      invoke<PetState>('get_pet_state'),
+      invoke<AppConfig>('get_app_config'),
+    ]);
+    applyThemePreference(config.system.theme);
     updatePetVisual(pet);
   } catch (error) {
     console.error('Failed to load pet state:', error);

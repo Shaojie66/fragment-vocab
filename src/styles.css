@@ -1,10 +1,10 @@
 :root {
   font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", sans-serif;
-  color: #1e2a26;
+  color: var(--text-primary);
   background:
-    radial-gradient(circle at top left, rgba(244, 220, 176, 0.55), transparent 30%),
-    radial-gradient(circle at top right, rgba(157, 206, 180, 0.45), transparent 28%),
-    linear-gradient(180deg, #f3ede2 0%, #edf3ed 55%, #e6efe8 100%);
+    radial-gradient(circle at top left, var(--bg-gradient-top-left), transparent 30%),
+    radial-gradient(circle at top right, var(--bg-gradient-top-right), transparent 28%),
+    linear-gradient(180deg, var(--bg-gradient-bottom) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,6 +18,11 @@
 body {
   margin: 0;
   min-height: 100vh;
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at top left, var(--bg-gradient-top-left), transparent 30%),
+    radial-gradient(circle at top right, var(--bg-gradient-top-right), transparent 28%),
+    linear-gradient(180deg, var(--bg-gradient-bottom) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%);
 }
 
 body.modal-open {
@@ -49,12 +54,12 @@ button {
   justify-content: space-between;
   gap: 24px;
   padding: 28px;
-  border: 1px solid rgba(38, 65, 53, 0.12);
+  border: 1px solid var(--border-color);
   border-radius: 28px;
   background:
-    linear-gradient(135deg, rgba(255, 249, 239, 0.92), rgba(241, 248, 243, 0.86)),
-    rgba(255, 255, 255, 0.62);
-  box-shadow: 0 24px 80px rgba(84, 102, 86, 0.14);
+    linear-gradient(135deg, var(--bg-hero-start), var(--bg-hero-end)),
+    var(--bg-hero-overlay);
+  box-shadow: 0 24px 80px var(--shadow-hero);
   backdrop-filter: blur(18px);
 }
 
@@ -65,7 +70,7 @@ button {
 .eyebrow,
 .panel-kicker {
   margin: 0 0 8px;
-  color: #7a6b4c;
+  color: var(--text-accent);
   font-size: 13px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -82,7 +87,7 @@ button {
 .hint-text,
 .metric-sub,
 .save-bar p {
-  color: #5a665f;
+  color: var(--text-secondary);
 }
 
 .hero-summary {
@@ -112,25 +117,25 @@ button {
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #2d5a45, #1f4133);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(31, 65, 51, 0.3);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--accent-text);
+  box-shadow: 0 4px 12px var(--shadow-button);
 }
 
 .primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(31, 65, 51, 0.4);
+  box-shadow: 0 6px 20px var(--shadow-button-hover);
 }
 
 .ghost-btn {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(38, 65, 53, 0.15);
-  color: #2d5a45;
+  background: var(--bg-card-strong);
+  border-color: var(--border-input);
+  color: var(--accent);
 }
 
 .ghost-btn:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(38, 65, 53, 0.25);
+  background: var(--bg-input-focus);
+  border-color: var(--border-strong);
   transform: translateY(-1px);
 }
 
@@ -145,9 +150,9 @@ button {
   margin-top: 16px;
   padding: 18px 22px;
   border-radius: 22px;
-  border: 1px solid rgba(198, 120, 68, 0.24);
-  background: linear-gradient(135deg, rgba(255, 247, 234, 0.9), rgba(253, 240, 224, 0.82));
-  box-shadow: 0 18px 42px rgba(164, 121, 74, 0.12);
+  border: 1px solid var(--border-banner);
+  background: linear-gradient(135deg, var(--bg-banner-start), var(--bg-banner-end));
+  box-shadow: 0 18px 42px var(--shadow-banner);
 }
 
 .state-banner strong {
@@ -157,7 +162,7 @@ button {
 
 .state-banner p {
   margin: 8px 0 0;
-  color: #6a5b44;
+  color: var(--text-banner);
   line-height: 1.6;
 }
 
@@ -168,15 +173,15 @@ button {
   gap: 6px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(38, 65, 53, 0.12);
-  color: #254337;
+  background: var(--bg-chip);
+  border: 1px solid var(--border-color);
+  color: var(--text-pill);
   font-size: 14px;
   font-weight: 600;
 }
 
 .status-chip.muted {
-  color: #5a665f;
+  color: var(--text-secondary);
 }
 
 .overview-grid {
@@ -190,9 +195,9 @@ button {
 .panel,
 .save-bar {
   border-radius: 24px;
-  border: 1px solid rgba(38, 65, 53, 0.12);
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 18px 45px rgba(91, 104, 94, 0.1);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: 0 18px 45px var(--shadow-panel);
   backdrop-filter: blur(14px);
 }
 
@@ -202,7 +207,7 @@ button {
 
 .metric-label {
   display: block;
-  color: #5c675d;
+  color: var(--text-muted);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -225,9 +230,9 @@ button {
 .panel {
   padding: 28px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(38, 65, 53, 0.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 8px var(--shadow-card);
 }
 
 .panel-diagnostic {
@@ -256,7 +261,7 @@ button {
 .feedback-list {
   margin: -4px 0 20px;
   padding-left: 18px;
-  color: #43544b;
+  color: var(--text-strong);
   line-height: 1.7;
 }
 
@@ -279,7 +284,7 @@ button {
 
 .field span {
   font-size: 13px;
-  color: #4b5c53;
+  color: var(--text-strong);
   font-weight: 600;
 }
 
@@ -290,18 +295,18 @@ button {
   min-height: 46px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 2px solid rgba(38, 65, 53, 0.12);
-  background: rgba(255, 255, 255, 0.9);
-  color: #1e2a26;
+  border: 2px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-primary);
   transition: all 0.2s ease;
 }
 
 .field input:focus,
 .field select:focus {
   outline: none;
-  border-color: #2d5a45;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(45, 90, 69, 0.1);
+  border-color: var(--accent);
+  background: var(--bg-input-focus);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .field input:disabled,
@@ -314,8 +319,8 @@ button {
   min-height: 46px;
   padding: 0 14px;
   border-radius: 16px;
-  border: 1px solid rgba(38, 65, 53, 0.14);
-  background: rgba(252, 249, 244, 0.82);
+  border: 1px solid var(--border-input);
+  background: var(--bg-card-soft);
 }
 
 .checkbox-field input {
@@ -331,7 +336,7 @@ button {
   margin-top: 18px;
   padding: 16px 18px;
   border-radius: 18px;
-  background: rgba(247, 243, 235, 0.88);
+  background: var(--bg-card-muted);
 }
 
 .template-summary strong {
@@ -341,7 +346,7 @@ button {
 
 .template-summary p {
   margin: 8px 0 0;
-  color: #536257;
+  color: var(--text-tertiary);
   line-height: 1.6;
 }
 
@@ -349,6 +354,51 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.wordbook-search {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card-soft);
+}
+
+.wordbook-search-results {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.wordbook-search-item {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--bg-card-muted);
+}
+
+.wordbook-search-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.wordbook-search-topline strong {
+  font-size: 18px;
+}
+
+.wordbook-search-meaning {
+  margin: 10px 0 0;
+  color: var(--text-strong);
+  line-height: 1.6;
+}
+
+.wordbook-search-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .wordbook-list {
@@ -362,7 +412,7 @@ button {
 .wordbook-empty {
   padding: 16px 18px;
   border-radius: 18px;
-  background: rgba(247, 243, 235, 0.88);
+  background: var(--bg-card-muted);
 }
 
 .wordbook-item {
@@ -378,7 +428,7 @@ button {
 
 .wordbook-item-meta {
   margin-top: 8px;
-  color: #536257;
+  color: var(--text-tertiary);
   line-height: 1.6;
   font-size: 14px;
 }
@@ -396,23 +446,38 @@ button {
   align-items: center;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(53, 95, 76, 0.12);
-  color: #2f5d4b;
+  background: var(--accent-soft);
+  color: var(--accent-soft-text);
   font-size: 12px;
   font-weight: 700;
 }
 
 .wordbook-badge.muted {
-  background: rgba(124, 109, 90, 0.12);
-  color: #6a5f52;
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold-text);
+}
+
+.wordbook-badge.status-new {
+  background: var(--accent-blue-soft);
+  color: var(--accent-blue-text);
+}
+
+.wordbook-badge.status-learning {
+  background: var(--accent-orange-soft);
+  color: var(--accent-orange-text);
+}
+
+.wordbook-badge.status-mastered {
+  background: var(--accent-soft-strong);
+  color: var(--accent-soft-text);
 }
 
 .wordbook-preview {
   margin-top: 18px;
   padding: 18px;
   border-radius: 20px;
-  border: 1px solid rgba(38, 65, 53, 0.12);
-  background: rgba(252, 249, 244, 0.86);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card-soft);
 }
 
 .wordbook-preview-head {
@@ -436,7 +501,7 @@ button {
 .wordbook-preview-item {
   padding: 16px 18px;
   border-radius: 18px;
-  background: rgba(247, 243, 235, 0.88);
+  background: var(--bg-card-muted);
 }
 
 .wordbook-preview-topline,
@@ -454,14 +519,14 @@ button {
 
 .wordbook-preview-aux {
   margin: 8px 0 0;
-  color: #5a665f;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .wordbook-preview-meaning {
   margin: 12px 0 0;
-  color: #243930;
+  color: var(--text-strong);
   line-height: 1.6;
 }
 
@@ -483,9 +548,9 @@ button {
   width: 100%;
   padding: 14px;
   border-radius: 16px;
-  border: 1px solid rgba(38, 65, 53, 0.14);
-  background: rgba(252, 249, 244, 0.82);
-  color: #243930;
+  border: 1px solid var(--border-input);
+  background: var(--bg-card-soft);
+  color: var(--text-strong);
   resize: vertical;
   line-height: 1.5;
 }
@@ -500,11 +565,11 @@ button {
 .diagnostic-list div {
   padding: 16px;
   border-radius: 18px;
-  background: rgba(247, 243, 235, 0.85);
+  background: var(--bg-card-muted);
 }
 
 .diagnostic-list dt {
-  color: #6a746d;
+  color: var(--text-muted);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -512,7 +577,7 @@ button {
 
 .diagnostic-list dd {
   margin: 8px 0 0;
-  color: #20342b;
+  color: var(--text-strong);
   font-size: 18px;
   line-height: 1.4;
 }
@@ -537,7 +602,7 @@ button {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(29, 38, 33, 0.28);
+  background: var(--bg-overlay);
   backdrop-filter: blur(10px);
   z-index: 20;
 }
@@ -546,11 +611,11 @@ button {
   width: min(760px, calc(100vw - 32px));
   padding: 28px;
   border-radius: 28px;
-  border: 1px solid rgba(38, 65, 53, 0.12);
+  border: 1px solid var(--border-color);
   background:
-    linear-gradient(135deg, rgba(255, 249, 239, 0.97), rgba(241, 248, 243, 0.92)),
-    rgba(255, 255, 255, 0.84);
-  box-shadow: 0 30px 80px rgba(47, 61, 52, 0.22);
+    linear-gradient(135deg, var(--bg-hero-start), var(--bg-hero-end)),
+    var(--bg-card-strong);
+  box-shadow: 0 30px 80px var(--shadow-modal);
 }
 
 .onboarding-card h2 {

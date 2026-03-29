@@ -7,6 +7,7 @@ pub struct Word {
     pub phonetic: Option<String>,
     pub part_of_speech: Option<String>,
     pub meaning_zh: String,
+    pub example_sentence: Option<String>,
     pub source: String,
     pub difficulty: i32,
     pub created_at: String,

@@ -2,6 +2,7 @@ use anyhow::{Context, Result};
 use rusqlite::{Connection, OptionalExtension};
 use std::sync::{Arc, Mutex};
 
+use crate::commands::SearchResult;
 use crate::db::models::Word;
 
 #[derive(Debug, Clone)]
@@ -43,7 +44,7 @@ impl WordsRepository {
     pub fn get_by_id(&self, id: i64) -> Result<Option<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at FROM words WHERE id = ?1"
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at FROM words WHERE id = ?1"
         )?;
 
         let word = stmt
@@ -54,9 +55,10 @@ impl WordsRepository {
                     phonetic: row.get(2)?,
                     part_of_speech: row.get(3)?,
                     meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
                 })
             })
             .optional()?;
@@ -67,7 +69,7 @@ impl WordsRepository {
     pub fn get_by_word(&self, word: &str) -> Result<Option<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at FROM words WHERE word = ?1"
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at FROM words WHERE word = ?1"
         )?;
 
         let word = stmt
@@ -78,9 +80,10 @@ impl WordsRepository {
                     phonetic: row.get(2)?,
                     part_of_speech: row.get(3)?,
                     meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
                 })
             })
             .optional()?;
@@ -98,7 +101,7 @@ impl WordsRepository {
     pub fn list(&self, limit: i64, offset: i64) -> Result<Vec<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at FROM words ORDER BY id LIMIT ?1 OFFSET ?2"
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at FROM words ORDER BY id LIMIT ?1 OFFSET ?2"
         )?;
 
         let words = stmt
@@ -109,9 +112,10 @@ impl WordsRepository {
                     phonetic: row.get(2)?,
                     part_of_speech: row.get(3)?,
                     meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
                 })
             })?
             .collect::<Result<Vec<_>, _>>()?;
@@ -127,7 +131,7 @@ impl WordsRepository {
     ) -> Result<Vec<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at
              FROM words
              WHERE id != ?1
              ORDER BY ABS(difficulty - ?2) ASC, RANDOM()
@@ -142,9 +146,10 @@ impl WordsRepository {
                     phonetic: row.get(2)?,
                     part_of_speech: row.get(3)?,
                     meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
                 })
             })?
             .collect::<Result<Vec<_>, _>>()?;
@@ -178,7 +183,7 @@ impl WordsRepository {
     pub fn list_by_source(&self, source: &str, limit: i64, offset: i64) -> Result<Vec<Word>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT id, word, phonetic, part_of_speech, meaning_zh, source, difficulty, created_at
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at
              FROM words
              WHERE source = ?1
              ORDER BY word COLLATE NOCASE ASC, id ASC
@@ -193,14 +198,44 @@ impl WordsRepository {
                     phonetic: row.get(2)?,
                     part_of_speech: row.get(3)?,
                     meaning_zh: row.get(4)?,
-                    source: row.get(5)?,
-                    difficulty: row.get(6)?,
-                    created_at: row.get(7)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
                 })
             })?
             .collect::<Result<Vec<_>, _>>()?;
 
         Ok(words)
+    }
+
+    pub fn search_words(&self, query: &str, limit: i64) -> Result<Vec<SearchResult>> {
+        let conn = self.conn.lock().unwrap();
+        let pattern = format!("%{}%", query.trim());
+        let safe_limit = limit.clamp(1, 100);
+        let mut stmt = conn.prepare(
+            "SELECT w.word, w.meaning_zh, w.phonetic, w.part_of_speech, COALESCE(c.status, 'new') AS status, w.source, w.example_sentence
+             FROM words w
+             LEFT JOIN srs_cards c ON c.word_id = w.id
+             WHERE w.word LIKE ?1 COLLATE NOCASE OR w.meaning_zh LIKE ?1
+             ORDER BY w.word COLLATE NOCASE ASC, w.id ASC
+             LIMIT ?2",
+        )?;
+
+        let results = stmt
+            .query_map((pattern, safe_limit), |row| {
+                Ok(SearchResult {
+                    word: row.get(0)?,
+                    meaning_zh: row.get(1)?,
+                    phonetic: row.get(2)?,
+                    part_of_speech: row.get(3)?,
+                    status: row.get(4)?,
+                    source: row.get(5)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(results)
     }
 
     pub fn delete_by_source(&self, source: &str) -> Result<usize> {

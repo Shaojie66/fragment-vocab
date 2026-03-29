@@ -179,6 +179,7 @@ fn build_word_card_data(
         },
         part_of_speech: word_with_card.word.part_of_speech.clone(),
         meaning_zh: word_with_card.word.meaning_zh.clone(),
+        example_sentence: word_with_card.word.example_sentence.clone(),
         quiz_mode,
         prompt,
         prompt_hint,
@@ -456,6 +457,7 @@ mod tests {
                 phonetic: Some("/test/".to_string()),
                 part_of_speech: Some("n.".to_string()),
                 meaning_zh: meaning_zh.to_string(),
+                example_sentence: Some(format!("This is an example for {word}.")),
                 source: "test".to_string(),
                 difficulty: 2,
                 created_at: now_rfc3339(),
@@ -502,6 +504,7 @@ mod tests {
                 phonetic: Some("/d1/".to_string()),
                 part_of_speech: Some("n.".to_string()),
                 meaning_zh: "干扰1".to_string(),
+                example_sentence: None,
                 source: "test".to_string(),
                 difficulty: 2,
                 created_at: now_rfc3339(),
@@ -512,6 +515,7 @@ mod tests {
                 phonetic: Some("/d2/".to_string()),
                 part_of_speech: Some("n.".to_string()),
                 meaning_zh: "干扰2".to_string(),
+                example_sentence: None,
                 source: "test".to_string(),
                 difficulty: 2,
                 created_at: now_rfc3339(),
@@ -522,6 +526,7 @@ mod tests {
                 phonetic: Some("/d3/".to_string()),
                 part_of_speech: Some("n.".to_string()),
                 meaning_zh: "干扰3".to_string(),
+                example_sentence: None,
                 source: "test".to_string(),
                 difficulty: 2,
                 created_at: now_rfc3339(),
@@ -538,6 +543,10 @@ mod tests {
         assert!(!card.prompt.is_empty());
         assert!(!card.explanation_title.is_empty());
         assert!(!card.explanation_detail.is_empty());
+        assert_eq!(
+            card.example_sentence.as_deref(),
+            Some("This is an example for target.")
+        );
     }
 
     #[test]

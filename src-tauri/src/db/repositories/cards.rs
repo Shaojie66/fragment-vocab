@@ -116,7 +116,7 @@ impl CardsRepository {
     pub fn get_due_cards(&self, now: &str, limit: i64) -> Result<Vec<WordWithCard>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.source, w.difficulty, w.created_at,
+            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.example_sentence, w.source, w.difficulty, w.created_at,
                     c.id, c.word_id, c.status, c.stage, c.due_at, c.last_seen_at, c.last_result, c.correct_streak, c.lifetime_correct, c.lifetime_wrong, c.skip_cooldown_until, c.updated_at
              FROM srs_cards c
              JOIN words w ON c.word_id = w.id
@@ -136,23 +136,24 @@ impl CardsRepository {
                         phonetic: row.get(2)?,
                         part_of_speech: row.get(3)?,
                         meaning_zh: row.get(4)?,
-                        source: row.get(5)?,
-                        difficulty: row.get(6)?,
-                        created_at: row.get(7)?,
+                        example_sentence: row.get(5)?,
+                        source: row.get(6)?,
+                        difficulty: row.get(7)?,
+                        created_at: row.get(8)?,
                     },
                     card: SrsCard {
-                        id: row.get(8)?,
-                        word_id: row.get(9)?,
-                        status: row.get(10)?,
-                        stage: row.get(11)?,
-                        due_at: row.get(12)?,
-                        last_seen_at: row.get(13)?,
-                        last_result: row.get(14)?,
-                        correct_streak: row.get(15)?,
-                        lifetime_correct: row.get(16)?,
-                        lifetime_wrong: row.get(17)?,
-                        skip_cooldown_until: row.get(18)?,
-                        updated_at: row.get(19)?,
+                        id: row.get(9)?,
+                        word_id: row.get(10)?,
+                        status: row.get(11)?,
+                        stage: row.get(12)?,
+                        due_at: row.get(13)?,
+                        last_seen_at: row.get(14)?,
+                        last_result: row.get(15)?,
+                        correct_streak: row.get(16)?,
+                        lifetime_correct: row.get(17)?,
+                        lifetime_wrong: row.get(18)?,
+                        skip_cooldown_until: row.get(19)?,
+                        updated_at: row.get(20)?,
                     },
                 })
             })?
@@ -164,7 +165,7 @@ impl CardsRepository {
     pub fn get_new_cards(&self, now: &str, limit: i64) -> Result<Vec<WordWithCard>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
-            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.source, w.difficulty, w.created_at,
+            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.example_sentence, w.source, w.difficulty, w.created_at,
                     c.id, c.word_id, c.status, c.stage, c.due_at, c.last_seen_at, c.last_result, c.correct_streak, c.lifetime_correct, c.lifetime_wrong, c.skip_cooldown_until, c.updated_at
              FROM srs_cards c
              JOIN words w ON c.word_id = w.id
@@ -183,23 +184,24 @@ impl CardsRepository {
                         phonetic: row.get(2)?,
                         part_of_speech: row.get(3)?,
                         meaning_zh: row.get(4)?,
-                        source: row.get(5)?,
-                        difficulty: row.get(6)?,
-                        created_at: row.get(7)?,
+                        example_sentence: row.get(5)?,
+                        source: row.get(6)?,
+                        difficulty: row.get(7)?,
+                        created_at: row.get(8)?,
                     },
                     card: SrsCard {
-                        id: row.get(8)?,
-                        word_id: row.get(9)?,
-                        status: row.get(10)?,
-                        stage: row.get(11)?,
-                        due_at: row.get(12)?,
-                        last_seen_at: row.get(13)?,
-                        last_result: row.get(14)?,
-                        correct_streak: row.get(15)?,
-                        lifetime_correct: row.get(16)?,
-                        lifetime_wrong: row.get(17)?,
-                        skip_cooldown_until: row.get(18)?,
-                        updated_at: row.get(19)?,
+                        id: row.get(9)?,
+                        word_id: row.get(10)?,
+                        status: row.get(11)?,
+                        stage: row.get(12)?,
+                        due_at: row.get(13)?,
+                        last_seen_at: row.get(14)?,
+                        last_result: row.get(15)?,
+                        correct_streak: row.get(16)?,
+                        lifetime_correct: row.get(17)?,
+                        lifetime_wrong: row.get(18)?,
+                        skip_cooldown_until: row.get(19)?,
+                        updated_at: row.get(20)?,
                     },
                 })
             })?
@@ -218,7 +220,7 @@ impl CardsRepository {
         let conn = self.conn.lock().unwrap();
         let placeholders = card_ids.iter().map(|_| "?").collect::<Vec<_>>().join(",");
         let sql = format!(
-            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.source, w.difficulty, w.created_at,
+            "SELECT w.id, w.word, w.phonetic, w.part_of_speech, w.meaning_zh, w.example_sentence, w.source, w.difficulty, w.created_at,
                     c.id, c.word_id, c.status, c.stage, c.due_at, c.last_seen_at, c.last_result, c.correct_streak, c.lifetime_correct, c.lifetime_wrong, c.skip_cooldown_until, c.updated_at
              FROM srs_cards c
              JOIN words w ON c.word_id = w.id
@@ -241,23 +243,24 @@ impl CardsRepository {
                         phonetic: row.get(2)?,
                         part_of_speech: row.get(3)?,
                         meaning_zh: row.get(4)?,
-                        source: row.get(5)?,
-                        difficulty: row.get(6)?,
-                        created_at: row.get(7)?,
+                        example_sentence: row.get(5)?,
+                        source: row.get(6)?,
+                        difficulty: row.get(7)?,
+                        created_at: row.get(8)?,
                     },
                     card: SrsCard {
-                        id: row.get(8)?,
-                        word_id: row.get(9)?,
-                        status: row.get(10)?,
-                        stage: row.get(11)?,
-                        due_at: row.get(12)?,
-                        last_seen_at: row.get(13)?,
-                        last_result: row.get(14)?,
-                        correct_streak: row.get(15)?,
-                        lifetime_correct: row.get(16)?,
-                        lifetime_wrong: row.get(17)?,
-                        skip_cooldown_until: row.get(18)?,
-                        updated_at: row.get(19)?,
+                        id: row.get(9)?,
+                        word_id: row.get(10)?,
+                        status: row.get(11)?,
+                        stage: row.get(12)?,
+                        due_at: row.get(13)?,
+                        last_seen_at: row.get(14)?,
+                        last_result: row.get(15)?,
+                        correct_streak: row.get(16)?,
+                        lifetime_correct: row.get(17)?,
+                        lifetime_wrong: row.get(18)?,
+                        skip_cooldown_until: row.get(19)?,
+                        updated_at: row.get(20)?,
                     },
                 })
             })?

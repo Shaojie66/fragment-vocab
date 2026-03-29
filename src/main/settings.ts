@@ -1,6 +1,7 @@
 import { disable as disableAutostart, enable as enableAutostart, isEnabled as isAutostartEnabled } from '@tauri-apps/plugin-autostart';
 import { applyModePreset, createDefaultAppConfig, getModeLabel } from '../shared/config';
-import type { AppConfig, RecommendedReminderMode, ReminderMode } from '../shared/types';
+import { applyThemePreference } from '../shared/theme';
+import type { AppConfig, RecommendedReminderMode, ReminderMode, ThemePreference } from '../shared/types';
 import { mainElements } from './elements';
 import { cloneConfig, readNumberInput } from './helpers';
 import { mainState } from './state';
@@ -48,11 +49,13 @@ export function populateForm(config: AppConfig) {
   mainElements.showPhoneticInput.checked = config.card.show_phonetic;
   mainElements.allowSkipInput.checked = config.card.allow_skip;
   mainElements.shortcutsEnabledInput.checked = config.card.shortcuts_enabled;
+  mainElements.animationsEnabledInput.checked = config.card.animations_enabled;
   mainElements.autoPronounceInput.checked = config.card.auto_pronounce;
 
   mainElements.launchAtLoginInput.checked = config.system.launch_at_login;
   mainElements.startBehaviorSelect.value = config.system.start_behavior;
   mainElements.trayEnabledInput.checked = config.system.tray_enabled;
+  mainElements.themeSelect.value = config.system.theme;
 
   syncReminderFieldStates(config.reminder.mode);
   syncSystemFieldStates();
@@ -104,11 +107,13 @@ export function readConfigFromForm(): AppConfig {
   config.card.show_phonetic = mainElements.showPhoneticInput.checked;
   config.card.allow_skip = mainElements.allowSkipInput.checked;
   config.card.shortcuts_enabled = mainElements.shortcutsEnabledInput.checked;
+  config.card.animations_enabled = mainElements.animationsEnabledInput.checked;
   config.card.auto_pronounce = mainElements.autoPronounceInput.checked;
 
   config.system.launch_at_login = mainElements.launchAtLoginInput.checked;
   config.system.start_behavior = mainElements.startBehaviorSelect.value as AppConfig['system']['start_behavior'];
   config.system.tray_enabled = mainElements.trayEnabledInput.checked;
+  config.system.theme = mainElements.themeSelect.value as ThemePreference;
 
   if (!config.system.tray_enabled && config.system.start_behavior === 'minimize-to-tray') {
     config.system.start_behavior = 'show-main';
@@ -204,6 +209,11 @@ export function initializeSettings(dependencies: SettingsDependencies) {
     if (!mainElements.trayEnabledInput.checked) {
       dependencies.setSaveHint('关闭托盘后，启动行为会自动回退为显示主页面。');
     }
+  });
+
+  mainElements.themeSelect.addEventListener('change', () => {
+    applyThemePreference(mainElements.themeSelect.value as ThemePreference);
+    dependencies.setSaveHint('主题预览已切换，保存后会同步到其他窗口。');
   });
 
   mainElements.saveConfigBtn.addEventListener('click', () => {

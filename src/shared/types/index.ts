@@ -58,6 +58,7 @@ export interface TriggerCondition {
 export type ReminderMode = RecommendedReminderMode | 'custom';
 export type RevealOrder = 'en-first' | 'zh-first';
 export type StartBehavior = 'show-main' | 'minimize-to-tray';
+export type ThemePreference = 'auto' | 'light' | 'dark';
 export type SchedulerBlockReason =
   | 'paused'
   | 'quiet_hours'
@@ -94,6 +95,7 @@ export interface CardPreferences {
   reveal_order: RevealOrder;
   allow_skip: boolean;
   shortcuts_enabled: boolean;
+  animations_enabled: boolean;
   auto_pronounce: boolean;
 }
 
@@ -101,6 +103,7 @@ export interface SystemPreferences {
   launch_at_login: boolean;
   start_behavior: StartBehavior;
   tray_enabled: boolean;
+  theme: ThemePreference;
 }
 
 export interface AppConfig {
@@ -129,9 +132,15 @@ export interface DayStats {
   new_words: number;
 }
 
+export interface StreakStats {
+  current_streak: number;
+  longest_streak: number;
+}
+
 export interface DashboardState {
   app_config: AppConfig;
   today_stats: TodayStats;
+  current_streak: number;
   pause_until?: string;
   needs_onboarding: boolean;
   recommendation: RecommendationSummary;
@@ -197,6 +206,7 @@ export interface WordCardData {
   phonetic?: string;
   part_of_speech?: string;
   meaning_zh: string;
+  example_sentence?: string;
   quiz_mode: WordQuizMode;
   prompt: string;
   prompt_hint?: string;
@@ -232,4 +242,13 @@ export interface WordbookWordItem {
   meaning_zh: string;
   difficulty: number;
   created_at: string;
+}
+
+export interface SearchResult {
+  word: string;
+  meaning_zh: string;
+  phonetic?: string;
+  part_of_speech?: string;
+  status: 'new' | 'learning' | 'mastered';
+  source: string;
 }

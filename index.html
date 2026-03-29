@@ -5,6 +5,177 @@
     <link rel="stylesheet" href="/src/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fragment Vocab</title>
+    <style>
+      html {
+        color-scheme: light;
+        --bg-primary: #e6efe8;
+        --bg-gradient-top-left: rgba(244, 220, 176, 0.55);
+        --bg-gradient-top-right: rgba(157, 206, 180, 0.45);
+        --bg-gradient-bottom: #f3ede2;
+        --bg-gradient-mid: #edf3ed;
+        --bg-gradient-end: #e6efe8;
+        --bg-hero-start: rgba(255, 249, 239, 0.92);
+        --bg-hero-end: rgba(241, 248, 243, 0.86);
+        --bg-hero-overlay: rgba(255, 255, 255, 0.62);
+        --bg-card: rgba(255, 255, 255, 0.72);
+        --bg-card-strong: rgba(255, 255, 255, 0.84);
+        --bg-card-soft: rgba(252, 249, 244, 0.82);
+        --bg-card-muted: rgba(247, 243, 235, 0.88);
+        --bg-chip: rgba(255, 255, 255, 0.78);
+        --bg-input: rgba(255, 255, 255, 0.9);
+        --bg-input-focus: #ffffff;
+        --bg-overlay: rgba(29, 38, 33, 0.28);
+        --bg-banner-start: rgba(255, 247, 234, 0.9);
+        --bg-banner-end: rgba(253, 240, 224, 0.82);
+        --text-primary: #1e2a26;
+        --text-secondary: #5a665f;
+        --text-tertiary: #536257;
+        --text-muted: #6a746d;
+        --text-accent: #7a6b4c;
+        --text-strong: #243930;
+        --text-pill: #254337;
+        --text-banner: #6a5b44;
+        --border-color: rgba(38, 65, 53, 0.12);
+        --border-strong: rgba(38, 65, 53, 0.25);
+        --border-soft: rgba(38, 65, 53, 0.08);
+        --border-input: rgba(38, 65, 53, 0.14);
+        --border-banner: rgba(198, 120, 68, 0.24);
+        --accent: #2d5a45;
+        --accent-strong: #1f4133;
+        --accent-text: #ffffff;
+        --accent-soft: rgba(53, 95, 76, 0.12);
+        --accent-soft-strong: rgba(53, 95, 76, 0.16);
+        --accent-soft-text: #2f5d4b;
+        --accent-blue-soft: rgba(90, 118, 228, 0.14);
+        --accent-blue-text: #2f50b8;
+        --accent-gold-soft: rgba(124, 109, 90, 0.12);
+        --accent-gold-text: #6a5f52;
+        --accent-orange-soft: rgba(197, 124, 52, 0.16);
+        --accent-orange-text: #8b4f13;
+        --shadow-hero: rgba(84, 102, 86, 0.14);
+        --shadow-panel: rgba(91, 104, 94, 0.1);
+        --shadow-card: rgba(0, 0, 0, 0.04);
+        --shadow-button: rgba(31, 65, 51, 0.3);
+        --shadow-button-hover: rgba(31, 65, 51, 0.4);
+        --shadow-banner: rgba(164, 121, 74, 0.12);
+        --shadow-modal: rgba(47, 61, 52, 0.22);
+        --focus-ring: rgba(45, 90, 69, 0.1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html:not([data-theme="light"]) {
+          color-scheme: dark;
+          --bg-primary: #0f1713;
+          --bg-gradient-top-left: rgba(181, 145, 73, 0.18);
+          --bg-gradient-top-right: rgba(72, 116, 93, 0.2);
+          --bg-gradient-bottom: #151d18;
+          --bg-gradient-mid: #101914;
+          --bg-gradient-end: #0f1713;
+          --bg-hero-start: rgba(42, 54, 45, 0.94);
+          --bg-hero-end: rgba(24, 35, 29, 0.88);
+          --bg-hero-overlay: rgba(18, 27, 22, 0.8);
+          --bg-card: rgba(20, 29, 24, 0.78);
+          --bg-card-strong: rgba(18, 27, 22, 0.88);
+          --bg-card-soft: rgba(27, 38, 32, 0.86);
+          --bg-card-muted: rgba(31, 43, 36, 0.88);
+          --bg-chip: rgba(24, 35, 29, 0.82);
+          --bg-input: rgba(20, 30, 24, 0.92);
+          --bg-input-focus: rgba(16, 24, 20, 0.96);
+          --bg-overlay: rgba(5, 9, 7, 0.5);
+          --bg-banner-start: rgba(77, 60, 27, 0.42);
+          --bg-banner-end: rgba(55, 45, 23, 0.34);
+          --text-primary: #ebf1eb;
+          --text-secondary: #b8c5ba;
+          --text-tertiary: #a8b7aa;
+          --text-muted: #91a095;
+          --text-accent: #d1bb79;
+          --text-strong: #f2f6f0;
+          --text-pill: #d6e3d7;
+          --text-banner: #ead7a5;
+          --border-color: rgba(185, 203, 188, 0.16);
+          --border-strong: rgba(185, 203, 188, 0.3);
+          --border-soft: rgba(185, 203, 188, 0.12);
+          --border-input: rgba(185, 203, 188, 0.18);
+          --border-banner: rgba(208, 178, 102, 0.22);
+          --accent: #6d9d79;
+          --accent-strong: #4c6e55;
+          --accent-text: #f7f2e2;
+          --accent-soft: rgba(109, 157, 121, 0.18);
+          --accent-soft-strong: rgba(109, 157, 121, 0.22);
+          --accent-soft-text: #c2dbc8;
+          --accent-blue-soft: rgba(118, 140, 209, 0.18);
+          --accent-blue-text: #c8d5ff;
+          --accent-gold-soft: rgba(171, 149, 94, 0.18);
+          --accent-gold-text: #ead8a8;
+          --accent-orange-soft: rgba(182, 127, 70, 0.2);
+          --accent-orange-text: #f0c892;
+          --shadow-hero: rgba(0, 0, 0, 0.34);
+          --shadow-panel: rgba(0, 0, 0, 0.28);
+          --shadow-card: rgba(0, 0, 0, 0.22);
+          --shadow-button: rgba(0, 0, 0, 0.34);
+          --shadow-button-hover: rgba(0, 0, 0, 0.42);
+          --shadow-banner: rgba(0, 0, 0, 0.22);
+          --shadow-modal: rgba(0, 0, 0, 0.42);
+          --focus-ring: rgba(109, 157, 121, 0.2);
+        }
+      }
+
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --bg-primary: #0f1713;
+        --bg-gradient-top-left: rgba(181, 145, 73, 0.18);
+        --bg-gradient-top-right: rgba(72, 116, 93, 0.2);
+        --bg-gradient-bottom: #151d18;
+        --bg-gradient-mid: #101914;
+        --bg-gradient-end: #0f1713;
+        --bg-hero-start: rgba(42, 54, 45, 0.94);
+        --bg-hero-end: rgba(24, 35, 29, 0.88);
+        --bg-hero-overlay: rgba(18, 27, 22, 0.8);
+        --bg-card: rgba(20, 29, 24, 0.78);
+        --bg-card-strong: rgba(18, 27, 22, 0.88);
+        --bg-card-soft: rgba(27, 38, 32, 0.86);
+        --bg-card-muted: rgba(31, 43, 36, 0.88);
+        --bg-chip: rgba(24, 35, 29, 0.82);
+        --bg-input: rgba(20, 30, 24, 0.92);
+        --bg-input-focus: rgba(16, 24, 20, 0.96);
+        --bg-overlay: rgba(5, 9, 7, 0.5);
+        --bg-banner-start: rgba(77, 60, 27, 0.42);
+        --bg-banner-end: rgba(55, 45, 23, 0.34);
+        --text-primary: #ebf1eb;
+        --text-secondary: #b8c5ba;
+        --text-tertiary: #a8b7aa;
+        --text-muted: #91a095;
+        --text-accent: #d1bb79;
+        --text-strong: #f2f6f0;
+        --text-pill: #d6e3d7;
+        --text-banner: #ead7a5;
+        --border-color: rgba(185, 203, 188, 0.16);
+        --border-strong: rgba(185, 203, 188, 0.3);
+        --border-soft: rgba(185, 203, 188, 0.12);
+        --border-input: rgba(185, 203, 188, 0.18);
+        --border-banner: rgba(208, 178, 102, 0.22);
+        --accent: #6d9d79;
+        --accent-strong: #4c6e55;
+        --accent-text: #f7f2e2;
+        --accent-soft: rgba(109, 157, 121, 0.18);
+        --accent-soft-strong: rgba(109, 157, 121, 0.22);
+        --accent-soft-text: #c2dbc8;
+        --accent-blue-soft: rgba(118, 140, 209, 0.18);
+        --accent-blue-text: #c8d5ff;
+        --accent-gold-soft: rgba(171, 149, 94, 0.18);
+        --accent-gold-text: #ead8a8;
+        --accent-orange-soft: rgba(182, 127, 70, 0.2);
+        --accent-orange-text: #f0c892;
+        --shadow-hero: rgba(0, 0, 0, 0.34);
+        --shadow-panel: rgba(0, 0, 0, 0.28);
+        --shadow-card: rgba(0, 0, 0, 0.22);
+        --shadow-button: rgba(0, 0, 0, 0.34);
+        --shadow-button-hover: rgba(0, 0, 0, 0.42);
+        --shadow-banner: rgba(0, 0, 0, 0.22);
+        --shadow-modal: rgba(0, 0, 0, 0.42);
+        --focus-ring: rgba(109, 157, 121, 0.2);
+      }
+    </style>
     <script type="module" src="/src/main/index.ts" defer></script>
   </head>
 
@@ -59,6 +230,11 @@
           <span class="metric-label">待复习词</span>
           <strong class="metric-value" id="metricDueCards">0</strong>
           <span class="metric-sub">优先于新词</span>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">当前连续天数</span>
+          <strong class="metric-value" id="metricCurrentStreak">0</strong>
+          <span class="metric-sub">至少每天完成 1 次复习</span>
         </article>
       </section>
 
@@ -135,7 +311,7 @@
               <h2>时间与静默</h2>
             </div>
           </div>
-          <p class=”panel-body”>
+          <p class="panel-body">
             设置晚上不打扰的时间段，比如睡觉时不弹卡。工作日和周末可以用不同的提醒频率。
           </p>
           <div class="form-grid">
@@ -174,7 +350,7 @@
             </div>
           </div>
           <p class="panel-body">
-            首版先接入自动隐藏、音标和快捷键，其他卡片体验为后续预留。
+            控制卡片停留时长、展示内容和交互细节，包括显示与关闭动画。
           </p>
           <div class="form-grid">
             <label class="field">
@@ -199,6 +375,10 @@
             <label class="field checkbox-field">
               <input id="shortcutsEnabledInput" type="checkbox" />
               <span>启用快捷键</span>
+            </label>
+            <label class="field checkbox-field">
+              <input id="animationsEnabledInput" type="checkbox" />
+              <span>启用卡片显示与关闭动画</span>
             </label>
             <label class="field checkbox-field">
               <input id="autoPronounceInput" type="checkbox" />
@@ -227,6 +407,14 @@
               <select id="startBehaviorSelect">
                 <option value="show-main">显示主页面</option>
                 <option value="minimize-to-tray">最小化到托盘</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>主题</span>
+              <select id="themeSelect">
+                <option value="auto">跟随系统</option>
+                <option value="light">浅色</option>
+                <option value="dark">深色</option>
               </select>
             </label>
             <label class="field checkbox-field">
@@ -278,6 +466,16 @@
           </div>
           <input id="uploadWordbookFileInput" class="hidden" type="file" accept="application/json,.json,text/csv,.csv,text/plain,.txt,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
           <p class="hint-text" id="wordbookUploadHint">支持 JSON / CSV / TXT / XLSX。核心字段可用 `word / meaning_zh`，也兼容 `English / Translation`、`单词 / 中文` 这类常见表头。</p>
+          <section class="wordbook-search">
+            <label class="field" for="wordbookSearchInput">
+              <span>搜索词条</span>
+              <input id="wordbookSearchInput" type="search" placeholder="输入英文单词或中文释义" autocomplete="off" />
+            </label>
+            <p class="hint-text" id="wordbookSearchMeta">输入关键词后，会在全部词库中搜索英文或中文释义。</p>
+            <div class="wordbook-search-results" id="wordbookSearchResults">
+              <div class="wordbook-empty">开始输入后，会在这里显示匹配的词条。</div>
+            </div>
+          </section>
           <div class="wordbook-list" id="wordbookList">
             <div class="wordbook-empty">正在读取词库列表...</div>
           </div>

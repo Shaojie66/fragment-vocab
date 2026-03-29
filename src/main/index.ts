@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { triggerScheduler } from '../domain/scheduler/triggerScheduler';
 import { applyModePreset } from '../shared/config';
+import { applyThemePreference } from '../shared/theme';
 import type {
   AppConfig,
   DashboardState,
@@ -45,6 +46,7 @@ async function refreshDashboard() {
   try {
     mainState.currentDashboard = await invoke<DashboardState>('get_dashboard_state');
     mainState.currentConfig = mainState.currentDashboard.app_config ?? mainState.currentConfig;
+    applyThemePreference(mainState.currentConfig.system.theme);
     triggerScheduler.updateConfig(mainState.currentConfig);
     triggerScheduler.syncPauseUntil(mainState.currentDashboard.pause_until);
     populateForm(mainState.currentConfig);
@@ -147,6 +149,7 @@ async function saveConfig(): Promise<boolean> {
     nextConfig.system.launch_at_login = launchAtLogin;
 
     mainState.currentConfig = await invoke<AppConfig>('update_app_config', { config: nextConfig });
+    applyThemePreference(mainState.currentConfig.system.theme);
 
     mainState.currentExportBundle = null;
     triggerScheduler.updateConfig(mainState.currentConfig);
@@ -184,6 +187,7 @@ async function restoreRecommended() {
     mainState.currentConfig.schedule.weekday_profile = 'gentle';
     mainState.currentConfig.schedule.weekend_profile = 'balanced';
     mainState.currentConfig = await invoke<AppConfig>('update_app_config', { config: mainState.currentConfig });
+    applyThemePreference(mainState.currentConfig.system.theme);
     mainState.currentExportBundle = null;
     triggerScheduler.updateConfig(mainState.currentConfig);
     populateForm(mainState.currentConfig);

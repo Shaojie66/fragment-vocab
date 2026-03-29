@@ -50,12 +50,14 @@ export function createDefaultAppConfig(): AppConfig {
       reveal_order: 'en-first',
       allow_skip: true,
       shortcuts_enabled: true,
+      animations_enabled: true,
       auto_pronounce: false,
     },
     system: {
       launch_at_login: false,
       start_behavior: 'show-main',
       tray_enabled: true,
+      theme: 'auto',
     },
   };
 }

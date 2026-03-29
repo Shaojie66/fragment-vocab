@@ -1,5 +1,13 @@
 use serde::{Deserialize, Serialize};
 
+fn default_theme() -> String {
+    "auto".to_string()
+}
+
+fn default_true() -> bool {
+    true
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum WordQuizMode {
@@ -22,6 +30,7 @@ pub struct WordCardData {
     pub phonetic: Option<String>,
     pub part_of_speech: Option<String>,
     pub meaning_zh: String,
+    pub example_sentence: Option<String>,
     pub quiz_mode: WordQuizMode,
     pub prompt: String,
     pub prompt_hint: Option<String>,
@@ -49,6 +58,12 @@ pub struct DayStats {
     pub total_reviews: i64,
     pub correct_count: i64,
     pub new_words: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StreakStats {
+    pub current_streak: i64,
+    pub longest_streak: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -115,6 +130,8 @@ pub struct CardConfig {
     pub reveal_order: String,
     pub allow_skip: bool,
     pub shortcuts_enabled: bool,
+    #[serde(default = "default_true")]
+    pub animations_enabled: bool,
     #[serde(default)]
     pub auto_pronounce: bool,
 }
@@ -127,6 +144,7 @@ impl Default for CardConfig {
             reveal_order: "en-first".to_string(),
             allow_skip: true,
             shortcuts_enabled: true,
+            animations_enabled: true,
             auto_pronounce: false,
         }
     }
@@ -137,6 +155,8 @@ pub struct SystemConfig {
     pub launch_at_login: bool,
     pub start_behavior: String,
     pub tray_enabled: bool,
+    #[serde(default = "default_theme")]
+    pub theme: String,
 }
 
 impl Default for SystemConfig {
@@ -145,6 +165,7 @@ impl Default for SystemConfig {
             launch_at_login: false,
             start_behavior: "show-main".to_string(),
             tray_enabled: true,
+            theme: default_theme(),
         }
     }
 }
@@ -162,6 +183,7 @@ pub struct AppConfig {
 pub struct DashboardState {
     pub app_config: AppConfig,
     pub today_stats: TodayStats,
+    pub current_streak: i64,
     pub pause_until: Option<String>,
     pub needs_onboarding: bool,
     pub recommendation: RecommendationSummary,
@@ -222,6 +244,16 @@ pub struct WordbookWordItem {
     pub meaning_zh: String,
     pub difficulty: i32,
     pub created_at: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SearchResult {
+    pub word: String,
+    pub meaning_zh: String,
+    pub phonetic: Option<String>,
+    pub part_of_speech: Option<String>,
+    pub status: String,
+    pub source: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

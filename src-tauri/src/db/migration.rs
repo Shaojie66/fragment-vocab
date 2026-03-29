@@ -18,7 +18,32 @@ impl Migrator {
         db.execute_migration(pets_migration_sql)
             .context("Failed to run 002_pets.sql migration")?;
 
+        Self::add_example_sentence_column(db)
+            .context("Failed to run 003_example_sentence.sql migration")?;
+
         println!("✅ Database migrations completed successfully");
+        Ok(())
+    }
+
+    fn add_example_sentence_column(db: &Database) -> Result<()> {
+        let conn = db.get_connection();
+        let conn = conn.lock().unwrap();
+
+        let mut stmt = conn.prepare("PRAGMA table_info(words)")?;
+        let has_column = stmt
+            .query_map([], |row| row.get::<_, String>(1))?
+            .collect::<std::result::Result<Vec<_>, _>>()?
+            .into_iter()
+            .any(|column| column == "example_sentence");
+
+        drop(stmt);
+
+        if !has_column {
+            let migration_sql = include_str!("../../migrations/003_example_sentence.sql");
+            conn.execute_batch(migration_sql)
+                .context("Failed to add example_sentence column to words table")?;
+        }
+
         Ok(())
     }
 }
@@ -50,6 +75,18 @@ mod tests {
             .unwrap();
 
         assert_eq!(table_count, 4);
+
+        let has_example_sentence: bool = conn
+            .prepare("PRAGMA table_info(words)")
+            .unwrap()
+            .query_map([], |row| row.get::<_, String>(1))
+            .unwrap()
+            .collect::<std::result::Result<Vec<_>, _>>()
+            .unwrap()
+            .into_iter()
+            .any(|column| column == "example_sentence");
+
+        assert!(has_example_sentence);
 
         drop(conn);
         drop(db);

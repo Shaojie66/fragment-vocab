@@ -11,17 +11,65 @@
       box-sizing: border-box;
     }
 
-    :root {
+    html {
+      color-scheme: light;
+      --bg-primary: rgba(255, 255, 255, 0.1);
+      --bg-shell-highlight: rgba(255, 255, 255, 0.2);
+      --slime-face: #1a1a1a;
       --slime-color: #4ade80;
       --slime-blush: #f9a8d4;
+      --slime-stage-0: #a3e635;
+      --slime-stage-1: #4ade80;
+      --slime-stage-2: #22c55e;
+      --slime-stage-3: #16a34a;
+      --slime-stage-4: #15803d;
+      --slime-shadow-inner: rgba(0, 0, 0, 0.1);
+      --slime-glow-soft: rgba(163, 230, 53, 0.5);
+      --slime-glow-strong: rgba(163, 230, 53, 0.8);
       --saturate: 1;
       --opacity: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg-primary: rgba(18, 28, 22, 0.2);
+        --bg-shell-highlight: rgba(255, 243, 214, 0.08);
+        --slime-face: #102019;
+        --slime-color: #5fb57a;
+        --slime-blush: #d9b27c;
+        --slime-stage-0: #93b84a;
+        --slime-stage-1: #5fb57a;
+        --slime-stage-2: #4a9366;
+        --slime-stage-3: #3b7c57;
+        --slime-stage-4: #305f43;
+        --slime-shadow-inner: rgba(0, 0, 0, 0.2);
+        --slime-glow-soft: rgba(180, 160, 92, 0.45);
+        --slime-glow-strong: rgba(180, 160, 92, 0.72);
+      }
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg-primary: rgba(18, 28, 22, 0.2);
+      --bg-shell-highlight: rgba(255, 243, 214, 0.08);
+      --slime-face: #102019;
+      --slime-color: #5fb57a;
+      --slime-blush: #d9b27c;
+      --slime-stage-0: #93b84a;
+      --slime-stage-1: #5fb57a;
+      --slime-stage-2: #4a9366;
+      --slime-stage-3: #3b7c57;
+      --slime-stage-4: #305f43;
+      --slime-shadow-inner: rgba(0, 0, 0, 0.2);
+      --slime-glow-soft: rgba(180, 160, 92, 0.45);
+      --slime-glow-strong: rgba(180, 160, 92, 0.72);
     }
 
     body {
       width: 200px;
       height: 200px;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--bg-primary);
       border-radius: 20px;
       overflow: hidden;
       display: flex;
@@ -50,8 +98,8 @@
       animation: bounce 1.5s ease-in-out infinite;
       transition: width 0.5s ease, height 0.5s ease, background-color 0.3s ease;
       box-shadow:
-        inset 0 -10px 20px rgba(0, 0, 0, 0.1),
-        inset 0 5px 10px rgba(255, 255, 255, 0.2);
+        inset 0 -10px 20px var(--slime-shadow-inner),
+        inset 0 5px 10px var(--bg-shell-highlight);
       -webkit-app-region: no-drag;
       cursor: pointer;
     }
@@ -64,9 +112,9 @@
       left: 25%;
       width: 8px;
       height: 8px;
-      background: #1a1a1a;
+      background: var(--slime-face);
       border-radius: 50%;
-      box-shadow: calc(var(--size, 40px) * 0.25) 0 0 #1a1a1a;
+      box-shadow: calc(var(--size, 40px) * 0.25) 0 0 var(--slime-face);
     }
 
     /* Mouth and blush (for evolved stages) */
@@ -78,7 +126,7 @@
       transform: translateX(-50%);
       width: 40%;
       height: 3px;
-      background: #1a1a1a;
+      background: var(--slime-face);
       border-radius: 2px;
       opacity: 0;
     }
@@ -90,29 +138,28 @@
     /* Evolution stages */
     .slime.stage-0 {
       --size: 40px;
-      --slime-color: #a3e635;
+      --slime-color: var(--slime-stage-0);
       animation: glow 2s ease-in-out infinite;
     }
 
     .slime.stage-1 {
       --size: 60px;
-      --slime-color: #4ade80;
+      --slime-color: var(--slime-stage-1);
     }
 
     .slime.stage-2 {
       --size: 90px;
-      --slime-color: #22c55e;
+      --slime-color: var(--slime-stage-2);
     }
 
     .slime.stage-3 {
       --size: 120px;
-      --slime-color: #16a34a;
+      --slime-color: var(--slime-stage-3);
     }
 
     .slime.stage-4 {
       --size: 150px;
-      --slime-color: #15803d;
-      --slime-blush: #f9a8d4;
+      --slime-color: var(--slime-stage-4);
     }
 
     /* Blush circles for evolved stages */
@@ -153,8 +200,8 @@
 
     /* Glow for egg */
     @keyframes glow {
-      0%, 100% { box-shadow: 0 0 10px rgba(163, 230, 53, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(163, 230, 53, 0.8); }
+      0%, 100% { box-shadow: 0 0 10px var(--slime-glow-soft); }
+      50% { box-shadow: 0 0 20px var(--slime-glow-strong); }
     }
 
     /* Bounce animation */
