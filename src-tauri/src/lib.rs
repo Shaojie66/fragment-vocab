@@ -310,12 +310,6 @@ pub fn run() {
             }
         })
         .setup(|app| {
-            #[cfg(target_os = "macos")]
-            {
-                app.set_activation_policy(tauri::ActivationPolicy::Regular);
-                app.set_dock_visibility(true);
-            }
-
             // 初始化数据库
             match setup_database(app) {
                 Ok(db) => {
@@ -334,6 +328,19 @@ pub fn run() {
                             }
                         }
                     };
+
+                    // 根据 tray 配置决定 Dock 可见性
+                    #[cfg(target_os = "macos")]
+                    {
+                        if app_config.system.tray_enabled {
+                            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+                            app.set_dock_visibility(false);
+                        } else {
+                            app.set_activation_policy(tauri::ActivationPolicy::Regular);
+                            app.set_dock_visibility(true);
+                        }
+                    }
+
                     // 将数据库实例存储到 app state 中供后续使用
                     app.manage(db);
                     if app_config.system.tray_enabled {
