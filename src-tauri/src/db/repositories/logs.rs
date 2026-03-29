@@ -97,6 +97,23 @@ impl LogsRepository {
 
         Ok(logs)
     }
+
+    /// Count cards whose first-ever log entry falls on or after `day_start_utc`.
+    /// This distinguishes genuinely new words from due-card reviews.
+    pub fn count_new_cards_since(&self, day_start_utc: &str) -> Result<i64> {
+        let conn = self.conn.lock().unwrap();
+        let count: i64 = conn.query_row(
+            "SELECT COUNT(DISTINCT card_id) FROM review_logs \
+             WHERE shown_at >= ?1 \
+               AND result IN ('know', 'dont_know') \
+               AND card_id NOT IN ( \
+                   SELECT DISTINCT card_id FROM review_logs WHERE shown_at < ?1 \
+               )",
+            [day_start_utc],
+            |row| row.get(0),
+        )?;
+        Ok(count)
+    }
 }
 
 #[cfg(test)]

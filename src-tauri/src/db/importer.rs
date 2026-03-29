@@ -5,10 +5,7 @@ use encoding_rs::GBK;
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-use crate::db::{
-    repositories::{CardsRepository, WordsRepository},
-    Database,
-};
+use crate::db::Database;
 
 fn default_difficulty() -> i32 {
     1
@@ -368,13 +365,22 @@ fn parse_txt(content: &str) -> Vec<WordbookEntry> {
 }
 
 // ============================================================================
-// CSV Parsing
+// CSV / TSV Parsing
 // ============================================================================
 
 fn parse_csv(content: &str) -> Vec<WordbookEntry> {
+    parse_delimited(content, b',')
+}
+
+fn parse_tsv(content: &str) -> Vec<WordbookEntry> {
+    parse_delimited(content, b'\t')
+}
+
+fn parse_delimited(content: &str, delimiter: u8) -> Vec<WordbookEntry> {
     let mut reader = ReaderBuilder::new()
         .has_headers(false)
         .flexible(true)
+        .delimiter(delimiter)
         .from_reader(content.as_bytes());
 
     let records: Vec<Vec<String>> = reader
@@ -580,7 +586,8 @@ impl WordbookImporter {
 
         let entries = match format.as_str() {
             "json" => parse_json(&content)?,
-            "csv" | "tsv" => parse_csv(&content),
+            "csv" => parse_csv(&content),
+            "tsv" => parse_tsv(&content),
             "txt" => parse_txt(&content),
             "xlsx" => parse_xlsx(raw_bytes, file_name)?,
             _ => unreachable!(),
@@ -595,8 +602,9 @@ impl WordbookImporter {
         source: &str,
         format: &str,
     ) -> Result<WordbookImportSummary> {
-        let words_repo = WordsRepository::new(db.get_connection());
-        let cards_repo = CardsRepository::new(db.get_connection());
+        let conn_arc = db.get_connection();
+        let mut conn = conn_arc.lock().unwrap();
+        let tx = conn.transaction()?;
 
         let mut imported_count = 0;
         let mut skipped_count = 0;
@@ -610,23 +618,43 @@ impl WordbookImporter {
                 continue;
             }
 
-            if words_repo.get_by_word(word)?.is_some() {
+            let word_exists: bool = tx
+                .query_row(
+                    "SELECT COUNT(*) FROM words WHERE word = ?1",
+                    [word],
+                    |row| row.get::<_, i64>(0),
+                )
+                .map(|count| count > 0)
+                .unwrap_or(false);
+
+            if word_exists {
                 skipped_count += 1;
                 continue;
             }
 
-            let word_id = words_repo.insert(
-                word,
-                meaning_zh,
-                source,
-                entry.phonetic.as_deref().map(str::trim).filter(|v| !v.is_empty()),
-                entry.part_of_speech.as_deref().map(str::trim).filter(|v| !v.is_empty()),
-                entry.difficulty.max(1),
+            let phonetic = entry.phonetic.as_deref().map(str::trim).filter(|v| !v.is_empty());
+            let part_of_speech = entry
+                .part_of_speech
+                .as_deref()
+                .map(str::trim)
+                .filter(|v| !v.is_empty());
+
+            tx.execute(
+                "INSERT INTO words (word, phonetic, part_of_speech, meaning_zh, source, difficulty) \
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+                (word, phonetic, part_of_speech, meaning_zh, source, entry.difficulty.max(1)),
+            )?;
+            let word_id = tx.last_insert_rowid();
+
+            tx.execute(
+                "INSERT INTO srs_cards (word_id, status, stage) VALUES (?1, 'new', -1)",
+                [word_id],
             )?;
 
-            cards_repo.insert(word_id)?;
             imported_count += 1;
         }
+
+        tx.commit()?;
 
         Ok(WordbookImportSummary {
             imported_count,

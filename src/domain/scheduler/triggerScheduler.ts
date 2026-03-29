@@ -26,6 +26,7 @@ export class TriggerScheduler {
 
   private intervalId?: number;
   private onTrigger?: () => void | Promise<void>;
+  private isChecking = false;
 
   constructor(config: AppConfig = createDefaultAppConfig()) {
     this.config = config;
@@ -119,6 +120,10 @@ export class TriggerScheduler {
   }
 
   private async checkAndTrigger() {
+    if (this.isChecking) {
+      return;
+    }
+    this.isChecking = true;
     try {
       const shouldTrigger = await this.shouldTriggerCard();
 
@@ -128,6 +133,8 @@ export class TriggerScheduler {
       }
     } catch (error) {
       console.error('❌ Error in checkAndTrigger:', error);
+    } finally {
+      this.isChecking = false;
     }
   }
 

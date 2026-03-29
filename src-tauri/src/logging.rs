@@ -1,6 +1,6 @@
 use log::LevelFilter;
 use simplelog::{
-    CombinedLogger, Config, ConfigBuilder, SharedLogger, TermLogger, TerminalMode, WriteLogger,
+    CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode, WriteLogger,
 };
 use std::fs;
 use std::path::PathBuf;

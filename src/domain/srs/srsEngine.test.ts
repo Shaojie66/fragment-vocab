@@ -12,7 +12,7 @@ describe('SRS Engine', () => {
     id: 1,
     word_id: 1,
     status: 'new',
-    stage: 0,
+    stage: -1,
     due_at: undefined,
     last_seen_at: undefined,
     last_result: undefined,
@@ -26,11 +26,11 @@ describe('SRS Engine', () => {
 
   describe('calculateReviewUpdate', () => {
     it('新词答对后进入 stage 0', () => {
-      const card = createCard({ status: 'new', stage: 0 });
+      const card = createCard({ status: 'new', stage: -1 });
       const update = calculateReviewUpdate(card, 'know', now);
 
       expect(update.status).toBe('learning');
-      expect(update.stage).toBe(1);
+      expect(update.stage).toBe(0);
       expect(update.correct_streak).toBe(1);
       expect(update.lifetime_correct).toBe(1);
       expect(update.lifetime_wrong).toBe(0);
