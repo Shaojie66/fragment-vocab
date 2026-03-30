@@ -9,15 +9,16 @@
             color-scheme: light;
             font-family: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", sans-serif;
             --bg-primary: #e6efe8;
+            --bg-page: #e6efe8;
             --bg-gradient-top-left: rgba(244, 220, 176, 0.55);
             --bg-gradient-top-right: rgba(157, 206, 180, 0.45);
             --bg-gradient-bottom: #f3ede2;
             --bg-gradient-mid: #edf3ed;
             --bg-gradient-end: #e6efe8;
-            --bg-card: rgba(255, 255, 255, 0.74);
-            --bg-card-muted: rgba(247, 243, 235, 0.88);
-            --bg-card-strong: rgba(255, 255, 255, 0.78);
-            --bg-button: rgba(255, 255, 255, 0.66);
+            --bg-card: rgba(255, 255, 255, 0.94);
+            --bg-card-muted: rgba(247, 243, 235, 0.94);
+            --bg-card-strong: rgba(255, 255, 255, 0.96);
+            --bg-button: rgba(255, 255, 255, 0.88);
             --bg-chart-top: rgba(255, 255, 255, 0.72);
             --bg-chart-bottom: rgba(243, 237, 226, 0.76);
             --bg-chart-overlay: rgba(255, 255, 255, 0.54);
@@ -58,10 +59,10 @@
                 --bg-gradient-bottom: #151d18;
                 --bg-gradient-mid: #101914;
                 --bg-gradient-end: #0f1713;
-                --bg-card: rgba(20, 29, 24, 0.78);
-                --bg-card-muted: rgba(31, 43, 36, 0.88);
-                --bg-card-strong: rgba(24, 35, 29, 0.82);
-                --bg-button: rgba(24, 35, 29, 0.82);
+                --bg-card: rgba(20, 29, 24, 0.96);
+                --bg-card-muted: rgba(31, 43, 36, 0.96);
+                --bg-card-strong: rgba(24, 35, 29, 0.97);
+                --bg-button: rgba(24, 35, 29, 0.92);
                 --bg-chart-top: rgba(27, 38, 32, 0.86);
                 --bg-chart-bottom: rgba(22, 31, 26, 0.9);
                 --bg-chart-overlay: rgba(18, 27, 22, 0.76);
@@ -97,6 +98,7 @@
         html[data-theme="dark"] {
             color-scheme: dark;
             --bg-primary: #0f1713;
+            --bg-page: #0f1713;
             --bg-gradient-top-left: rgba(181, 145, 73, 0.18);
             --bg-gradient-top-right: rgba(72, 116, 93, 0.2);
             --bg-gradient-bottom: #151d18;
@@ -149,7 +151,8 @@
             background:
                 radial-gradient(circle at top left, var(--bg-gradient-top-left), transparent 30%),
                 radial-gradient(circle at top right, var(--bg-gradient-top-right), transparent 28%),
-                linear-gradient(180deg, var(--bg-gradient-bottom) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%);
+                linear-gradient(180deg, var(--bg-gradient-bottom) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%),
+                var(--bg-page);
         }
 
         main {
