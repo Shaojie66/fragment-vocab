@@ -46,6 +46,20 @@
             --accent-soft: rgba(208, 130, 60, 0.12);
             --shadow-card: rgba(95, 75, 53, 0.18);
             --shadow-hover: rgba(92, 72, 49, 0.12);
+            /* Pet slime CSS variables */
+            --slime-face: #1a1a1a;
+            --slime-color: #4ade80;
+            --slime-blush: #f9a8d4;
+            --slime-stage-0: #a3e635;
+            --slime-stage-1: #4ade80;
+            --slime-stage-2: #22c55e;
+            --slime-stage-3: #16a34a;
+            --slime-stage-4: #15803d;
+            --slime-shadow-inner: rgba(0, 0, 0, 0.1);
+            --slime-glow-soft: rgba(163, 230, 53, 0.5);
+            --slime-glow-strong: rgba(163, 230, 53, 0.8);
+            --saturate: 1;
+            --opacity: 1;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -83,6 +97,18 @@
                 --accent-soft: rgba(171, 139, 76, 0.18);
                 --shadow-card: rgba(0, 0, 0, 0.34);
                 --shadow-hover: rgba(0, 0, 0, 0.28);
+                /* Pet slime dark mode */
+                --slime-face: #102019;
+                --slime-color: #5fb57a;
+                --slime-blush: #d9b27c;
+                --slime-stage-0: #93b84a;
+                --slime-stage-1: #5fb57a;
+                --slime-stage-2: #4a9366;
+                --slime-stage-3: #3b7c57;
+                --slime-stage-4: #305f43;
+                --slime-shadow-inner: rgba(0, 0, 0, 0.2);
+                --slime-glow-soft: rgba(180, 160, 92, 0.45);
+                --slime-glow-strong: rgba(180, 160, 92, 0.72);
             }
         }
 
@@ -433,6 +459,50 @@
             color: var(--text-status);
             text-align: center;
         }
+
+        /* Pet styles embedded from pet.html */
+        .pet-wrapper {
+            position: fixed;
+            bottom: 12px;
+            right: 12px;
+            width: 120px;
+            height: 120px;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pet-wrapper .slime {
+            width: 50px;
+            height: 50px;
+            background: var(--slime-color);
+            border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+            position: relative;
+            filter: saturate(var(--saturate)) opacity(var(--opacity));
+            animation: pet-bounce 1.5s ease-in-out infinite;
+            box-shadow: inset 0 -8px 16px var(--slime-shadow-inner);
+        }
+
+        .pet-wrapper .slime::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 20%;
+            width: 6px;
+            height: 6px;
+            background: var(--slime-face);
+            border-radius: 50%;
+            box-shadow: 12px 0 0 var(--slime-face);
+        }
+
+        @keyframes pet-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .pet-wrapper .slime.hungry { animation-duration: 3s; }
+        .pet-wrapper .slime.very-hungry { animation-duration: 5s; filter: saturate(0.3) opacity(0.5); }
     </style>
 </head>
 <body>
@@ -471,6 +541,15 @@
         </div>
     </div>
 
+    <!-- Embedded Pet -->
+    <div class="pet-wrapper">
+        <div class="slime stage-0" id="slime">
+            <div class="blush left"></div>
+            <div class="blush right"></div>
+        </div>
+    </div>
+
     <script type="module" src="/src/card.ts"></script>
+    <script type="module" src="/src/pet.ts"></script>
 </body>
 </html>
