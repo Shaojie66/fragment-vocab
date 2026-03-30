@@ -249,7 +249,7 @@ mod tests {
             .unwrap();
         let card_id = cards_repo.insert(word_id).unwrap();
 
-        submit_review_for_db(&db, card_id, "know").unwrap();
+        submit_review_for_db(&db, None, card_id, "know").unwrap();
 
         let achievements = get_achievements_for_db(&db).unwrap();
         let first_review = achievements

@@ -1,4 +1,4 @@
-use tauri::{Manager, State};
+use tauri::{Emitter, Manager, State};
 
 use crate::db::pet_model::PetState;
 use crate::db::{Database, PetsRepository};
@@ -18,10 +18,17 @@ pub fn get_pet_state(db: State<Database>) -> Result<PetState, String> {
         .map_err(|e| format!("Failed to get pet state: {}", e))
 }
 
+/// Emit pet state updated event to all windows
+fn emit_pet_state_updated(app: Option<&tauri::AppHandle>, pet: &PetState) {
+    if let Some(handle) = app {
+        let _ = handle.emit("pet-state-updated", pet.clone());
+    }
+}
+
 /// Internal function to update pet after a review action.
 /// Both reviews and study actions update the pet (experience, streak, timestamps).
 /// Health decay is handled by init_pet_on_startup.
-pub fn update_pet_after_review(db: &Database) -> Result<PetState, String> {
+pub fn update_pet_after_review(db: &Database, app: Option<&tauri::AppHandle>) -> Result<PetState, String> {
     let conn = db.get_connection();
     let pets_repo = PetsRepository::new(conn);
 
@@ -39,13 +46,16 @@ pub fn update_pet_after_review(db: &Database) -> Result<PetState, String> {
         .update(&pet)
         .map_err(|e| format!("Failed to update pet: {}", e))?;
 
+    // Emit event to notify frontend windows
+    emit_pet_state_updated(app, &pet);
+
     Ok(pet)
 }
 
 /// Internal function to update pet after a study action.
 /// Applies study effects (experience, streak, timestamps) without re-running
 /// health decay — health decay is handled by init_pet_on_startup on app launch.
-pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
+pub fn update_pet_on_study(db: &Database, app: Option<&tauri::AppHandle>) -> Result<PetState, String> {
     let conn = db.get_connection();
     let pets_repo = PetsRepository::new(conn);
 
@@ -64,6 +74,9 @@ pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
     pets_repo
         .update(&pet)
         .map_err(|e| format!("Failed to update pet: {}", e))?;
+
+    // Emit event to notify frontend windows
+    emit_pet_state_updated(app, &pet);
 
     Ok(pet)
 }

@@ -136,7 +136,7 @@ fn review_flow_selects_new_card_and_updates_srs_state() {
     assert_eq!(card.options.len(), 4);
     assert_eq!(card.correct_option_id, format!("word-{}", card.word_id));
 
-    submit_review_for_db(&ctx.db, card.card_id, "know").expect("review submission should work");
+    submit_review_for_db(&ctx.db, None, card.card_id, "know").expect("review submission should work");
 
     let cards_repo = CardsRepository::new(ctx.db.get_connection());
     let logs_repo = LogsRepository::new(ctx.db.get_connection());
@@ -258,7 +258,7 @@ fn pet_startup_and_study_actions_update_health_and_experience() {
     assert_eq!(pet_after_startup.current_streak, 0);
     assert_close(pet_after_startup.vitality_multiplier, 1.0);
 
-    let pet_after_study = update_pet_on_study(&ctx.db).expect("study action should update pet");
+    let pet_after_study = update_pet_on_study(&ctx.db, None).expect("study action should update pet");
     assert_close(pet_after_study.health, 0.55);
     assert_eq!(pet_after_study.experience, 1);
     assert_eq!(pet_after_study.current_streak, 1);

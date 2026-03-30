@@ -11,9 +11,12 @@ let isLoadingCard = false;
 let isSubmitting = false;
 let hasAnswered = false;
 const CARD_WINDOW_ANIMATION_MS = 160;
+const PET_ANIMATION_MS = 500;
 
 const cardShellEl = document.getElementById('cardShell') as HTMLElement;
 const modeBadgeEl = document.getElementById('modeBadge') as HTMLElement;
+const petWrapperEl = document.querySelector('.pet-wrapper') as HTMLElement;
+const slimeEl = document.getElementById('slime') as HTMLElement;
 const promptEl = document.getElementById('prompt') as HTMLElement;
 const promptHintEl = document.getElementById('promptHint') as HTMLElement;
 const optionsEl = document.getElementById('options') as HTMLElement;
@@ -49,6 +52,26 @@ function setFeedbackStatus(message: string) {
 
 function areAnimationsEnabled(config: AppConfig | null = currentConfig): boolean {
   return config?.card.animations_enabled ?? true;
+}
+
+function triggerPetTransformOut(): Promise<void> {
+  if (!petWrapperEl || !slimeEl || !areAnimationsEnabled()) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    slimeEl.classList.add('transforming');
+    setTimeout(resolve, PET_ANIMATION_MS);
+  });
+}
+
+function triggerPetTransformIn(): Promise<void> {
+  if (!petWrapperEl || !slimeEl || !areAnimationsEnabled()) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    slimeEl.classList.remove('transforming');
+    resolve();
+  });
 }
 
 function triggerCardShowAnimation(config: AppConfig | null = currentConfig) {
@@ -152,7 +175,14 @@ async function hideCardWindowAfterAnimation() {
 async function hideCardWindow() {
   clearAllTimers();
   resetCardState();
-  cardShellEl.classList.remove('card-shell-enter', 'card-shell-exit');
+  cardShellEl.classList.remove('card-shell-enter', 'card-shell-exit', 'pet-transform-in', 'pet-transform-out');
+  // Show pet again with animation
+  if (petWrapperEl && slimeEl) {
+    slimeEl.classList.remove('transforming');
+    slimeEl.style.opacity = '1';
+    slimeEl.style.transform = 'scale(1)';
+    slimeEl.style.animation = 'pet-bounce 1.5s ease-in-out infinite';
+  }
   await invoke('hide_card_window');
   await emit('card-hidden');
 }
@@ -560,7 +590,10 @@ listen('card-window-shown', async () => {
   try {
     const config = await invoke<AppConfig>('get_app_config');
     applyCardPreferences(config);
+    // Pet transforms out, then card animates in
+    await triggerPetTransformOut();
     triggerCardShowAnimation(config);
+    await triggerPetTransformIn();
     void loadAndShowCard(config);
   } catch (error) {
     console.error('读取卡片配置失败:', error);
@@ -571,6 +604,13 @@ listen('card-window-shown', async () => {
 
 listen('card-window-hidden', () => {
   resetCardState();
+  // Show pet again
+  if (petWrapperEl && slimeEl) {
+    slimeEl.classList.remove('transforming');
+    slimeEl.style.opacity = '1';
+    slimeEl.style.transform = 'scale(1)';
+    slimeEl.style.animation = 'pet-bounce 1.5s ease-in-out infinite';
+  }
 });
 
 document.addEventListener('visibilitychange', () => {

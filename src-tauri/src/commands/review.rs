@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use chrono::{Duration, Utc};
 use fsrs::{FSRS, MemoryState, DEFAULT_PARAMETERS};
 use rusqlite::OptionalExtension;
-use tauri::State;
+use tauri::{Emitter, State};
 
 use crate::db::{
     models::{SrsCard, Word, WordWithCard},
@@ -293,8 +293,8 @@ fn build_word_card_data(
     }
 }
 
-fn update_pet_on_review(db: &Database) {
-    let _ = super::pet::update_pet_after_review(db);
+fn update_pet_on_review(db: &Database, app: Option<&tauri::AppHandle>) {
+    let _ = super::pet::update_pet_after_review(db, app);
 }
 
 // ============================================================================
@@ -366,11 +366,11 @@ pub fn get_next_card_for_db(db: &Database) -> Result<Option<WordCardData>, Strin
 }
 
 #[tauri::command]
-pub fn submit_review(db: State<Database>, card_id: i64, result: String) -> Result<(), String> {
-    submit_review_for_db(db.inner(), card_id, &result)
+pub fn submit_review(db: State<Database>, app: tauri::AppHandle, card_id: i64, result: String) -> Result<(), String> {
+    submit_review_for_db(db.inner(), Some(&app), card_id, &result)
 }
 
-pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result<(), String> {
+pub fn submit_review_for_db(db: &Database, app: Option<&tauri::AppHandle>, card_id: i64, result: &str) -> Result<(), String> {
     let now = Utc::now();
     let now_str = now.to_rfc3339();
 
@@ -547,7 +547,11 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
             .map_err(|e| format!("Failed to commit transaction: {}", e))?;
     }
 
-    update_pet_on_review(&db);
+    update_pet_on_review(&db, app);
+    // Emit study-completed event for pet celebration animation
+    if let Some(app_handle) = app {
+        let _ = app_handle.emit("study-completed", ());
+    }
     if let Err(error) = super::achievements::check_achievements_for_db(db) {
         eprintln!("Failed to check achievements after review: {}", error);
     }

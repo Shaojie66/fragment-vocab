@@ -460,17 +460,15 @@
             text-align: center;
         }
 
-        /* Pet styles embedded from pet.html */
+        /* Pet styles - top-left corner */
         .pet-wrapper {
             position: fixed;
-            bottom: 12px;
-            right: 12px;
-            width: 120px;
-            height: 120px;
+            top: 16px;
+            left: 16px;
+            width: 60px;
+            height: 60px;
             pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 100;
         }
 
         .pet-wrapper .slime {
@@ -482,6 +480,7 @@
             filter: saturate(var(--saturate)) opacity(var(--opacity));
             animation: pet-bounce 1.5s ease-in-out infinite;
             box-shadow: inset 0 -8px 16px var(--slime-shadow-inner);
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         .pet-wrapper .slime::before {
@@ -503,6 +502,59 @@
 
         .pet-wrapper .slime.hungry { animation-duration: 3s; }
         .pet-wrapper .slime.very-hungry { animation-duration: 5s; filter: saturate(0.3) opacity(0.5); }
+
+        /* Pet transform to card animation */
+        .pet-wrapper.transforming .slime {
+            animation: pet-transform 0.6s ease-in-out forwards;
+        }
+
+        @keyframes pet-transform {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5) translateY(-10px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0) translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+        /* Card shell animation when pet transforms */
+        .card-shell.pet-transform-in {
+            animation: card-from-pet 0.5s ease-out 0.3s forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        @keyframes card-from-pet {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .card-shell.pet-transform-out {
+            animation: card-to-pet 0.4s ease-in forwards;
+        }
+
+        @keyframes card-to-pet {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
     </style>
 </head>
 <body>
