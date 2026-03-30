@@ -45,8 +45,13 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
     }
 
     if let Some(window) = app.get_webview_window("card") {
-        // 居中显示窗口
-        let _ = window.center();
+        // 固定在屏幕上方中央位置，避免多显示器问题
+        if let Ok(Some(monitor)) = window.current_monitor() {
+            let screen_size = monitor.size();
+            let window_width = 480.0;
+            let x = (screen_size.width as f64 - window_width) / 2.0;
+            let _ = window.set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y: 80.0 }));
+        }
         let _ = window.set_always_on_top(true);
         focus_window(&window);
         let _ = window.emit("card-window-shown", ());
