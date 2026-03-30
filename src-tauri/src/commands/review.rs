@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 
 use chrono::{Duration, Utc};
+use fsrs::{FSRS, MemoryState, DEFAULT_PARAMETERS};
 use rusqlite::OptionalExtension;
 use tauri::State;
 
@@ -12,6 +13,92 @@ use crate::db::{
 use super::config::load_app_config;
 use super::types::*;
 use super::utils::*;
+
+/// Default desired retention rate for FSRS scheduling
+const DEFAULT_DESIRED_RETENTION: f32 = 0.9;
+
+/// Converts minutes to days for FSRS interval calculation
+fn minutes_to_days(minutes: i64) -> f32 {
+    minutes as f32 / 1440.0
+}
+
+/// Converts days to minutes for database storage
+fn days_to_minutes(days: f32) -> i64 {
+    (days * 1440.0).round() as i64
+}
+
+/// Maps user result to FSRS rating
+/// "know" = good (3), "dont_know" = again (1)
+fn result_to_rating(result: &str) -> Option<u32> {
+    match result {
+        "know" => Some(3),      // good
+        "dont_know" => Some(1), // again
+        "skip" => None,          // skip doesn't change FSRS state
+        _ => None,
+    }
+}
+
+/// Applies FSRS algorithm to calculate next card state
+fn apply_fsrs(card: &mut SrsCard, result: &str, _now: &str) {
+    let rating = match result_to_rating(result) {
+        Some(r) => r,
+        None => return, // skip doesn't update FSRS state
+    };
+
+    let fsrs = match FSRS::new(Some(&DEFAULT_PARAMETERS)) {
+        Ok(f) => f,
+        Err(_) => return, // FSRS initialization failed
+    };
+
+    // Calculate days elapsed since last review
+    let days_elapsed: u32 = if card.reviews_count == 0 {
+        0 // new card
+    } else {
+        minutes_to_days(card.actual_interval.max(1)) as u32
+    };
+
+    // Get current memory state from card's stability and difficulty
+    let current_memory_state = if card.stability > 0.0 {
+        Some(MemoryState {
+            stability: card.stability as f32,
+            difficulty: card.difficulty.max(1.0).min(10.0) as f32,
+        })
+    } else {
+        None // new card
+    };
+
+    // Get next states from FSRS
+    let next_states = match fsrs.next_states(current_memory_state, DEFAULT_DESIRED_RETENTION, days_elapsed) {
+        Ok(states) => states,
+        Err(_) => return, // FSRS calculation failed
+    };
+
+    // Select the appropriate state based on rating
+    let (new_stability, new_difficulty, new_interval_days) = match rating {
+        1 => (next_states.again.memory.stability, next_states.again.memory.difficulty, next_states.again.interval),
+        2 => (next_states.hard.memory.stability, next_states.hard.memory.difficulty, next_states.hard.interval),
+        3 => (next_states.good.memory.stability, next_states.good.memory.difficulty, next_states.good.interval),
+        4 => (next_states.easy.memory.stability, next_states.easy.memory.difficulty, next_states.easy.interval),
+        _ => return,
+    };
+
+    // Update card FSRS fields
+    card.stability = new_stability as f64;
+    card.difficulty = new_difficulty as f64;
+    card.reviews_count += 1;
+    card.actual_interval = days_to_minutes(new_interval_days);
+
+    // Calculate current retrievability (memory strength)
+    let retrievability = fsrs.current_retrievability(
+        MemoryState {
+            stability: new_stability,
+            difficulty: new_difficulty,
+        },
+        days_elapsed,
+        DEFAULT_PARAMETERS[20],
+    );
+    card.memory_strength = retrievability as f64;
+}
 
 fn select_card_candidate(
     due_cards: &[WordWithCard],
@@ -285,7 +372,8 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
                 .prepare(
                     "SELECT id, word_id, status, stage, due_at, last_seen_at, last_result, \
                      correct_streak, lifetime_correct, lifetime_wrong, skip_cooldown_until, \
-                     updated_at FROM srs_cards WHERE id = ?1",
+                     updated_at, stability, difficulty, memory_strength, reviews_count, actual_interval \
+                     FROM srs_cards WHERE id = ?1",
                 )
                 .map_err(|e| format!("Failed to prepare card query: {}", e))?;
             stmt.query_row([card_id], |row| {
@@ -302,6 +390,11 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
                     lifetime_wrong: row.get(9)?,
                     skip_cooldown_until: row.get(10)?,
                     updated_at: row.get(11)?,
+                    stability: row.get(12)?,
+                    difficulty: row.get(13)?,
+                    memory_strength: row.get(14)?,
+                    reviews_count: row.get(15)?,
+                    actual_interval: row.get(16)?,
                 })
             })
             .optional()
@@ -311,52 +404,51 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
 
         match result {
             "know" => {
-                card.stage += 1;
-                card.status = if card.stage >= 5 {
-                    "mastered".to_string()
-                } else {
-                    "learning".to_string()
-                };
+                // Apply FSRS algorithm
+                apply_fsrs(&mut card, result, &now_str);
+
+                // Update basic tracking fields
+                card.stage = (card.stage + 1).max(0); // Maintain stage for compatibility
                 card.correct_streak += 1;
                 card.lifetime_correct += 1;
                 card.last_result = Some("know".to_string());
                 card.last_seen_at = Some(now_str.clone());
 
-                let interval_minutes = match card.stage {
-                    0 => 10,
-                    1 => 1440,
-                    2 => 4320,
-                    3 => 10080,
-                    4 => 20160,
-                    _ => 0,
-                };
-
-                card.due_at = if card.status == "mastered" {
-                    None
+                // Calculate due_at based on actual_interval (which FSRS has set in minutes)
+                if card.actual_interval > 0 {
+                    card.due_at = Some(
+                        (now + Duration::minutes(card.actual_interval)).to_rfc3339()
+                    );
                 } else {
-                    Some((now + Duration::minutes(interval_minutes)).to_rfc3339())
-                };
+                    // Fallback for new cards
+                    card.due_at = Some((now + Duration::minutes(10)).to_rfc3339());
+                }
                 card.skip_cooldown_until = None;
+
+                // Update status: mastered if interval > 30 days
+                card.status = if card.actual_interval > 43200 { // 30 days in minutes
+                    "mastered".to_string()
+                } else {
+                    "learning".to_string()
+                };
             }
             "dont_know" => {
-                card.stage = std::cmp::max(0, card.stage - 1);
-                card.status = "learning".to_string();
+                // Apply FSRS algorithm
+                apply_fsrs(&mut card, result, &now_str);
+
+                // Update basic tracking fields
+                card.stage = std::cmp::max(0, card.stage) - 1; // FSRS doesn't use stage, but we maintain it for compatibility
                 card.correct_streak = 0;
                 card.lifetime_wrong += 1;
                 card.last_result = Some("dont_know".to_string());
                 card.last_seen_at = Some(now_str.clone());
 
-                let interval_minutes = match card.stage {
-                    0 => 10,
-                    1 => 1440,
-                    2 => 4320,
-                    3 => 10080,
-                    4 => 20160,
-                    _ => 10,
-                };
-
-                card.due_at = Some((now + Duration::minutes(interval_minutes)).to_rfc3339());
+                // Calculate due_at based on actual_interval (FSRS sets this even for "dont_know")
+                // But we ensure a minimum of 10 minutes
+                let interval = card.actual_interval.max(10);
+                card.due_at = Some((now + Duration::minutes(interval)).to_rfc3339());
                 card.skip_cooldown_until = None;
+                card.status = "learning".to_string();
             }
             "skip" => {
                 card.last_result = Some("skip".to_string());
@@ -369,7 +461,10 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
         tx.execute(
             "UPDATE srs_cards SET status = ?1, stage = ?2, due_at = ?3, last_seen_at = ?4, \
              last_result = ?5, correct_streak = ?6, lifetime_correct = ?7, lifetime_wrong = ?8, \
-             skip_cooldown_until = ?9, updated_at = ?10 WHERE id = ?11",
+             skip_cooldown_until = ?9, updated_at = ?10, \
+             stability = ?11, difficulty = ?12, memory_strength = ?13, \
+             reviews_count = ?14, actual_interval = ?15 \
+             WHERE id = ?16",
             (
                 &card.status,
                 card.stage,
@@ -381,6 +476,11 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
                 card.lifetime_wrong,
                 &card.skip_cooldown_until,
                 &now_str,
+                card.stability,
+                card.difficulty,
+                card.memory_strength,
+                card.reviews_count,
+                card.actual_interval,
                 card.id,
             ),
         )
@@ -478,6 +578,11 @@ mod tests {
                 lifetime_wrong: 0,
                 skip_cooldown_until: None,
                 updated_at: now_rfc3339(),
+                stability: 0.0,
+                difficulty: 5.0,
+                memory_strength: 0.0,
+                reviews_count: 0,
+                actual_interval: 0,
             },
         }
     }

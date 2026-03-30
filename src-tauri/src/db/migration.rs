@@ -37,6 +37,11 @@ impl Migrator {
         db.execute_migration(tags_migration_sql)
             .context("Failed to run 006_tags.sql migration")?;
 
+        let fsrs_migration_sql = include_str!("../../migrations/007_fsrs.sql");
+
+        db.execute_migration(fsrs_migration_sql)
+            .context("Failed to run 007_fsrs.sql migration")?;
+
         println!("✅ Database migrations completed successfully");
         Ok(())
     }
@@ -47,8 +52,8 @@ impl Migrator {
 
         let mut stmt = conn.prepare("PRAGMA table_info(words)")?;
         let has_column = stmt
-            .query_map([], |row| row.get::<_, String>(1))?
-            .collect::<std::result::Result<Vec<_>, _>>()?
+            .query_map([], |row| row.get::<_, String>(1)).unwrap()
+            .collect::<std::result::Result<Vec<_>, _>>().unwrap()
             .into_iter()
             .any(|column| column == "example_sentence");
 
@@ -91,6 +96,17 @@ mod tests {
             .unwrap();
 
         assert_eq!(table_count, 7);
+
+        // Verify FSRS columns exist in srs_cards
+        let fsrs_columns: Vec<String> = conn
+            .prepare("PRAGMA table_info(srs_cards)").unwrap()
+            .query_map([], |row| row.get::<_, String>(1)).unwrap()
+            .collect::<std::result::Result<Vec<_>, _>>().unwrap();
+        assert!(fsrs_columns.contains(&"stability".to_string()));
+        assert!(fsrs_columns.contains(&"difficulty".to_string()));
+        assert!(fsrs_columns.contains(&"memory_strength".to_string()));
+        assert!(fsrs_columns.contains(&"reviews_count".to_string()));
+        assert!(fsrs_columns.contains(&"actual_interval".to_string()));
 
         let has_example_sentence: bool = conn
             .prepare("PRAGMA table_info(words)")

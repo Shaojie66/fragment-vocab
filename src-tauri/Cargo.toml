@@ -33,6 +33,7 @@ base64 = "0.22"
 encoding_rs = "0.8"
 log = "0.4.29"
 simplelog = "0.12.2"
+fsrs = "4"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 core-graphics = "0.23"

@@ -138,7 +138,8 @@ fn load_cards_for_export(conn: &Connection) -> Result<Vec<SrsCard>, String> {
     let mut stmt = conn
         .prepare(
             "SELECT id, word_id, status, stage, due_at, last_seen_at, last_result, correct_streak,
-                    lifetime_correct, lifetime_wrong, skip_cooldown_until, updated_at
+                    lifetime_correct, lifetime_wrong, skip_cooldown_until, updated_at,
+                    stability, difficulty, memory_strength, reviews_count, actual_interval
              FROM srs_cards
              ORDER BY id ASC",
         )
@@ -159,6 +160,11 @@ fn load_cards_for_export(conn: &Connection) -> Result<Vec<SrsCard>, String> {
                 lifetime_wrong: row.get(9)?,
                 skip_cooldown_until: row.get(10)?,
                 updated_at: row.get(11)?,
+                stability: row.get(12)?,
+                difficulty: row.get(13)?,
+                memory_strength: row.get(14)?,
+                reviews_count: row.get(15)?,
+                actual_interval: row.get(16)?,
             })
         })
         .map_err(|e| format!("Failed to export srs_cards: {}", e))?;

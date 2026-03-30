@@ -27,6 +27,12 @@ pub struct SrsCard {
     pub lifetime_wrong: i32,
     pub skip_cooldown_until: Option<String>,
     pub updated_at: String,
+    // FSRS v4 fields
+    pub stability: f64,
+    pub difficulty: f64,
+    pub memory_strength: f64,
+    pub reviews_count: i64,
+    pub actual_interval: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
