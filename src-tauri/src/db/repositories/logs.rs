@@ -76,6 +76,13 @@ impl LogsRepository {
         Ok(count)
     }
 
+    pub fn count_all(&self) -> Result<i64> {
+        let conn = self.conn.lock().unwrap();
+        let count: i64 =
+            conn.query_row("SELECT COUNT(*) FROM review_logs", [], |row| row.get(0))?;
+        Ok(count)
+    }
+
     pub fn get_recent_logs(&self, limit: i64) -> Result<Vec<ReviewLog>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(

@@ -209,21 +209,50 @@ impl WordsRepository {
         Ok(words)
     }
 
-    pub fn search_words(&self, query: &str, limit: i64) -> Result<Vec<SearchResult>> {
+    pub fn list_all_by_source(&self, source: &str) -> Result<Vec<Word>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at
+             FROM words
+             WHERE source = ?1
+             ORDER BY word COLLATE NOCASE ASC, id ASC",
+        )?;
+
+        let words = stmt
+            .query_map([source], |row| {
+                Ok(Word {
+                    id: row.get(0)?,
+                    word: row.get(1)?,
+                    phonetic: row.get(2)?,
+                    part_of_speech: row.get(3)?,
+                    meaning_zh: row.get(4)?,
+                    example_sentence: row.get(5)?,
+                    source: row.get(6)?,
+                    difficulty: row.get(7)?,
+                    created_at: row.get(8)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(words)
+    }
+
+    pub fn search_words(&self, query: &str, limit: i64, offset: i64) -> Result<Vec<SearchResult>> {
         let conn = self.conn.lock().unwrap();
         let pattern = format!("%{}%", query.trim());
-        let safe_limit = limit.clamp(1, 100);
+        let safe_limit = limit.clamp(1, 50);
+        let safe_offset = offset.max(0);
         let mut stmt = conn.prepare(
             "SELECT w.word, w.meaning_zh, w.phonetic, w.part_of_speech, COALESCE(c.status, 'new') AS status, w.source, w.example_sentence
              FROM words w
              LEFT JOIN srs_cards c ON c.word_id = w.id
              WHERE w.word LIKE ?1 COLLATE NOCASE OR w.meaning_zh LIKE ?1
              ORDER BY w.word COLLATE NOCASE ASC, w.id ASC
-             LIMIT ?2",
+             LIMIT ?2 OFFSET ?3",
         )?;
 
         let results = stmt
-            .query_map((pattern, safe_limit), |row| {
+            .query_map((pattern, safe_limit, safe_offset), |row| {
                 Ok(SearchResult {
                     word: row.get(0)?,
                     meaning_zh: row.get(1)?,
@@ -409,6 +438,43 @@ mod tests {
         assert_eq!(words[0].word, "apple");
         assert_eq!(words[1].word, "zebra");
         assert!(words.iter().all(|word| word.source == "custom-alpha"));
+
+        drop(repo);
+        drop(db);
+        let _ = std::fs::remove_file(&db_path);
+    }
+
+    #[test]
+    fn test_search_words_offset_and_limit_cap() {
+        let temp_dir = env::temp_dir();
+        let db_path = temp_dir.join("test_words_search_offset.db");
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = Database::new(db_path.clone()).unwrap();
+        Migrator::run_migrations(&db).unwrap();
+
+        let repo = WordsRepository::new(db.get_connection());
+
+        for index in 0..60 {
+            repo.insert(
+                &format!("word-{index:02}"),
+                "测试",
+                "search-source",
+                None,
+                None,
+                1,
+            )
+            .unwrap();
+        }
+
+        let first_page = repo.search_words("word-", 50, 0).unwrap();
+        let second_page = repo.search_words("word-", 50, 50).unwrap();
+        let capped_page = repo.search_words("word-", 200, 0).unwrap();
+
+        assert_eq!(first_page.len(), 50);
+        assert_eq!(second_page.len(), 10);
+        assert_eq!(capped_page.len(), 50);
+        assert_eq!(second_page[0].word, "word-50");
 
         drop(repo);
         drop(db);

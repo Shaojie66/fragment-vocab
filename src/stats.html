@@ -42,6 +42,11 @@
             --chart-axis: rgba(38, 65, 53, 0.22);
             --chart-label: #667169;
             --chart-caption: #94674c;
+            --heatmap-empty: rgba(53, 95, 76, 0.1);
+            --heatmap-light: #d6eadc;
+            --heatmap-medium: #86b79a;
+            --heatmap-dark: #355f4c;
+            --heatmap-label: #667169;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -81,6 +86,11 @@
                 --chart-axis: rgba(185, 203, 188, 0.24);
                 --chart-label: #aab9ac;
                 --chart-caption: #e8d6a3;
+                --heatmap-empty: rgba(166, 199, 163, 0.12);
+                --heatmap-light: #3f6c52;
+                --heatmap-medium: #699c7a;
+                --heatmap-dark: #a6c7a3;
+                --heatmap-label: #aab9ac;
             }
         }
 
@@ -120,6 +130,11 @@
             --chart-axis: rgba(185, 203, 188, 0.24);
             --chart-label: #aab9ac;
             --chart-caption: #e8d6a3;
+            --heatmap-empty: rgba(166, 199, 163, 0.12);
+            --heatmap-light: #3f6c52;
+            --heatmap-medium: #699c7a;
+            --heatmap-dark: #a6c7a3;
+            --heatmap-label: #aab9ac;
         }
 
         * {
@@ -412,9 +427,99 @@
             line-height: 1.7;
         }
 
+        .heatmap-panel {
+            grid-column: 1 / -1;
+        }
+
+        .heatmap-shell {
+            margin-top: 18px;
+            min-height: 220px;
+            padding: 18px;
+            border-radius: 20px;
+            background:
+                linear-gradient(180deg, var(--bg-chart-top), var(--bg-chart-bottom)),
+                var(--bg-chart-overlay);
+            border: 1px solid var(--border-soft);
+        }
+
+        .heatmap-shell svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .heatmap-caption {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .achievements-grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .achievement-card {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            gap: 14px;
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(128, 138, 132, 0.12);
+            border: 1px solid rgba(128, 138, 132, 0.18);
+            color: var(--text-secondary);
+            filter: grayscale(1);
+            opacity: 0.76;
+        }
+
+        .achievement-card.is-unlocked {
+            background: linear-gradient(135deg, rgba(196, 109, 45, 0.16), rgba(53, 95, 76, 0.14));
+            border-color: rgba(196, 109, 45, 0.28);
+            color: var(--text-primary);
+            filter: none;
+            opacity: 1;
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: var(--bg-card-muted);
+            border: 1px solid var(--border-soft);
+            color: var(--text-accent);
+            font-size: 24px;
+        }
+
+        .achievement-card h3 {
+            font-size: 16px;
+        }
+
+        .achievement-card p {
+            margin-top: 4px;
+            color: inherit;
+            line-height: 1.5;
+        }
+
+        .achievement-meta {
+            display: inline-block;
+            margin-top: 8px;
+            color: var(--text-accent);
+            font-size: 12px;
+            letter-spacing: 0.04em;
+        }
+
         @media (max-width: 980px) {
             .metrics-grid,
             .panel-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .achievements-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
@@ -434,6 +539,10 @@
 
             .metrics-grid,
             .panel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievements-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -594,6 +703,19 @@
                 </div>
             </article>
 
+            <article class="panel heatmap-panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-kicker">Learning Heatmap</p>
+                        <h2>学习热力图</h2>
+                    </div>
+                </div>
+                <div class="heatmap-shell" id="heatmapContainer">
+                    <div class="chart-empty">正在读取过去 90 天的学习活跃度。</div>
+                </div>
+                <p class="heatmap-caption">每个方格代表一天，颜色越深表示当天复习次数越多。</p>
+            </article>
+
             <article class="panel">
                 <div class="panel-head">
                     <div>
@@ -622,6 +744,19 @@
                 <div class="summary-block">
                     <strong id="learningSummary">学习计划读取中</strong>
                     <p id="systemSummary">系统设置读取中</p>
+                </div>
+            </article>
+
+            <article class="panel" style="grid-column: 1 / -1;">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-kicker">Achievements</p>
+                        <h2>学习成就</h2>
+                    </div>
+                    <span class="status-chip" id="achievementsProgress">读取中</span>
+                </div>
+                <div id="achievementsContent">
+                    <p class="panel-body">正在加载成就徽章...</p>
                 </div>
             </article>
 

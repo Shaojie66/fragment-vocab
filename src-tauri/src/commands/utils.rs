@@ -142,6 +142,10 @@ pub fn build_wordbook_list_items(
 }
 
 pub fn clamp_wordbook_preview_limit(limit: i64) -> i64 {
+    limit.clamp(1, 20_000)
+}
+
+pub fn clamp_wordbook_search_limit(limit: i64) -> i64 {
     limit.clamp(1, 50)
 }
 

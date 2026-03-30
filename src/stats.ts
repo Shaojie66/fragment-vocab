@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { DashboardState, DayStats, FeedbackRecord, StreakStats } from './shared/types';
+import type { Achievement, DashboardState, DayStats, FeedbackRecord, StreakStats } from './shared/types';
+import { createWordDetailModal } from './shared/word-detail-modal';
 import { applyThemePreference, getThemeLabel } from './shared/theme';
 
 interface WrongBookWord {
@@ -39,6 +40,9 @@ const learningSummary = document.querySelector('#learningSummary') as HTMLElemen
 const systemSummary = document.querySelector('#systemSummary') as HTMLElement;
 const feedbackList = document.querySelector('#feedbackList') as HTMLElement;
 const historyChartContainer = document.querySelector('#historyChartContainer') as HTMLElement;
+const heatmapContainer = document.querySelector('#heatmapContainer') as HTMLElement;
+const achievementsContent = document.querySelector('#achievementsContent') as HTMLElement;
+const achievementsProgress = document.querySelector('#achievementsProgress') as HTMLElement;
 const range7Btn = document.querySelector('#range7Btn') as HTMLButtonElement;
 const range30Btn = document.querySelector('#range30Btn') as HTMLButtonElement;
 
@@ -46,6 +50,19 @@ const refreshBtn = document.querySelector('#refreshBtn') as HTMLButtonElement;
 const openMainBtn = document.querySelector('#openMainBtn') as HTMLButtonElement;
 
 let selectedHistoryRange = 7;
+const HEATMAP_DAYS = 90;
+const HEATMAP_COLUMNS = 13;
+const HEATMAP_ROWS = 7;
+const HEATMAP_DAY_LABELS = ['一', '二', '三', '四', '五', '六', '日'];
+const HEATMAP_MONTH_LABELS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+const wordDetailModal = createWordDetailModal({
+  onWrongBookChange: async () => {
+    await loadWrongBook();
+  },
+  onError: (message) => {
+    console.error('单词详情操作失败:', message);
+  },
+});
 
 function escapeHtml(value: string): string {
   return value
@@ -86,6 +103,15 @@ function getRangeDates(days: number): string[] {
   return dates;
 }
 
+function parseDateKey(value: string): Date | null {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
 function normalizeHistoryStats(stats: DayStats[], days: number): DayStats[] {
   const statsByDate = new Map(stats.map((item) => [item.date, item]));
   return getRangeDates(days).map((date) => {
@@ -111,6 +137,10 @@ function getThemeColor(name: string, fallback: string): string {
 
 function renderHistoryEmpty(message: string) {
   historyChartContainer.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
+}
+
+function renderHeatmapEmpty(message: string) {
+  heatmapContainer.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
 }
 
 function renderHistoryChart(stats: DayStats[]) {
@@ -205,6 +235,129 @@ function renderHistoryChart(stats: DayStats[]) {
   `;
 }
 
+function getHeatmapLevel(totalReviews: number): 0 | 1 | 2 | 3 {
+  if (totalReviews <= 0) {
+    return 0;
+  }
+  if (totalReviews <= 5) {
+    return 1;
+  }
+  if (totalReviews <= 15) {
+    return 2;
+  }
+  return 3;
+}
+
+function getHeatmapColor(totalReviews: number): string {
+  const level = getHeatmapLevel(totalReviews);
+  if (level === 0) {
+    return getThemeColor('--heatmap-empty', 'rgba(53, 95, 76, 0.1)');
+  }
+  if (level === 1) {
+    return getThemeColor('--heatmap-light', '#d6eadc');
+  }
+  if (level === 2) {
+    return getThemeColor('--heatmap-medium', '#86b79a');
+  }
+  return getThemeColor('--heatmap-dark', '#355f4c');
+}
+
+function getMondayIndex(date: Date): number {
+  const weekDay = date.getDay();
+  return weekDay === 0 ? 6 : weekDay - 1;
+}
+
+function renderLearningHeatmap(stats: DayStats[]) {
+  const normalizedStats = normalizeHistoryStats(stats, HEATMAP_DAYS);
+  const statsByDate = new Map(normalizedStats.map((item) => [item.date, item]));
+  const startDate = parseDateKey(normalizedStats[0]?.date ?? '');
+  const endDate = parseDateKey(normalizedStats[normalizedStats.length - 1]?.date ?? '');
+
+  if (!startDate || !endDate) {
+    renderHeatmapEmpty('过去 90 天的学习记录读取失败，请稍后刷新重试。');
+    return;
+  }
+
+  const firstGridDate = new Date(endDate);
+  firstGridDate.setDate(endDate.getDate() - HEATMAP_COLUMNS * HEATMAP_ROWS + 1);
+  firstGridDate.setHours(0, 0, 0, 0);
+
+  const cellSize = 18;
+  const cellGap = 5;
+  const labelWidth = 32;
+  const monthLabelHeight = 24;
+  const topPadding = 16;
+  const rightPadding = 12;
+  const bottomPadding = 12;
+  const gridWidth = HEATMAP_COLUMNS * cellSize + (HEATMAP_COLUMNS - 1) * cellGap;
+  const gridHeight = HEATMAP_ROWS * cellSize + (HEATMAP_ROWS - 1) * cellGap;
+  const width = labelWidth + gridWidth + rightPadding;
+  const height = topPadding + monthLabelHeight + gridHeight + bottomPadding;
+  const labelColor = getThemeColor('--heatmap-label', '#667169');
+  const borderColor = getThemeColor('--border-soft', 'rgba(38, 65, 53, 0.08)');
+  const monthLabels: string[] = [];
+  const dayLabels: string[] = [];
+  const cells: string[] = [];
+
+  for (let row = 0; row < HEATMAP_ROWS; row += 1) {
+    const y = topPadding + monthLabelHeight + row * (cellSize + cellGap) + cellSize / 2 + 4;
+    dayLabels.push(
+      `<text x="${labelWidth - 8}" y="${y}" text-anchor="end" font-size="12" fill="${labelColor}">${HEATMAP_DAY_LABELS[row]}</text>`,
+    );
+  }
+
+  for (let column = 0; column < HEATMAP_COLUMNS; column += 1) {
+    const columnDate = new Date(firstGridDate);
+    columnDate.setDate(firstGridDate.getDate() + column * HEATMAP_ROWS);
+
+    const previousColumnDate = new Date(firstGridDate);
+    previousColumnDate.setDate(firstGridDate.getDate() + (column - 1) * HEATMAP_ROWS);
+
+    if (column === 0 || columnDate.getMonth() !== previousColumnDate.getMonth()) {
+      const x = labelWidth + column * (cellSize + cellGap);
+      monthLabels.push(
+        `<text x="${x}" y="${topPadding + 12}" font-size="12" fill="${labelColor}">${HEATMAP_MONTH_LABELS[columnDate.getMonth()]}</text>`,
+      );
+    }
+  }
+
+  for (let index = 0; index < HEATMAP_COLUMNS * HEATMAP_ROWS; index += 1) {
+    const date = new Date(firstGridDate);
+    date.setDate(firstGridDate.getDate() + index);
+
+    const column = Math.floor(index / HEATMAP_ROWS);
+    const row = getMondayIndex(date);
+    const dateKey = getDateKey(date);
+
+    if (date < startDate || date > endDate) {
+      continue;
+    }
+
+    const item = statsByDate.get(dateKey) ?? {
+      date: dateKey,
+      total_reviews: 0,
+      correct_count: 0,
+      new_words: 0,
+    };
+    const x = labelWidth + column * (cellSize + cellGap);
+    const y = topPadding + monthLabelHeight + row * (cellSize + cellGap);
+
+    cells.push(
+      `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="5" fill="${getHeatmapColor(item.total_reviews)}" stroke="${borderColor}" stroke-width="1">
+        <title>${escapeHtml(`${item.date} · ${item.total_reviews} 次复习`)}</title>
+      </rect>`,
+    );
+  }
+
+  heatmapContainer.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="过去 90 天学习活跃热力图">
+      ${monthLabels.join('')}
+      ${dayLabels.join('')}
+      ${cells.join('')}
+    </svg>
+  `;
+}
+
 async function loadHistoryStats(days: number) {
   selectedHistoryRange = days;
   setRangeButtons(days);
@@ -264,6 +417,30 @@ function renderFeedback(records: FeedbackRecord[] = []) {
     .join('');
 }
 
+function renderAchievements(achievements: Achievement[]) {
+  const unlockedCount = achievements.filter((achievement) => achievement.unlocked).length;
+  achievementsProgress.textContent = `${unlockedCount} / ${achievements.length} 已解锁`;
+
+  achievementsContent.innerHTML = `<div class="achievements-grid">${achievements
+    .map((achievement) => {
+      const unlockLabel = achievement.unlocked
+        ? `解锁于 ${formatDateTime(achievement.unlocked_at)}`
+        : '尚未解锁';
+
+      return `
+        <article class="achievement-card${achievement.unlocked ? ' is-unlocked' : ''}">
+          <div class="achievement-icon" aria-hidden="true">${achievement.unlocked ? '★' : '○'}</div>
+          <div>
+            <h3>${escapeHtml(achievement.title)}</h3>
+            <p>${escapeHtml(achievement.description)}</p>
+            <span class="achievement-meta">${escapeHtml(unlockLabel)}</span>
+          </div>
+        </article>
+      `;
+    })
+    .join('')}</div>`;
+}
+
 function renderDashboard(state: DashboardState) {
   const { today_stats: stats, app_config: config, recommendation, pause_until } = state;
   applyThemePreference(config.system.theme);
@@ -303,14 +480,18 @@ function renderStreakStats(stats: StreakStats) {
 
 async function loadStats() {
   try {
-    const [dashboard, history, streak] = await Promise.all([
+    const [dashboard, history, heatmapHistory, streak, achievements] = await Promise.all([
       invoke<DashboardState>('get_dashboard_state'),
       invoke<DayStats[]>('get_history_stats', { days: selectedHistoryRange }),
+      invoke<DayStats[]>('get_history_stats', { days: HEATMAP_DAYS }),
       invoke<StreakStats>('get_streak_stats'),
+      invoke<Achievement[]>('get_achievements'),
     ]);
     renderDashboard(dashboard);
     renderStreakStats(streak);
     renderHistoryChart(normalizeHistoryStats(history, selectedHistoryRange));
+    renderLearningHeatmap(heatmapHistory);
+    renderAchievements(achievements);
   } catch (error) {
     console.error('加载统计页失败:', error);
     heroSummary.textContent = '统计页读取失败，请稍后重试或返回主页面查看当前状态。';
@@ -318,7 +499,10 @@ async function loadStats() {
     recommendationChip.textContent = '请重试';
     metricCurrentStreak.textContent = '0';
     metricLongestStreak.textContent = '0';
+    achievementsProgress.textContent = '读取失败';
+    achievementsContent.innerHTML = '<p class="panel-body">成就读取失败，请稍后刷新重试。</p>';
     renderHistoryEmpty('学习历史趋势读取失败，请稍后刷新重试。');
+    renderHeatmapEmpty('过去 90 天的学习记录读取失败，请稍后刷新重试。');
   }
 }
 
@@ -367,24 +551,68 @@ function renderWrongBook(words: WrongBookWord[]) {
   wrongBookContent.innerHTML = `<div class="wrong-book-list">${words
     .map(
       (w) => `
-    <div class="wrong-book-item" data-card-id="${w.card_id}">
+    <div class="wrong-book-item" data-card-id="${w.card_id}" data-word-id="${w.word_id}" role="button" tabindex="0" aria-label="查看 ${escapeHtml(w.word)} 详情">
       <div>
-        <div class="wrong-book-word">${w.word}${w.phonetic ? ` <span class="wrong-book-phonetic">${w.phonetic}</span>` : ''}</div>
-        <div class="wrong-book-meaning">${w.part_of_speech ? `${w.part_of_speech} ` : ''}${w.meaning_zh}</div>
+        <div class="wrong-book-word">${escapeHtml(w.word)}${w.phonetic ? ` <span class="wrong-book-phonetic">${escapeHtml(w.phonetic)}</span>` : ''}</div>
+        <div class="wrong-book-meaning">${w.part_of_speech ? `${escapeHtml(w.part_of_speech)} ` : ''}${escapeHtml(w.meaning_zh)}</div>
         <div class="wrong-book-meta">错 ${w.lifetime_wrong} 次 · 对 ${w.lifetime_correct} 次</div>
       </div>
-      <button class="wrong-book-remove" onclick="removeFromWrongBook(${w.card_id})">已掌握</button>
+      <button class="wrong-book-remove" type="button" data-remove-card-id="${w.card_id}">已掌握</button>
     </div>`
     )
     .join('')}</div>`;
 }
 
-// Make available globally for onclick
-(window as unknown as Record<string, unknown>).removeFromWrongBook = async (cardId: number) => {
-  try {
-    await invoke('remove_from_wrong_book', { cardId });
-    await loadWrongBook();
-  } catch (error) {
-    console.error('移除错题失败:', error);
+wrongBookContent.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement | null;
+  const removeButton = target?.closest<HTMLButtonElement>('button[data-remove-card-id]');
+
+  if (removeButton) {
+    const cardId = Number(removeButton.dataset.removeCardId);
+    if (!Number.isFinite(cardId)) {
+      return;
+    }
+
+    void (async () => {
+      try {
+        await invoke('remove_from_wrong_book', { cardId });
+        await loadWrongBook();
+      } catch (error) {
+        console.error('移除错题失败:', error);
+      }
+    })();
+    return;
   }
-};
+
+  const item = target?.closest<HTMLElement>('.wrong-book-item[data-word-id]');
+  if (!item) {
+    return;
+  }
+
+  const wordId = Number(item.dataset.wordId);
+  if (!Number.isFinite(wordId)) {
+    return;
+  }
+
+  void wordDetailModal.open(wordId);
+});
+
+wrongBookContent.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter' && event.key !== ' ') {
+    return;
+  }
+
+  const target = event.target as HTMLElement | null;
+  const item = target?.closest<HTMLElement>('.wrong-book-item[data-word-id]');
+  if (!item || target?.closest('button[data-remove-card-id]')) {
+    return;
+  }
+
+  event.preventDefault();
+  const wordId = Number(item.dataset.wordId);
+  if (!Number.isFinite(wordId)) {
+    return;
+  }
+
+  void wordDetailModal.open(wordId);
+});

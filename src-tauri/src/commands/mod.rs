@@ -1,3 +1,4 @@
+pub mod achievements;
 pub mod backup;
 pub mod config;
 pub mod pet;

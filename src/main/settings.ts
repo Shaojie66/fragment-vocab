@@ -1,17 +1,46 @@
+import { invoke } from '@tauri-apps/api/core';
 import { disable as disableAutostart, enable as enableAutostart, isEnabled as isAutostartEnabled } from '@tauri-apps/plugin-autostart';
-import { applyModePreset, createDefaultAppConfig, getModeLabel } from '../shared/config';
+import { applyModePreset, getModeLabel, isRecommendedReminderMode } from '../shared/config';
 import { applyThemePreference } from '../shared/theme';
-import type { AppConfig, RecommendedReminderMode, ReminderMode, ThemePreference } from '../shared/types';
+import type { AppConfig, ImportSummary, RecommendedReminderMode, ReminderMode, ThemePreference } from '../shared/types';
 import { mainElements } from './elements';
-import { cloneConfig, readNumberInput } from './helpers';
+import { cloneConfig, downloadTextFile, getErrorMessage, readNumberInput } from './helpers';
 import { mainState } from './state';
 
 interface SettingsDependencies {
   renderDashboard: () => void;
   setSaveHint: (message: string) => void;
+  onRefreshDashboard: () => Promise<void>;
   onSaveConfig: () => Promise<void>;
   onRestoreRecommended: () => Promise<void>;
-  onCompleteOnboarding: () => Promise<void>;
+}
+
+function buildImportSummaryMessage(summary: ImportSummary): string {
+  return `学习数据已导入：单词 ${summary.words}，卡片 ${summary.srs_cards}，复习记录 ${summary.review_logs}，状态 ${summary.app_state}，宠物 ${summary.pets}，成就 ${summary.achievements}。`;
+}
+
+async function exportLearningData(dependencies: SettingsDependencies): Promise<void> {
+  try {
+    const json = await invoke<string>('export_all_data');
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadTextFile(json, `fragment-vocab-learning-data-${stamp}.json`, 'application/json');
+    dependencies.setSaveHint('学习数据已导出到 JSON 文件。');
+  } catch (error) {
+    console.error('导出学习数据失败:', error);
+    dependencies.setSaveHint(`导出学习数据失败：${getErrorMessage(error)}`);
+  }
+}
+
+async function importLearningData(file: File, dependencies: SettingsDependencies): Promise<void> {
+  try {
+    const jsonData = await file.text();
+    const summary = await invoke<ImportSummary>('import_all_data', { jsonData });
+    await dependencies.onRefreshDashboard();
+    dependencies.setSaveHint(buildImportSummaryMessage(summary));
+  } catch (error) {
+    console.error('导入学习数据失败:', error);
+    dependencies.setSaveHint(`导入学习数据失败：${getErrorMessage(error)}`);
+  }
 }
 
 function syncReminderFieldStates(mode: ReminderMode) {
@@ -62,11 +91,12 @@ export function populateForm(config: AppConfig) {
 }
 
 export function populateOnboarding(config: AppConfig) {
-  mainElements.onboardingDailyNewInput.value = String(config.learning.daily_new_limit);
-  mainElements.onboardingModeSelect.value = (config.schedule.weekday_profile ?? config.reminder.mode) as RecommendedReminderMode;
-  mainElements.onboardingQuietStartInput.value = config.schedule.quiet_hours_start;
-  mainElements.onboardingQuietEndInput.value = config.schedule.quiet_hours_end;
-  mainElements.onboardingLaunchAtLoginInput.checked = config.system.launch_at_login;
+  const candidateMode = config.schedule.weekday_profile ?? config.reminder.mode;
+  const mode = isRecommendedReminderMode(candidateMode) ? candidateMode : 'gentle';
+
+  mainElements.onboardingFrequencyInputs.forEach((input) => {
+    input.checked = input.value === mode;
+  });
 }
 
 export function readConfigFromForm(): AppConfig {
@@ -123,15 +153,12 @@ export function readConfigFromForm(): AppConfig {
 }
 
 export function readOnboardingConfig(): AppConfig {
-  const mode = mainElements.onboardingModeSelect.value as RecommendedReminderMode;
-  const config = applyModePreset(createDefaultAppConfig(), mode);
+  const selectedMode = mainElements.onboardingFrequencyInputs.find((input) => input.checked)?.value;
+  const mode: RecommendedReminderMode = isRecommendedReminderMode(selectedMode) ? selectedMode : 'gentle';
+  const config = applyModePreset(cloneConfig(mainState.currentConfig), mode);
 
   config.schedule.weekday_profile = mode;
   config.schedule.weekend_profile = mode;
-  config.schedule.quiet_hours_start = mainElements.onboardingQuietStartInput.value || config.schedule.quiet_hours_start;
-  config.schedule.quiet_hours_end = mainElements.onboardingQuietEndInput.value || config.schedule.quiet_hours_end;
-  config.learning.daily_new_limit = readNumberInput(mainElements.onboardingDailyNewInput, config.learning.daily_new_limit);
-  config.system.launch_at_login = mainElements.onboardingLaunchAtLoginInput.checked;
 
   return config;
 }
@@ -216,13 +243,32 @@ export function initializeSettings(dependencies: SettingsDependencies) {
     dependencies.setSaveHint('主题预览已切换，保存后会同步到其他窗口。');
   });
 
+  mainElements.exportLearningDataBtn.addEventListener('click', () => {
+    void exportLearningData(dependencies);
+  });
+  mainElements.importLearningDataBtn.addEventListener('click', () => {
+    mainElements.importLearningDataFileInput.click();
+  });
+  mainElements.importLearningDataFileInput.addEventListener('change', () => {
+    void (async () => {
+      const [file] = Array.from(mainElements.importLearningDataFileInput.files ?? []);
+
+      if (!file) {
+        return;
+      }
+
+      try {
+        await importLearningData(file, dependencies);
+      } finally {
+        mainElements.importLearningDataFileInput.value = '';
+      }
+    })();
+  });
+
   mainElements.saveConfigBtn.addEventListener('click', () => {
     void dependencies.onSaveConfig();
   });
   mainElements.restoreRecommendedBtn.addEventListener('click', () => {
     void dependencies.onRestoreRecommended();
-  });
-  mainElements.completeOnboardingBtn.addEventListener('click', () => {
-    void dependencies.onCompleteOnboarding();
   });
 }

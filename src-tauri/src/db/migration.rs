@@ -21,6 +21,17 @@ impl Migrator {
         Self::add_example_sentence_column(db)
             .context("Failed to run 003_example_sentence.sql migration")?;
 
+        let performance_index_migration_sql =
+            include_str!("../../migrations/005_performance_indexes.sql");
+
+        db.execute_migration(performance_index_migration_sql)
+            .context("Failed to run 005_performance_indexes.sql migration")?;
+
+        let achievements_migration_sql = include_str!("../../migrations/004_achievements.sql");
+
+        db.execute_migration(achievements_migration_sql)
+            .context("Failed to run 004_achievements.sql migration")?;
+
         println!("✅ Database migrations completed successfully");
         Ok(())
     }
@@ -68,13 +79,13 @@ mod tests {
 
         let table_count: i32 = conn
             .query_row(
-                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('words', 'srs_cards', 'review_logs', 'app_state')",
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('words', 'srs_cards', 'review_logs', 'app_state', 'achievements')",
                 [],
                 |row| row.get(0),
             )
             .unwrap();
 
-        assert_eq!(table_count, 4);
+        assert_eq!(table_count, 5);
 
         let has_example_sentence: bool = conn
             .prepare("PRAGMA table_info(words)")
@@ -87,6 +98,21 @@ mod tests {
             .any(|column| column == "example_sentence");
 
         assert!(has_example_sentence);
+
+        let index_count: i32 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name IN (
+                    'idx_words_source',
+                    'idx_srs_cards_status_due_at',
+                    'idx_srs_cards_word_id',
+                    'idx_review_logs_card_id_shown_at'
+                )",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+
+        assert_eq!(index_count, 4);
 
         drop(conn);
         drop(db);

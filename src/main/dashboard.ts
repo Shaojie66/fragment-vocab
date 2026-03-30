@@ -203,6 +203,32 @@ function renderMetrics(stats: TodayStats | undefined) {
   mainElements.metricCurrentStreak.textContent = String(mainState.currentDashboard?.current_streak ?? 0);
 }
 
+function renderDailyGoalProgress(stats: TodayStats | undefined, config: AppConfig) {
+  const newWordsToday = Math.max(0, stats?.new_words_today ?? 0);
+  const dailyLimit = Math.max(0, config.learning.daily_new_limit ?? 0);
+  const isGoalConfigured = dailyLimit > 0;
+  const isGoalComplete = isGoalConfigured && newWordsToday === dailyLimit;
+  const isGoalExceeded = isGoalConfigured && newWordsToday > dailyLimit;
+  const progressRatio = isGoalConfigured ? Math.min(newWordsToday / dailyLimit, 1) : 0;
+  const progressPercent = `${Math.round(progressRatio * 100)}%`;
+
+  mainElements.dailyGoalText.textContent = `${newWordsToday} / ${dailyLimit} 新词`;
+  mainElements.dailyGoalStatus.textContent = !isGoalConfigured
+    ? '今日未设置目标'
+    : isGoalExceeded
+      ? '已超出今日目标'
+      : isGoalComplete
+        ? '目标达成！'
+        : '今日目标进行中';
+
+  mainElements.dailyGoalCard.classList.toggle('is-complete', isGoalComplete);
+  mainElements.dailyGoalCard.classList.toggle('is-exceeded', isGoalExceeded);
+  mainElements.dailyGoalCard.classList.toggle('is-unset', !isGoalConfigured);
+  mainElements.dailyGoalTrack.setAttribute('aria-valuemax', String(dailyLimit));
+  mainElements.dailyGoalTrack.setAttribute('aria-valuenow', String(Math.min(newWordsToday, dailyLimit)));
+  mainElements.dailyGoalFill.style.width = progressPercent;
+}
+
 function renderStateBanner(snapshot: SchedulerSnapshot) {
   const notice = (() => {
     if (mainState.lastErrorMessage) {
@@ -214,8 +240,8 @@ function renderStateBanner(snapshot: SchedulerSnapshot) {
 
     if (mainState.currentDashboard?.needs_onboarding) {
       return {
-        title: '先完成首次设置',
-        body: '应用会在你确认新词目标、静默时间和提醒强度后再开始调度。',
+        title: '先完成首次引导',
+        body: '完成欢迎向导后，应用会按你选择的提醒频率，在空闲时开始弹出单词卡。',
       };
     }
 
@@ -255,11 +281,6 @@ function renderStateBanner(snapshot: SchedulerSnapshot) {
   mainElements.stateBannerBody.textContent = notice.body;
 }
 
-export function syncOnboardingVisibility(visible: boolean) {
-  mainElements.onboardingBackdrop.classList.toggle('hidden', !visible);
-  document.body.classList.toggle('modal-open', visible);
-}
-
 export function renderSchedulerControls(isStarted: boolean) {
   mainElements.startSchedulerBtn.style.display = isStarted ? 'none' : 'inline-block';
   mainElements.stopSchedulerBtn.style.display = isStarted ? 'inline-block' : 'none';
@@ -275,6 +296,7 @@ export function renderDashboard() {
   const recommendation = mainState.currentDashboard?.recommendation;
 
   renderMetrics(stats);
+  renderDailyGoalProgress(stats, mainState.currentConfig);
 
   mainElements.statusChip.textContent = getCurrentStatus(snapshot);
   mainElements.strategyChip.textContent = isRecommended ? `今日${scheduleSegmentLabel}：${modeLabel}` : `当前模式：${modeLabel}`;

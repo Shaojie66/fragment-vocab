@@ -248,8 +248,8 @@ describe('TriggerScheduler', () => {
       vi.useRealTimers();
     });
 
-    it('距离上次展示 < 45 分钟时不兜底触发', async () => {
-      const lastShowTime = new Date(Date.now() - 30 * 60 * 1000);
+    it('距离上次展示 < fallback 间隔时不兜底触发', async () => {
+      const lastShowTime = new Date(Date.now() - 20 * 60 * 1000);
       (scheduler as any).state.lastShowTime = lastShowTime;
 
       vi.mocked(invoke).mockResolvedValue(60);

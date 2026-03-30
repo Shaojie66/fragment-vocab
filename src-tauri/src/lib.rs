@@ -457,12 +457,18 @@ pub fn run() {
             commands::config::list_team_templates,
             commands::config::record_feedback,
             commands::config::get_export_bundle,
+            commands::config::export_all_data,
+            commands::config::import_all_data,
             commands::config::get_history_stats,
             commands::config::get_streak_stats,
+            commands::achievements::get_achievements,
+            commands::achievements::check_and_unlock_achievements,
             commands::wordbook::import_custom_wordbook,
             commands::wordbook::list_wordbooks,
             commands::wordbook::list_wordbook_words,
+            commands::wordbook::export_wordbook,
             commands::wordbook::search_words,
+            commands::wordbook::get_word_detail,
             commands::wordbook::set_wordbook_enabled,
             commands::wordbook::delete_wordbook,
             commands::review::get_next_card,
@@ -476,6 +482,7 @@ pub fn run() {
             commands::backup::restore_backup,
             commands::wrong_book::get_wrong_book_words,
             commands::wrong_book::remove_from_wrong_book,
+            commands::wrong_book::set_wrong_book_state,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

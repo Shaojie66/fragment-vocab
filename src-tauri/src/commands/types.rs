@@ -225,6 +225,17 @@ pub struct ExportBundle {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportSummary {
+    pub words: i64,
+    pub srs_cards: i64,
+    pub review_logs: i64,
+    pub app_state: i64,
+    pub pets: i64,
+    pub achievements: i64,
+    pub total_imported: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WordbookListItem {
     pub source: String,
     pub display_name: String,
@@ -244,6 +255,24 @@ pub struct WordbookWordItem {
     pub meaning_zh: String,
     pub difficulty: i32,
     pub created_at: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WordDetail {
+    pub word: String,
+    pub phonetic: Option<String>,
+    pub part_of_speech: Option<String>,
+    pub meaning_zh: String,
+    pub example_sentence: Option<String>,
+    pub source: String,
+    pub difficulty: i32,
+    pub srs_status: String,
+    pub srs_stage: i32,
+    pub correct_streak: i32,
+    pub lifetime_correct: i32,
+    pub lifetime_wrong: i32,
+    pub due_at: Option<String>,
+    pub in_wrong_book: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

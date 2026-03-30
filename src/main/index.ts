@@ -10,10 +10,11 @@ import type {
   FeedbackType,
   TeamTemplate,
 } from '../shared/types';
-import { initializeDashboard, renderDashboard, renderSchedulerControls, syncOnboardingVisibility } from './dashboard';
+import { initializeDashboard, renderDashboard, renderSchedulerControls } from './dashboard';
 import { mainElements } from './elements';
 import { initializeEvents, initScheduler, isSchedulerStarted, startDashboardRefreshPolling, stopScheduler } from './events';
 import { copyToClipboard, downloadTextFile, getErrorMessage } from './helpers';
+import { initializeOnboarding, syncOnboardingVisibility } from './onboarding';
 import {
   initializeSettings,
   populateForm,
@@ -211,6 +212,7 @@ async function completeOnboarding() {
 
     mainState.currentConfig = await invoke<AppConfig>('complete_onboarding', { config: nextConfig });
     mainState.currentExportBundle = null;
+    syncOnboardingVisibility(false);
     await refreshDashboard();
 
     if (launchAtLogin !== requestedLaunchAtLogin) {
@@ -341,14 +343,18 @@ function handleStopScheduler() {
 }
 
 function initializeModules() {
+  initializeOnboarding({
+    onComplete: completeOnboarding,
+  });
+
   initializeSettings({
     renderDashboard,
     setSaveHint,
+    onRefreshDashboard: refreshDashboard,
     onSaveConfig: async () => {
       await saveConfig();
     },
     onRestoreRecommended: restoreRecommended,
-    onCompleteOnboarding: completeOnboarding,
   });
 
   initializeDashboard({

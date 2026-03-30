@@ -210,6 +210,30 @@
         <p id="stateBannerBody">正在同步当前提醒状态。</p>
       </section>
 
+      <section class="daily-goal-card" id="dailyGoalCard">
+        <div class="daily-goal-head">
+          <div>
+            <p class="panel-kicker">Daily Goal</p>
+            <h2>今日新词进度</h2>
+          </div>
+          <div class="daily-goal-summary">
+            <strong id="dailyGoalText">0 / 0 新词</strong>
+            <span id="dailyGoalStatus">今日目标进行中</span>
+          </div>
+        </div>
+        <div
+          class="daily-goal-track"
+          id="dailyGoalTrack"
+          role="progressbar"
+          aria-label="今日新词学习进度"
+          aria-valuemin="0"
+          aria-valuemax="0"
+          aria-valuenow="0"
+        >
+          <div class="daily-goal-fill" id="dailyGoalFill"></div>
+        </div>
+      </section>
+
       <section class="overview-grid">
         <article class="metric-card">
           <span class="metric-label">今日学习次数</span>
@@ -422,6 +446,11 @@
               <span>启用托盘</span>
             </label>
           </div>
+          <div class="inline-actions">
+            <button class="ghost-btn" id="exportLearningDataBtn" type="button">Export Learning Data</button>
+            <button class="ghost-btn" id="importLearningDataBtn" type="button">Import Learning Data</button>
+          </div>
+          <input id="importLearningDataFileInput" class="hidden" type="file" accept="application/json,.json" />
           <p class="hint-text">部分系统设置会在下次启动时完全生效。</p>
         </article>
 
@@ -584,43 +613,104 @@
       </footer>
     </main>
 
-    <div class="onboarding-backdrop hidden" id="onboardingBackdrop">
-      <section class="onboarding-card" aria-labelledby="onboardingTitle">
-        <p class="eyebrow">First-Time Setup</p>
-        <h2 id="onboardingTitle">先完成一次最小设置</h2>
-        <p class="panel-body">
-          Fragment Vocab 是被动提醒工具。先确定你的新词目标、提醒时间段和推荐强度，后面都可以在主页面继续调。
-        </p>
+    <div class="hidden" id="onboarding-wizard" aria-hidden="true">
+      <section class="onboarding-wizard-card" aria-labelledby="onboardingTitle">
+        <div class="onboarding-wizard-shell">
+          <div class="onboarding-wizard-head">
+            <p class="eyebrow">First Run</p>
+            <div class="onboarding-step-dots" id="onboardingStepDots" aria-label="Onboarding progress">
+              <button class="onboarding-step-dot" type="button" data-onboarding-dot="0" aria-label="第 1 步"></button>
+              <button class="onboarding-step-dot" type="button" data-onboarding-dot="1" aria-label="第 2 步"></button>
+              <button class="onboarding-step-dot" type="button" data-onboarding-dot="2" aria-label="第 3 步"></button>
+              <button class="onboarding-step-dot" type="button" data-onboarding-dot="3" aria-label="第 4 步"></button>
+            </div>
+          </div>
 
-        <div class="form-grid onboarding-grid">
-          <label class="field">
-            <span>每日新词目标</span>
-            <input id="onboardingDailyNewInput" type="number" min="0" max="100" value="10" />
-          </label>
-          <label class="field">
-            <span>提醒偏好</span>
-            <select id="onboardingModeSelect">
-              <option value="gentle">克制</option>
-              <option value="balanced">平衡</option>
-              <option value="intensive">强化</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>静默开始</span>
-            <input id="onboardingQuietStartInput" type="time" value="23:00" />
-          </label>
-          <label class="field">
-            <span>静默结束</span>
-            <input id="onboardingQuietEndInput" type="time" value="07:00" />
-          </label>
-          <label class="field checkbox-field onboarding-checkbox">
-            <input id="onboardingLaunchAtLoginInput" type="checkbox" />
-            <span>开机自动启动</span>
-          </label>
-        </div>
+          <div class="onboarding-step-viewport">
+            <article class="onboarding-step-panel" data-onboarding-step="0" aria-hidden="true">
+              <div class="onboarding-hero-icon" aria-hidden="true">
+                <div class="onboarding-hero-icon-core">FV</div>
+                <span class="onboarding-hero-leaf onboarding-hero-leaf-left"></span>
+                <span class="onboarding-hero-leaf onboarding-hero-leaf-right"></span>
+              </div>
+              <p class="onboarding-step-kicker">欢迎</p>
+              <h2 id="onboardingTitle">Fragment Vocab 帮你在碎片时间记单词</h2>
+              <p class="onboarding-step-body">
+                它不是传统的背词页面，而是一个更轻量的陪伴工具，在你有空的时候提醒一下，不强行打断。
+              </p>
+            </article>
 
-        <div class="onboarding-actions">
-          <button class="primary-btn" id="completeOnboardingBtn" type="button">完成设置并开始使用</button>
+            <article class="onboarding-step-panel" data-onboarding-step="1" aria-hidden="true">
+              <div class="onboarding-illustration" aria-hidden="true">
+                <div class="onboarding-illustration-card">
+                  <span class="onboarding-illustration-label">Idle Moment</span>
+                  <strong>fragment</strong>
+                  <span>碎片，片段</span>
+                </div>
+                <div class="onboarding-illustration-actions">
+                  <span>认识</span>
+                  <span>不认识</span>
+                </div>
+              </div>
+              <p class="onboarding-step-kicker">如何运作</p>
+              <h2>系统会在你空闲时弹出单词卡，选择认识或不认识</h2>
+              <p class="onboarding-step-body">
+                每次只做一个很轻的判断。系统会根据你的反馈，继续安排后续复习节奏。
+              </p>
+            </article>
+
+            <article class="onboarding-step-panel" data-onboarding-step="2" aria-hidden="true">
+              <p class="onboarding-step-kicker">提醒频率</p>
+              <h2>选择你想要的学习节奏</h2>
+              <p class="onboarding-step-body">
+                先从一个舒服的强度开始。后面随时都可以在主页面调整。
+              </p>
+
+              <div class="onboarding-frequency-list" role="radiogroup" aria-label="选择提醒频率">
+                <label class="onboarding-frequency-option">
+                  <input id="onboardingFrequencyGentle" type="radio" name="onboardingFrequency" value="gentle" />
+                  <span class="onboarding-frequency-card">
+                    <strong>Gentle</strong>
+                    <span class="onboarding-frequency-title">克制</span>
+                    <span class="onboarding-frequency-desc">提醒更少，适合先养成习惯，不想被频繁打断。</span>
+                  </span>
+                </label>
+                <label class="onboarding-frequency-option">
+                  <input id="onboardingFrequencyBalanced" type="radio" name="onboardingFrequency" value="balanced" />
+                  <span class="onboarding-frequency-card">
+                    <strong>Balanced</strong>
+                    <span class="onboarding-frequency-title">平衡</span>
+                    <span class="onboarding-frequency-desc">覆盖率和打扰感更均衡，适合大多数使用场景。</span>
+                  </span>
+                </label>
+                <label class="onboarding-frequency-option">
+                  <input id="onboardingFrequencyIntensive" type="radio" name="onboardingFrequency" value="intensive" />
+                  <span class="onboarding-frequency-card">
+                    <strong>Intensive</strong>
+                    <span class="onboarding-frequency-title">强化</span>
+                    <span class="onboarding-frequency-desc">更积极利用空闲时间，适合想尽快拉起学习密度的人。</span>
+                  </span>
+                </label>
+              </div>
+            </article>
+
+            <article class="onboarding-step-panel" data-onboarding-step="3" aria-hidden="true">
+              <div class="onboarding-ready-badge" aria-hidden="true">Ready</div>
+              <p class="onboarding-step-kicker">准备完成</p>
+              <h2>一切就绪！开始你的第一次学习</h2>
+              <p class="onboarding-step-body">
+                完成后，Fragment Vocab 会按照你选定的频率，在你空闲时开始第一次提醒。
+              </p>
+            </article>
+          </div>
+
+          <div class="onboarding-actions">
+            <button class="ghost-btn" id="onboardingPrevBtn" type="button">上一步</button>
+            <div class="onboarding-actions-right">
+              <button class="ghost-btn" id="onboardingNextBtn" type="button">下一步</button>
+              <button class="primary-btn" id="completeOnboardingBtn" type="button">开始使用</button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

@@ -16,9 +16,9 @@ export interface MainState {
   currentWordbooks: WordbookListItem[];
   currentWordbookPreviewSource: string | null;
   currentWordbookPreviewWords: WordbookWordItem[];
-  currentWordbookPreviewOffset: number;
   isWordbookPreviewLoading: boolean;
   currentWordbookSearchQuery: string;
+  currentWordbookSearchOffset: number;
   currentWordbookSearchResults: SearchResult[];
   isWordbookSearchLoading: boolean;
   currentExportBundle: ExportBundle | null;
@@ -32,9 +32,9 @@ export const mainState: MainState = {
   currentWordbooks: [],
   currentWordbookPreviewSource: null,
   currentWordbookPreviewWords: [],
-  currentWordbookPreviewOffset: 0,
   isWordbookPreviewLoading: false,
   currentWordbookSearchQuery: '',
+  currentWordbookSearchOffset: 0,
   currentWordbookSearchResults: [],
   isWordbookSearchLoading: false,
   currentExportBundle: null,

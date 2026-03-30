@@ -2,7 +2,9 @@ use anyhow::{Context, Result};
 use calamine::{open_workbook_auto, Reader};
 use csv::ReaderBuilder;
 use encoding_rs::GBK;
+use rusqlite::{params_from_iter, types::Value};
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 use std::fs;
 
 use crate::db::Database;
@@ -87,6 +89,18 @@ pub struct WordbookImportSummary {
     pub total_count: usize,
     pub source: String,
     pub format: String,
+}
+
+const IMPORT_BATCH_SIZE: usize = 500;
+
+#[derive(Debug, Clone)]
+struct PreparedWordInsert {
+    word: String,
+    phonetic: Option<String>,
+    part_of_speech: Option<String>,
+    meaning_zh: String,
+    example_sentence: Option<String>,
+    difficulty: i32,
 }
 
 // ============================================================================
@@ -708,67 +722,69 @@ impl WordbookImporter {
 
         let mut imported_count = 0;
         let mut skipped_count = 0;
+        let mut seen_words = HashSet::new();
 
-        for entry in entries.iter() {
-            let word = entry.word.trim();
-            let meaning_zh = entry.meaning_zh.trim();
+        for chunk in entries.chunks(IMPORT_BATCH_SIZE) {
+            let mut batch = Vec::with_capacity(chunk.len());
 
-            if word.is_empty() || meaning_zh.is_empty() {
-                skipped_count += 1;
+            for entry in chunk {
+                let word = entry.word.trim();
+                let meaning_zh = entry.meaning_zh.trim();
+
+                if word.is_empty() || meaning_zh.is_empty() {
+                    skipped_count += 1;
+                    continue;
+                }
+
+                if !seen_words.insert(word.to_string()) {
+                    skipped_count += 1;
+                    continue;
+                }
+
+                batch.push(PreparedWordInsert {
+                    word: word.to_string(),
+                    phonetic: entry
+                        .phonetic
+                        .as_deref()
+                        .map(str::trim)
+                        .filter(|value| !value.is_empty())
+                        .map(str::to_string),
+                    part_of_speech: entry
+                        .part_of_speech
+                        .as_deref()
+                        .map(str::trim)
+                        .filter(|value| !value.is_empty())
+                        .map(str::to_string),
+                    meaning_zh: meaning_zh.to_string(),
+                    example_sentence: entry
+                        .example_sentence
+                        .as_deref()
+                        .map(str::trim)
+                        .filter(|value| !value.is_empty())
+                        .map(str::to_string),
+                    difficulty: entry.difficulty.max(1),
+                });
+            }
+
+            let existing_words = load_existing_words_for_batch(&tx, &batch)?;
+            let rows_to_insert = batch
+                .into_iter()
+                .filter(|item| {
+                    let exists = existing_words.contains(item.word.as_str());
+                    if exists {
+                        skipped_count += 1;
+                    }
+                    !exists
+                })
+                .collect::<Vec<_>>();
+
+            if rows_to_insert.is_empty() {
                 continue;
             }
 
-            let word_exists: bool = tx
-                .query_row(
-                    "SELECT COUNT(*) FROM words WHERE word = ?1",
-                    [word],
-                    |row| row.get::<_, i64>(0),
-                )
-                .map(|count| count > 0)
-                .unwrap_or(false);
-
-            if word_exists {
-                skipped_count += 1;
-                continue;
-            }
-
-            let phonetic = entry
-                .phonetic
-                .as_deref()
-                .map(str::trim)
-                .filter(|v| !v.is_empty());
-            let part_of_speech = entry
-                .part_of_speech
-                .as_deref()
-                .map(str::trim)
-                .filter(|v| !v.is_empty());
-            let example_sentence = entry
-                .example_sentence
-                .as_deref()
-                .map(str::trim)
-                .filter(|v| !v.is_empty());
-
-            tx.execute(
-                "INSERT INTO words (word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty) \
-                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
-                (
-                    word,
-                    phonetic,
-                    part_of_speech,
-                    meaning_zh,
-                    example_sentence,
-                    source,
-                    entry.difficulty.max(1),
-                ),
-            )?;
-            let word_id = tx.last_insert_rowid();
-
-            tx.execute(
-                "INSERT INTO srs_cards (word_id, status, stage) VALUES (?1, 'new', -1)",
-                [word_id],
-            )?;
-
-            imported_count += 1;
+            let word_ids = insert_words_batch(&tx, &rows_to_insert, source)?;
+            insert_cards_batch(&tx, &word_ids)?;
+            imported_count += word_ids.len();
         }
 
         tx.commit()?;
@@ -781,6 +797,111 @@ impl WordbookImporter {
             format: format.to_string(),
         })
     }
+}
+
+fn load_existing_words_for_batch(
+    tx: &rusqlite::Transaction<'_>,
+    batch: &[PreparedWordInsert],
+) -> Result<HashSet<String>> {
+    if batch.is_empty() {
+        return Ok(HashSet::new());
+    }
+
+    let placeholders = std::iter::repeat("?")
+        .take(batch.len())
+        .collect::<Vec<_>>()
+        .join(", ");
+    let sql = format!("SELECT word FROM words WHERE word IN ({})", placeholders);
+    let params = batch
+        .iter()
+        .map(|item| Value::Text(item.word.clone()))
+        .collect::<Vec<_>>();
+    let mut stmt = tx.prepare(&sql)?;
+
+    let existing_words = stmt
+        .query_map(params_from_iter(params), |row| row.get::<_, String>(0))?
+        .collect::<std::result::Result<HashSet<_>, _>>()?;
+
+    Ok(existing_words)
+}
+
+fn insert_words_batch(
+    tx: &rusqlite::Transaction<'_>,
+    batch: &[PreparedWordInsert],
+    source: &str,
+) -> Result<Vec<i64>> {
+    let value_groups = (0..batch.len())
+        .map(|index| {
+            let start = index * 7 + 1;
+            format!(
+                "(?{}, ?{}, ?{}, ?{}, ?{}, ?{}, ?{})",
+                start,
+                start + 1,
+                start + 2,
+                start + 3,
+                start + 4,
+                start + 5,
+                start + 6
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    let sql = format!(
+        "INSERT INTO words (word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty) \
+         VALUES {} RETURNING id",
+        value_groups
+    );
+    let mut params = Vec::with_capacity(batch.len() * 7);
+
+    for item in batch {
+        params.push(Value::Text(item.word.clone()));
+        params.push(match &item.phonetic {
+            Some(value) => Value::Text(value.clone()),
+            None => Value::Null,
+        });
+        params.push(match &item.part_of_speech {
+            Some(value) => Value::Text(value.clone()),
+            None => Value::Null,
+        });
+        params.push(Value::Text(item.meaning_zh.clone()));
+        params.push(match &item.example_sentence {
+            Some(value) => Value::Text(value.clone()),
+            None => Value::Null,
+        });
+        params.push(Value::Text(source.to_string()));
+        params.push(Value::Integer(i64::from(item.difficulty)));
+    }
+
+    let mut stmt = tx.prepare(&sql)?;
+    let word_ids = stmt
+        .query_map(params_from_iter(params), |row| row.get::<_, i64>(0))?
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+
+    Ok(word_ids)
+}
+
+fn insert_cards_batch(tx: &rusqlite::Transaction<'_>, word_ids: &[i64]) -> Result<()> {
+    if word_ids.is_empty() {
+        return Ok(());
+    }
+
+    let value_groups = (0..word_ids.len())
+        .map(|index| format!("(?{}, 'new', -1)", index + 1))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let sql = format!(
+        "INSERT INTO srs_cards (word_id, status, stage) VALUES {}",
+        value_groups
+    );
+    let params = word_ids
+        .iter()
+        .copied()
+        .map(Value::Integer)
+        .collect::<Vec<_>>();
+
+    tx.execute(&sql, params_from_iter(params))?;
+    Ok(())
 }
 
 // ============================================================================

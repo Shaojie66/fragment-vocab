@@ -137,6 +137,14 @@ export interface StreakStats {
   longest_streak: number;
 }
 
+export interface Achievement {
+  achievement_key: string;
+  title: string;
+  description: string;
+  unlocked: boolean;
+  unlocked_at?: string;
+}
+
 export interface DashboardState {
   app_config: AppConfig;
   today_stats: TodayStats;
@@ -191,6 +199,16 @@ export interface ExportBundle {
   config_json: string;
 }
 
+export interface ImportSummary {
+  words: number;
+  srs_cards: number;
+  review_logs: number;
+  app_state: number;
+  pets: number;
+  achievements: number;
+  total_imported: number;
+}
+
 export type WordQuizMode = 'zh_to_en_choice' | 'en_to_zh_choice';
 
 export interface WordQuizOption {
@@ -242,6 +260,23 @@ export interface WordbookWordItem {
   meaning_zh: string;
   difficulty: number;
   created_at: string;
+}
+
+export interface WordDetail {
+  word: string;
+  phonetic?: string;
+  part_of_speech?: string;
+  meaning_zh: string;
+  example_sentence?: string;
+  source: string;
+  difficulty: number;
+  srs_status: 'new' | 'learning' | 'mastered';
+  srs_stage: number;
+  correct_streak: number;
+  lifetime_correct: number;
+  lifetime_wrong: number;
+  due_at?: string;
+  in_wrong_book: boolean;
 }
 
 export interface SearchResult {

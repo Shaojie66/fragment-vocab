@@ -1,12 +1,17 @@
 import { invoke } from '@tauri-apps/api/core';
 import type { SearchResult, WordbookImportSummary, WordbookListItem, WordbookWordItem } from '../shared/types';
+import { createWordDetailModal } from '../shared/word-detail-modal';
 import { mainElements } from './elements';
-import { fileToBase64, formatDateTime, getErrorMessage } from './helpers';
+import { downloadTextFile, fileToBase64, formatDateTime, getErrorMessage } from './helpers';
 import { mainState } from './state';
 
 const WORDBOOK_PREVIEW_PAGE_SIZE = 12;
 const WORDBOOK_SEARCH_LIMIT = 20;
 const WORDBOOK_SEARCH_DEBOUNCE_MS = 300;
+const WORDBOOK_SEARCH_MAX_LIMIT = 50;
+const WORDBOOK_PREVIEW_ROW_HEIGHT = 152;
+const WORDBOOK_PREVIEW_CONTAINER_HEIGHT = 720;
+const WORDBOOK_PREVIEW_OVERSCAN = 6;
 
 interface WordbookDependencies {
   refreshDashboard: () => Promise<void>;
@@ -17,6 +22,19 @@ interface WordbookDependencies {
 let dependencies: WordbookDependencies | null = null;
 let searchDebounceTimer: number | null = null;
 let activeSearchRequestId = 0;
+const wordDetailModal = createWordDetailModal({
+  onError: (message) => {
+    dependencies?.setSaveHint(message);
+  },
+});
+
+function sanitizeWordbookFilenameSegment(value: string) {
+  return value
+    .trim()
+    .replace(/[^a-zA-Z0-9-_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'wordbook';
+}
 
 function getStatusLabel(status: SearchResult['status']) {
   if (status === 'learning') {
@@ -36,6 +54,7 @@ function getStatusBadgeClass(status: SearchResult['status']) {
 
 function renderWordSearch() {
   const query = mainState.currentWordbookSearchQuery.trim();
+  const offset = mainState.currentWordbookSearchOffset;
   mainElements.wordbookSearchInput.value = mainState.currentWordbookSearchQuery;
 
   if (!query) {
@@ -56,7 +75,12 @@ function renderWordSearch() {
     return;
   }
 
-  mainElements.wordbookSearchMeta.textContent = `找到 ${mainState.currentWordbookSearchResults.length} 条与“${query}”相关的结果。`;
+  const start = offset + 1;
+  const end = offset + mainState.currentWordbookSearchResults.length;
+  const hasPrev = offset > 0;
+  const hasNext = mainState.currentWordbookSearchResults.length === WORDBOOK_SEARCH_LIMIT
+    && WORDBOOK_SEARCH_LIMIT <= WORDBOOK_SEARCH_MAX_LIMIT;
+  mainElements.wordbookSearchMeta.textContent = `显示第 ${start}-${end} 条与“${query}”相关的结果。`;
   mainElements.wordbookSearchResults.innerHTML = '';
 
   mainState.currentWordbookSearchResults.forEach((item) => {
@@ -97,12 +121,39 @@ function renderWordSearch() {
     card.append(topline, meaning, meta);
     mainElements.wordbookSearchResults.appendChild(card);
   });
+
+  const pagination = document.createElement('div');
+  pagination.className = 'wordbook-preview-actions';
+
+  const prevButton = document.createElement('button');
+  prevButton.className = 'ghost-btn';
+  prevButton.type = 'button';
+  prevButton.textContent = '上一页';
+  prevButton.disabled = mainState.isWordbookSearchLoading || !hasPrev;
+  prevButton.addEventListener('click', () => {
+    activeSearchRequestId += 1;
+    void runWordSearch(query, Math.max(0, offset - WORDBOOK_SEARCH_LIMIT));
+  });
+
+  const nextButton = document.createElement('button');
+  nextButton.className = 'ghost-btn';
+  nextButton.type = 'button';
+  nextButton.textContent = '下一页';
+  nextButton.disabled = mainState.isWordbookSearchLoading || !hasNext;
+  nextButton.addEventListener('click', () => {
+    activeSearchRequestId += 1;
+    void runWordSearch(query, offset + WORDBOOK_SEARCH_LIMIT);
+  });
+
+  pagination.append(prevButton, nextButton);
+  mainElements.wordbookSearchResults.appendChild(pagination);
 }
 
-async function runWordSearch(query: string) {
+async function runWordSearch(query: string, offset = 0) {
   const normalizedQuery = query.trim();
   const requestId = activeSearchRequestId;
   mainState.currentWordbookSearchQuery = query;
+  mainState.currentWordbookSearchOffset = Math.max(0, offset);
 
   if (!normalizedQuery) {
     mainState.isWordbookSearchLoading = false;
@@ -118,6 +169,7 @@ async function runWordSearch(query: string) {
     const results = await invoke<SearchResult[]>('search_words', {
       query: normalizedQuery,
       limit: WORDBOOK_SEARCH_LIMIT,
+      offset: mainState.currentWordbookSearchOffset,
     });
 
     if (requestId !== activeSearchRequestId) {
@@ -152,6 +204,7 @@ async function runWordSearch(query: string) {
 function scheduleWordSearch(query: string) {
   activeSearchRequestId += 1;
   mainState.currentWordbookSearchQuery = query;
+  mainState.currentWordbookSearchOffset = 0;
 
   if (searchDebounceTimer !== null) {
     window.clearTimeout(searchDebounceTimer);
@@ -212,6 +265,30 @@ export function renderWordbooks() {
     actions.appendChild(toggleButton);
 
     if (!item.built_in) {
+      const exportFormatSelect = document.createElement('select');
+      exportFormatSelect.className = 'wordbook-export-format';
+      exportFormatSelect.dataset.source = item.source;
+      exportFormatSelect.dataset.role = 'export-format';
+
+      const csvOption = document.createElement('option');
+      csvOption.value = 'csv';
+      csvOption.textContent = 'CSV';
+
+      const jsonOption = document.createElement('option');
+      jsonOption.value = 'json';
+      jsonOption.textContent = 'JSON';
+
+      exportFormatSelect.append(csvOption, jsonOption);
+      actions.appendChild(exportFormatSelect);
+
+      const exportButton = document.createElement('button');
+      exportButton.className = 'ghost-btn';
+      exportButton.type = 'button';
+      exportButton.dataset.source = item.source;
+      exportButton.dataset.action = 'export';
+      exportButton.textContent = '导出';
+      actions.appendChild(exportButton);
+
       const deleteButton = document.createElement('button');
       deleteButton.className = 'ghost-btn';
       deleteButton.type = 'button';
@@ -229,10 +306,88 @@ export function renderWordbooks() {
 export function closeWordbookPreview() {
   mainState.currentWordbookPreviewSource = null;
   mainState.currentWordbookPreviewWords = [];
-  mainState.currentWordbookPreviewOffset = 0;
   mainState.isWordbookPreviewLoading = false;
   mainElements.wordbookPreview.classList.add('hidden');
+  mainElements.wordbookPreviewList.scrollTop = 0;
   renderWordbooks();
+}
+
+function createWordbookPreviewCard(item: WordbookWordItem) {
+  const card = document.createElement('article');
+  card.className = 'wordbook-preview-item';
+  card.dataset.wordId = String(item.id);
+  card.tabIndex = 0;
+  card.dataset.wordId = String(item.id);
+  card.tabIndex = 0;
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-label', `查看 ${item.word} 详情`);
+
+  const topline = document.createElement('div');
+  topline.className = 'wordbook-preview-topline';
+
+  const title = document.createElement('strong');
+  title.textContent = item.word;
+  topline.appendChild(title);
+
+  const difficultyBadge = document.createElement('span');
+  difficultyBadge.className = 'wordbook-badge muted';
+  difficultyBadge.textContent = `难度 ${item.difficulty}`;
+  topline.appendChild(difficultyBadge);
+
+  const aux = document.createElement('p');
+  aux.className = 'wordbook-preview-aux';
+  aux.textContent = [item.phonetic, item.part_of_speech].filter(Boolean).join(' · ') || '未提供音标或词性';
+
+  const meaning = document.createElement('p');
+  meaning.className = 'wordbook-preview-meaning';
+  meaning.textContent = item.meaning_zh;
+
+  const bottomline = document.createElement('div');
+  bottomline.className = 'wordbook-preview-bottomline';
+
+  const idBadge = document.createElement('span');
+  idBadge.className = 'wordbook-badge';
+  idBadge.textContent = `#${item.id}`;
+
+  const createdText = document.createElement('span');
+  createdText.className = 'wordbook-preview-aux';
+  createdText.textContent = `导入于 ${formatDateTime(item.created_at)}`;
+
+  bottomline.append(idBadge, createdText);
+  card.append(topline, aux, meaning, bottomline);
+
+  return card;
+}
+
+function renderVirtualWordbookPreviewRows() {
+  const total = mainState.currentWordbookPreviewWords.length;
+
+  if (!total) {
+    return;
+  }
+
+  const scrollTop = mainElements.wordbookPreviewList.scrollTop;
+  const visibleCount = Math.ceil(WORDBOOK_PREVIEW_CONTAINER_HEIGHT / WORDBOOK_PREVIEW_ROW_HEIGHT);
+  const startIndex = Math.max(0, Math.floor(scrollTop / WORDBOOK_PREVIEW_ROW_HEIGHT) - WORDBOOK_PREVIEW_OVERSCAN);
+  const endIndex = Math.min(total, startIndex + visibleCount + WORDBOOK_PREVIEW_OVERSCAN * 2);
+
+  mainElements.wordbookPreviewList.innerHTML = '';
+
+  const spacer = document.createElement('div');
+  spacer.className = 'wordbook-preview-spacer';
+  spacer.style.height = `${total * WORDBOOK_PREVIEW_ROW_HEIGHT}px`;
+
+  for (let index = startIndex; index < endIndex; index += 1) {
+    const card = createWordbookPreviewCard(mainState.currentWordbookPreviewWords[index]);
+    card.style.position = 'absolute';
+    card.style.top = `${index * WORDBOOK_PREVIEW_ROW_HEIGHT}px`;
+    card.style.left = '0';
+    card.style.right = '0';
+    card.style.minHeight = `${WORDBOOK_PREVIEW_ROW_HEIGHT - 12}px`;
+    spacer.appendChild(card);
+  }
+
+  mainElements.wordbookPreviewList.appendChild(spacer);
 }
 
 export function renderWordbookPreview() {
@@ -258,59 +413,16 @@ export function renderWordbookPreview() {
     mainElements.wordbookPreviewMeta.textContent = `${selectedWordbook.total_words} 个单词 · 当前词库${selectedWordbook.enabled ? '已启用' : '已停用'}`;
     mainElements.wordbookPreviewList.innerHTML = '<div class="wordbook-empty">这个词库当前没有可展示的词条。</div>';
   } else {
-    const start = mainState.currentWordbookPreviewOffset + 1;
-    const end = mainState.currentWordbookPreviewOffset + mainState.currentWordbookPreviewWords.length;
-    mainElements.wordbookPreviewMeta.textContent = `第 ${start}-${end} / ${selectedWordbook.total_words} 个单词 · 当前词库${selectedWordbook.enabled ? '已启用' : '已停用'}`;
-    mainElements.wordbookPreviewList.innerHTML = '';
-
-    mainState.currentWordbookPreviewWords.forEach((item) => {
-      const card = document.createElement('article');
-      card.className = 'wordbook-preview-item';
-
-      const topline = document.createElement('div');
-      topline.className = 'wordbook-preview-topline';
-
-      const title = document.createElement('strong');
-      title.textContent = item.word;
-      topline.appendChild(title);
-
-      const difficultyBadge = document.createElement('span');
-      difficultyBadge.className = 'wordbook-badge muted';
-      difficultyBadge.textContent = `难度 ${item.difficulty}`;
-      topline.appendChild(difficultyBadge);
-
-      const aux = document.createElement('p');
-      aux.className = 'wordbook-preview-aux';
-      aux.textContent = [item.phonetic, item.part_of_speech].filter(Boolean).join(' · ') || '未提供音标或词性';
-
-      const meaning = document.createElement('p');
-      meaning.className = 'wordbook-preview-meaning';
-      meaning.textContent = item.meaning_zh;
-
-      const bottomline = document.createElement('div');
-      bottomline.className = 'wordbook-preview-bottomline';
-
-      const idBadge = document.createElement('span');
-      idBadge.className = 'wordbook-badge';
-      idBadge.textContent = `#${item.id}`;
-
-      const createdText = document.createElement('span');
-      createdText.className = 'wordbook-preview-aux';
-      createdText.textContent = `导入于 ${formatDateTime(item.created_at)}`;
-
-      bottomline.append(idBadge, createdText);
-      card.append(topline, aux, meaning, bottomline);
-      mainElements.wordbookPreviewList.appendChild(card);
-    });
+    mainElements.wordbookPreviewMeta.textContent = `${mainState.currentWordbookPreviewWords.length} / ${selectedWordbook.total_words} 个单词 · 当前词库${selectedWordbook.enabled ? '已启用' : '已停用'} · 滚动查看可见词条`;
+    renderVirtualWordbookPreviewRows();
   }
 
-  const hasPrev = mainState.currentWordbookPreviewOffset > 0;
-  const hasNext = mainState.currentWordbookPreviewOffset + mainState.currentWordbookPreviewWords.length < selectedWordbook.total_words;
-  mainElements.wordbookPreviewPrevBtn.disabled = mainState.isWordbookPreviewLoading || !hasPrev;
-  mainElements.wordbookPreviewNextBtn.disabled = mainState.isWordbookPreviewLoading || !hasNext;
+  const hasWords = mainState.currentWordbookPreviewWords.length > 0;
+  mainElements.wordbookPreviewPrevBtn.disabled = mainState.isWordbookPreviewLoading || !hasWords;
+  mainElements.wordbookPreviewNextBtn.disabled = mainState.isWordbookPreviewLoading || !hasWords;
 }
 
-async function openWordbookPreview(source: string, offset = 0) {
+async function openWordbookPreview(source: string) {
   const selectedWordbook = mainState.currentWordbooks.find((item) => item.source === source);
 
   if (!selectedWordbook) {
@@ -318,16 +430,16 @@ async function openWordbookPreview(source: string, offset = 0) {
   }
 
   mainState.currentWordbookPreviewSource = source;
-  mainState.currentWordbookPreviewOffset = Math.max(0, offset);
   mainState.isWordbookPreviewLoading = true;
+  mainElements.wordbookPreviewList.scrollTop = 0;
   renderWordbooks();
   renderWordbookPreview();
 
   try {
     mainState.currentWordbookPreviewWords = await invoke<WordbookWordItem[]>('list_wordbook_words', {
       source,
-      limit: WORDBOOK_PREVIEW_PAGE_SIZE,
-      offset: mainState.currentWordbookPreviewOffset,
+      limit: Math.max(selectedWordbook.total_words, WORDBOOK_PREVIEW_PAGE_SIZE),
+      offset: 0,
     });
     renderWordbookPreview();
   } catch (error) {
@@ -379,7 +491,7 @@ async function importCustomWordbook(file: File) {
   await loadWordbooks();
 
   if (mainState.currentWordbookPreviewSource === summary.source) {
-    await openWordbookPreview(summary.source, 0);
+    await openWordbookPreview(summary.source);
   }
 
   await dependencies?.refreshDashboard();
@@ -428,6 +540,20 @@ async function deleteWordbookBySource(source: string) {
   }
 }
 
+async function exportWordbookBySource(source: string, format: 'csv' | 'json') {
+  try {
+    const content = await invoke<string>('export_wordbook', { source, format });
+    const mimeType = format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8';
+    const filename = `${sanitizeWordbookFilenameSegment(source)}.${format}`;
+    downloadTextFile(content, filename, mimeType);
+    dependencies?.setSaveHint(`词库已导出为 ${format.toUpperCase()} 文件。`);
+  } catch (error) {
+    mainState.lastErrorMessage = getErrorMessage(error);
+    dependencies?.renderDashboard();
+    dependencies?.setSaveHint('导出词库失败，请稍后重试。');
+  }
+}
+
 export function initializeWordbooks(nextDependencies: WordbookDependencies) {
   dependencies = nextDependencies;
   renderWordSearch();
@@ -442,24 +568,57 @@ export function initializeWordbooks(nextDependencies: WordbookDependencies) {
     closeWordbookPreview();
   });
   mainElements.wordbookPreviewPrevBtn.addEventListener('click', () => {
-    if (!mainState.currentWordbookPreviewSource || mainState.currentWordbookPreviewOffset <= 0) {
+    if (!mainState.currentWordbookPreviewWords.length) {
       return;
     }
 
-    void openWordbookPreview(
-      mainState.currentWordbookPreviewSource,
-      mainState.currentWordbookPreviewOffset - WORDBOOK_PREVIEW_PAGE_SIZE,
-    );
+    mainElements.wordbookPreviewList.scrollBy({ top: -WORDBOOK_PREVIEW_CONTAINER_HEIGHT, behavior: 'smooth' });
   });
   mainElements.wordbookPreviewNextBtn.addEventListener('click', () => {
-    if (!mainState.currentWordbookPreviewSource) {
+    if (!mainState.currentWordbookPreviewWords.length) {
       return;
     }
 
-    void openWordbookPreview(
-      mainState.currentWordbookPreviewSource,
-      mainState.currentWordbookPreviewOffset + WORDBOOK_PREVIEW_PAGE_SIZE,
-    );
+    mainElements.wordbookPreviewList.scrollBy({ top: WORDBOOK_PREVIEW_CONTAINER_HEIGHT, behavior: 'smooth' });
+  });
+  mainElements.wordbookPreviewList.addEventListener('scroll', () => {
+    if (!mainState.isWordbookPreviewLoading && mainState.currentWordbookPreviewWords.length) {
+      renderVirtualWordbookPreviewRows();
+    }
+  });
+  mainElements.wordbookPreviewList.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    const item = target?.closest<HTMLElement>('.wordbook-preview-item[data-word-id]');
+
+    if (!item) {
+      return;
+    }
+
+    const wordId = Number(item.dataset.wordId);
+    if (!Number.isFinite(wordId)) {
+      return;
+    }
+
+    void wordDetailModal.open(wordId);
+  });
+  mainElements.wordbookPreviewList.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    const item = target?.closest<HTMLElement>('.wordbook-preview-item[data-word-id]');
+    if (!item) {
+      return;
+    }
+
+    event.preventDefault();
+    const wordId = Number(item.dataset.wordId);
+    if (!Number.isFinite(wordId)) {
+      return;
+    }
+
+    void wordDetailModal.open(wordId);
   });
   mainElements.wordbookList.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null;
@@ -489,6 +648,20 @@ export function initializeWordbooks(nextDependencies: WordbookDependencies) {
       }
 
       void toggleWordbook(source, !wordbook.enabled);
+      return;
+    }
+
+    if (action === 'export') {
+      const wordbook = mainState.currentWordbooks.find((item) => item.source === source);
+
+      if (!wordbook || wordbook.built_in) {
+        return;
+      }
+
+      const row = button.closest<HTMLElement>('.wordbook-item');
+      const formatSelect = row?.querySelector<HTMLSelectElement>('select[data-role="export-format"][data-source]');
+      const format = formatSelect?.value === 'json' ? 'json' : 'csv';
+      void exportWordbookBySource(source, format);
       return;
     }
 

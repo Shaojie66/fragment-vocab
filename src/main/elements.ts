@@ -31,6 +31,9 @@ export const mainElements = {
   startBehaviorSelect: queryRequiredElement<HTMLSelectElement>('#startBehaviorSelect'),
   trayEnabledInput: queryRequiredElement<HTMLInputElement>('#trayEnabledInput'),
   themeSelect: queryRequiredElement<HTMLSelectElement>('#themeSelect'),
+  exportLearningDataBtn: queryRequiredElement<HTMLButtonElement>('#exportLearningDataBtn'),
+  importLearningDataBtn: queryRequiredElement<HTMLButtonElement>('#importLearningDataBtn'),
+  importLearningDataFileInput: queryRequiredElement<HTMLInputElement>('#importLearningDataFileInput'),
 
   pauseOneHourBtn: queryRequiredElement<HTMLButtonElement>('#pauseOneHourBtn'),
   pauseTodayBtn: queryRequiredElement<HTMLButtonElement>('#pauseTodayBtn'),
@@ -52,6 +55,11 @@ export const mainElements = {
   stateBanner: queryRequiredElement<HTMLElement>('#stateBanner'),
   stateBannerTitle: queryRequiredElement<HTMLElement>('#stateBannerTitle'),
   stateBannerBody: queryRequiredElement<HTMLElement>('#stateBannerBody'),
+  dailyGoalCard: queryRequiredElement<HTMLElement>('#dailyGoalCard'),
+  dailyGoalTrack: queryRequiredElement<HTMLElement>('#dailyGoalTrack'),
+  dailyGoalFill: queryRequiredElement<HTMLElement>('#dailyGoalFill'),
+  dailyGoalText: queryRequiredElement<HTMLElement>('#dailyGoalText'),
+  dailyGoalStatus: queryRequiredElement<HTMLElement>('#dailyGoalStatus'),
 
   metricTotalReviews: queryRequiredElement<HTMLElement>('#metricTotalReviews'),
   metricAccuracy: queryRequiredElement<HTMLElement>('#metricAccuracy'),
@@ -97,13 +105,15 @@ export const mainElements = {
   exportSummaryOutput: queryRequiredElement<HTMLTextAreaElement>('#exportSummaryOutput'),
   exportJsonOutput: queryRequiredElement<HTMLTextAreaElement>('#exportJsonOutput'),
 
-  onboardingBackdrop: queryRequiredElement<HTMLElement>('#onboardingBackdrop'),
-  onboardingDailyNewInput: queryRequiredElement<HTMLInputElement>('#onboardingDailyNewInput'),
-  onboardingModeSelect: queryRequiredElement<HTMLSelectElement>('#onboardingModeSelect'),
-  onboardingQuietStartInput: queryRequiredElement<HTMLInputElement>('#onboardingQuietStartInput'),
-  onboardingQuietEndInput: queryRequiredElement<HTMLInputElement>('#onboardingQuietEndInput'),
-  onboardingLaunchAtLoginInput: queryRequiredElement<HTMLInputElement>('#onboardingLaunchAtLoginInput'),
+  onboardingWizard: queryRequiredElement<HTMLElement>('#onboarding-wizard'),
+  onboardingPrevBtn: queryRequiredElement<HTMLButtonElement>('#onboardingPrevBtn'),
+  onboardingNextBtn: queryRequiredElement<HTMLButtonElement>('#onboardingNextBtn'),
   completeOnboardingBtn: queryRequiredElement<HTMLButtonElement>('#completeOnboardingBtn'),
+  onboardingFrequencyInputs: Array.from(
+    document.querySelectorAll<HTMLInputElement>('input[name="onboardingFrequency"]'),
+  ),
+  onboardingStepPanels: Array.from(document.querySelectorAll<HTMLElement>('[data-onboarding-step]')),
+  onboardingStepDots: Array.from(document.querySelectorAll<HTMLButtonElement>('[data-onboarding-dot]')),
 
   tabButtons: Array.from(document.querySelectorAll<HTMLElement>('[data-main-tab]')),
   tabPanels: Array.from(document.querySelectorAll<HTMLElement>('[data-main-panel]')),

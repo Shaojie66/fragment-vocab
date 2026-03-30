@@ -46,3 +46,27 @@ pub fn remove_from_wrong_book(db: State<Database>, card_id: i64) -> Result<(), S
     wrong_book.remove(&card_id);
     persist_wrong_book_set(&state_repo, &wrong_book)
 }
+
+#[tauri::command]
+pub fn set_wrong_book_state(
+    db: State<Database>,
+    word_id: i64,
+    in_wrong_book: bool,
+) -> Result<(), String> {
+    let conn = db.get_connection();
+    let state_repo = StateRepository::new(conn.clone());
+    let cards_repo = CardsRepository::new(conn);
+    let card = cards_repo
+        .get_by_word_id(word_id)
+        .map_err(|e| format!("Failed to load SRS card for wrong book update: {}", e))?
+        .ok_or_else(|| format!("Word {} has no SRS card", word_id))?;
+
+    let mut wrong_book = load_wrong_book_set(&state_repo)?;
+    if in_wrong_book {
+        wrong_book.insert(card.id);
+    } else {
+        wrong_book.remove(&card.id);
+    }
+
+    persist_wrong_book_set(&state_repo, &wrong_book)
+}

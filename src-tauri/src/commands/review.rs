@@ -435,6 +435,9 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
     }
 
     update_pet_on_review(&db);
+    if let Err(error) = super::achievements::check_achievements_for_db(db) {
+        eprintln!("Failed to check achievements after review: {}", error);
+    }
 
     Ok(())
 }

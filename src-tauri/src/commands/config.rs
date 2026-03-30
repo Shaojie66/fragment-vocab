@@ -1,12 +1,486 @@
 use std::collections::HashSet;
 
 use chrono::{DateTime, Datelike, Duration, Local, Utc};
+use rusqlite::{types::ValueRef, Connection, Row, Transaction};
+use serde::{Deserialize, Serialize};
+use serde_json::{Map as JsonMap, Value as JsonValue};
 use tauri::State;
 
-use crate::db::{CardsRepository, Database, LogsRepository, StateRepository};
+use crate::db::{
+    models::{AppState as AppStateRow, ReviewLog, SrsCard, Word},
+    pet_model::PetState,
+    CardsRepository, Database, LogsRepository, StateRepository,
+};
 
 use super::types::*;
 use super::utils::*;
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+struct LearningDataArchive {
+    #[serde(default)]
+    version: i32,
+    #[serde(default)]
+    exported_at: String,
+    #[serde(default)]
+    words: Vec<Word>,
+    #[serde(default)]
+    srs_cards: Vec<SrsCard>,
+    #[serde(default)]
+    review_logs: Vec<ReviewLog>,
+    #[serde(default)]
+    app_state: Vec<AppStateRow>,
+    #[serde(default)]
+    pets: Vec<PetState>,
+    #[serde(default)]
+    achievements: Vec<JsonMap<String, JsonValue>>,
+}
+
+fn table_exists(conn: &Connection, table_name: &str) -> Result<bool, String> {
+    conn.query_row(
+        "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?1)",
+        [table_name],
+        |row| row.get::<_, i64>(0),
+    )
+    .map(|exists| exists != 0)
+    .map_err(|e| format!("Failed to inspect table {}: {}", table_name, e))
+}
+
+fn quote_identifier(identifier: &str) -> String {
+    format!("\"{}\"", identifier.replace('"', "\"\""))
+}
+
+fn sql_value_ref_to_json(value: ValueRef<'_>) -> JsonValue {
+    match value {
+        ValueRef::Null => JsonValue::Null,
+        ValueRef::Integer(value) => JsonValue::from(value),
+        ValueRef::Real(value) => JsonValue::from(value),
+        ValueRef::Text(value) => JsonValue::String(String::from_utf8_lossy(value).into_owned()),
+        ValueRef::Blob(value) => JsonValue::Array(
+            value
+                .iter()
+                .map(|byte| JsonValue::from(i64::from(*byte)))
+                .collect(),
+        ),
+    }
+}
+
+fn json_value_to_sql(value: &JsonValue) -> rusqlite::types::Value {
+    match value {
+        JsonValue::Null => rusqlite::types::Value::Null,
+        JsonValue::Bool(value) => rusqlite::types::Value::Integer(i64::from(*value)),
+        JsonValue::Number(value) => {
+            if let Some(value) = value.as_i64() {
+                rusqlite::types::Value::Integer(value)
+            } else if let Some(value) = value.as_u64() {
+                match i64::try_from(value) {
+                    Ok(value) => rusqlite::types::Value::Integer(value),
+                    Err(_) => rusqlite::types::Value::Text(value.to_string()),
+                }
+            } else if let Some(value) = value.as_f64() {
+                rusqlite::types::Value::Real(value)
+            } else {
+                rusqlite::types::Value::Text(value.to_string())
+            }
+        }
+        JsonValue::String(value) => rusqlite::types::Value::Text(value.clone()),
+        JsonValue::Array(_) | JsonValue::Object(_) => {
+            rusqlite::types::Value::Text(value.to_string())
+        }
+    }
+}
+
+fn row_to_json_map(
+    row: &Row<'_>,
+    columns: &[String],
+) -> rusqlite::Result<JsonMap<String, JsonValue>> {
+    let mut object = JsonMap::new();
+
+    for (index, column) in columns.iter().enumerate() {
+        object.insert(column.clone(), sql_value_ref_to_json(row.get_ref(index)?));
+    }
+
+    Ok(object)
+}
+
+fn load_words_for_export(conn: &Connection) -> Result<Vec<Word>, String> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at
+             FROM words
+             ORDER BY id ASC",
+        )
+        .map_err(|e| format!("Failed to prepare words export: {}", e))?;
+
+    let rows = stmt
+        .query_map([], |row| {
+            Ok(Word {
+                id: row.get(0)?,
+                word: row.get(1)?,
+                phonetic: row.get(2)?,
+                part_of_speech: row.get(3)?,
+                meaning_zh: row.get(4)?,
+                example_sentence: row.get(5)?,
+                source: row.get(6)?,
+                difficulty: row.get(7)?,
+                created_at: row.get(8)?,
+            })
+        })
+        .map_err(|e| format!("Failed to export words: {}", e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect words: {}", e))?;
+
+    Ok(items)
+}
+
+fn load_cards_for_export(conn: &Connection) -> Result<Vec<SrsCard>, String> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT id, word_id, status, stage, due_at, last_seen_at, last_result, correct_streak,
+                    lifetime_correct, lifetime_wrong, skip_cooldown_until, updated_at
+             FROM srs_cards
+             ORDER BY id ASC",
+        )
+        .map_err(|e| format!("Failed to prepare srs_cards export: {}", e))?;
+
+    let rows = stmt
+        .query_map([], |row| {
+            Ok(SrsCard {
+                id: row.get(0)?,
+                word_id: row.get(1)?,
+                status: row.get(2)?,
+                stage: row.get(3)?,
+                due_at: row.get(4)?,
+                last_seen_at: row.get(5)?,
+                last_result: row.get(6)?,
+                correct_streak: row.get(7)?,
+                lifetime_correct: row.get(8)?,
+                lifetime_wrong: row.get(9)?,
+                skip_cooldown_until: row.get(10)?,
+                updated_at: row.get(11)?,
+            })
+        })
+        .map_err(|e| format!("Failed to export srs_cards: {}", e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect srs_cards: {}", e))?;
+
+    Ok(items)
+}
+
+fn load_logs_for_export(conn: &Connection) -> Result<Vec<ReviewLog>, String> {
+    let mut stmt = conn
+        .prepare(
+            "SELECT id, card_id, shown_at, result, trigger_type, response_ms, created_at
+             FROM review_logs
+             ORDER BY id ASC",
+        )
+        .map_err(|e| format!("Failed to prepare review_logs export: {}", e))?;
+
+    let rows = stmt
+        .query_map([], |row| {
+            Ok(ReviewLog {
+                id: row.get(0)?,
+                card_id: row.get(1)?,
+                shown_at: row.get(2)?,
+                result: row.get(3)?,
+                trigger_type: row.get(4)?,
+                response_ms: row.get(5)?,
+                created_at: row.get(6)?,
+            })
+        })
+        .map_err(|e| format!("Failed to export review_logs: {}", e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect review_logs: {}", e))?;
+
+    Ok(items)
+}
+
+fn load_app_state_for_export(conn: &Connection) -> Result<Vec<AppStateRow>, String> {
+    let mut stmt = conn
+        .prepare("SELECT key, value, updated_at FROM app_state ORDER BY key ASC")
+        .map_err(|e| format!("Failed to prepare app_state export: {}", e))?;
+
+    let rows = stmt
+        .query_map([], |row| {
+            Ok(AppStateRow {
+                key: row.get(0)?,
+                value: row.get(1)?,
+                updated_at: row.get(2)?,
+            })
+        })
+        .map_err(|e| format!("Failed to export app_state: {}", e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect app_state: {}", e))?;
+
+    Ok(items)
+}
+
+fn load_pets_for_export(conn: &Connection) -> Result<Vec<PetState>, String> {
+    if !table_exists(conn, "pets")? {
+        return Ok(Vec::new());
+    }
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT id, stage, health, experience, current_streak, vitality_multiplier,
+                    last_study_at, last_review_at, created_at, updated_at
+             FROM pets
+             ORDER BY id ASC",
+        )
+        .map_err(|e| format!("Failed to prepare pets export: {}", e))?;
+
+    let rows = stmt
+        .query_map([], |row| {
+            Ok(PetState {
+                id: row.get(0)?,
+                stage: row.get::<_, i64>(1)? as u8,
+                health: row.get(2)?,
+                experience: row.get::<_, i64>(3)? as u32,
+                current_streak: row.get::<_, i64>(4)? as u32,
+                vitality_multiplier: row.get(5)?,
+                last_study_at: row.get(6)?,
+                last_review_at: row.get(7)?,
+                created_at: row.get(8)?,
+                updated_at: row.get(9)?,
+            })
+        })
+        .map_err(|e| format!("Failed to export pets: {}", e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect pets: {}", e))?;
+
+    Ok(items)
+}
+
+fn load_generic_table_for_export(
+    conn: &Connection,
+    table_name: &str,
+) -> Result<Vec<JsonMap<String, JsonValue>>, String> {
+    if !table_exists(conn, table_name)? {
+        return Ok(Vec::new());
+    }
+
+    let mut pragma_stmt = conn
+        .prepare(&format!(
+            "PRAGMA table_info({})",
+            quote_identifier(table_name)
+        ))
+        .map_err(|e| format!("Failed to inspect {} columns: {}", table_name, e))?;
+    let columns = pragma_stmt
+        .query_map([], |row| row.get::<_, String>(1))
+        .map_err(|e| format!("Failed to query {} columns: {}", table_name, e))?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect {} columns: {}", table_name, e))?;
+
+    if columns.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    let select_columns = columns
+        .iter()
+        .map(|column| quote_identifier(column))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let mut stmt = conn
+        .prepare(&format!(
+            "SELECT {} FROM {}",
+            select_columns,
+            quote_identifier(table_name)
+        ))
+        .map_err(|e| format!("Failed to prepare {} export: {}", table_name, e))?;
+
+    let rows = stmt
+        .query_map([], |row| row_to_json_map(row, &columns))
+        .map_err(|e| format!("Failed to export {}: {}", table_name, e))?;
+
+    let items = rows
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| format!("Failed to collect {} rows: {}", table_name, e))?;
+
+    Ok(items)
+}
+
+fn import_words(tx: &Transaction<'_>, rows: &[Word]) -> Result<i64, String> {
+    let mut stmt = tx
+        .prepare(
+            "INSERT OR REPLACE INTO words
+             (id, word, phonetic, part_of_speech, meaning_zh, example_sentence, source, difficulty, created_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+        )
+        .map_err(|e| format!("Failed to prepare words import: {}", e))?;
+
+    for row in rows {
+        stmt.execute((
+            row.id,
+            &row.word,
+            &row.phonetic,
+            &row.part_of_speech,
+            &row.meaning_zh,
+            &row.example_sentence,
+            &row.source,
+            row.difficulty,
+            &row.created_at,
+        ))
+        .map_err(|e| format!("Failed to import word {}: {}", row.word, e))?;
+    }
+
+    Ok(rows.len() as i64)
+}
+
+fn import_srs_cards(tx: &Transaction<'_>, rows: &[SrsCard]) -> Result<i64, String> {
+    let mut stmt = tx
+        .prepare(
+            "INSERT OR REPLACE INTO srs_cards
+             (id, word_id, status, stage, due_at, last_seen_at, last_result, correct_streak, lifetime_correct,
+              lifetime_wrong, skip_cooldown_until, updated_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+        )
+        .map_err(|e| format!("Failed to prepare srs_cards import: {}", e))?;
+
+    for row in rows {
+        stmt.execute((
+            row.id,
+            row.word_id,
+            &row.status,
+            row.stage,
+            &row.due_at,
+            &row.last_seen_at,
+            &row.last_result,
+            row.correct_streak,
+            row.lifetime_correct,
+            row.lifetime_wrong,
+            &row.skip_cooldown_until,
+            &row.updated_at,
+        ))
+        .map_err(|e| format!("Failed to import srs_card {}: {}", row.id, e))?;
+    }
+
+    Ok(rows.len() as i64)
+}
+
+fn import_review_logs(tx: &Transaction<'_>, rows: &[ReviewLog]) -> Result<i64, String> {
+    let mut stmt = tx
+        .prepare(
+            "INSERT OR REPLACE INTO review_logs
+             (id, card_id, shown_at, result, trigger_type, response_ms, created_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        )
+        .map_err(|e| format!("Failed to prepare review_logs import: {}", e))?;
+
+    for row in rows {
+        stmt.execute((
+            row.id,
+            row.card_id,
+            &row.shown_at,
+            &row.result,
+            &row.trigger_type,
+            row.response_ms,
+            &row.created_at,
+        ))
+        .map_err(|e| format!("Failed to import review_log {}: {}", row.id, e))?;
+    }
+
+    Ok(rows.len() as i64)
+}
+
+fn import_app_state(tx: &Transaction<'_>, rows: &[AppStateRow]) -> Result<i64, String> {
+    let mut stmt = tx
+        .prepare("INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?1, ?2, ?3)")
+        .map_err(|e| format!("Failed to prepare app_state import: {}", e))?;
+
+    for row in rows {
+        stmt.execute((&row.key, &row.value, &row.updated_at))
+            .map_err(|e| format!("Failed to import app_state {}: {}", row.key, e))?;
+    }
+
+    Ok(rows.len() as i64)
+}
+
+fn import_pets(tx: &Transaction<'_>, rows: &[PetState]) -> Result<i64, String> {
+    if rows.is_empty() || !table_exists(tx, "pets")? {
+        return Ok(0);
+    }
+
+    let mut stmt = tx
+        .prepare(
+            "INSERT OR REPLACE INTO pets
+             (id, stage, health, experience, current_streak, vitality_multiplier, last_study_at, last_review_at, created_at, updated_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        )
+        .map_err(|e| format!("Failed to prepare pets import: {}", e))?;
+
+    for row in rows {
+        stmt.execute((
+            row.id,
+            i64::from(row.stage),
+            row.health,
+            i64::from(row.experience),
+            i64::from(row.current_streak),
+            row.vitality_multiplier,
+            &row.last_study_at,
+            &row.last_review_at,
+            &row.created_at,
+            &row.updated_at,
+        ))
+        .map_err(|e| format!("Failed to import pet {}: {}", row.id, e))?;
+    }
+
+    Ok(rows.len() as i64)
+}
+
+fn import_generic_rows(
+    tx: &Transaction<'_>,
+    table_name: &str,
+    rows: &[JsonMap<String, JsonValue>],
+) -> Result<i64, String> {
+    if rows.is_empty() || !table_exists(tx, table_name)? {
+        return Ok(0);
+    }
+
+    let mut imported = 0_i64;
+
+    for row in rows {
+        if row.is_empty() {
+            continue;
+        }
+
+        let columns = row.keys().cloned().collect::<Vec<_>>();
+        let quoted_columns = columns
+            .iter()
+            .map(|column| quote_identifier(column))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let placeholders = (1..=columns.len())
+            .map(|index| format!("?{}", index))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let sql = format!(
+            "INSERT OR REPLACE INTO {} ({}) VALUES ({})",
+            quote_identifier(table_name),
+            quoted_columns,
+            placeholders
+        );
+        let values = columns
+            .iter()
+            .filter_map(|column| row.get(column))
+            .map(json_value_to_sql)
+            .collect::<Vec<_>>();
+
+        tx.execute(&sql, rusqlite::params_from_iter(values))
+            .map_err(|e| format!("Failed to import {} row: {}", table_name, e))?;
+        imported += 1;
+    }
+
+    Ok(imported)
+}
 
 pub fn normalize_app_config(config: AppConfig) -> AppConfig {
     let mut normalized = config;
@@ -726,6 +1200,57 @@ pub fn get_export_bundle(db: State<Database>) -> Result<ExportBundle, String> {
         &recommendation,
         &feedback_records,
     )
+}
+
+#[tauri::command]
+pub fn export_all_data(db: State<Database>) -> Result<String, String> {
+    let conn = db.get_connection();
+    let conn = conn.lock().unwrap();
+    let archive = LearningDataArchive {
+        version: 1,
+        exported_at: now_rfc3339(),
+        words: load_words_for_export(&conn)?,
+        srs_cards: load_cards_for_export(&conn)?,
+        review_logs: load_logs_for_export(&conn)?,
+        app_state: load_app_state_for_export(&conn)?,
+        pets: load_pets_for_export(&conn)?,
+        achievements: load_generic_table_for_export(&conn, "achievements")?,
+    };
+
+    serde_json::to_string_pretty(&archive)
+        .map_err(|e| format!("Failed to serialize learning data export: {}", e))
+}
+
+#[tauri::command]
+pub fn import_all_data(db: State<Database>, json_data: String) -> Result<ImportSummary, String> {
+    let archive: LearningDataArchive = serde_json::from_str(&json_data)
+        .map_err(|e| format!("Failed to parse learning data JSON: {}", e))?;
+
+    let conn = db.get_connection();
+    let mut conn = conn.lock().unwrap();
+    let tx = conn
+        .transaction()
+        .map_err(|e| format!("Failed to start import transaction: {}", e))?;
+
+    let words = import_words(&tx, &archive.words)?;
+    let srs_cards = import_srs_cards(&tx, &archive.srs_cards)?;
+    let review_logs = import_review_logs(&tx, &archive.review_logs)?;
+    let app_state = import_app_state(&tx, &archive.app_state)?;
+    let pets = import_pets(&tx, &archive.pets)?;
+    let achievements = import_generic_rows(&tx, "achievements", &archive.achievements)?;
+
+    tx.commit()
+        .map_err(|e| format!("Failed to commit imported learning data: {}", e))?;
+
+    Ok(ImportSummary {
+        words,
+        srs_cards,
+        review_logs,
+        app_state,
+        pets,
+        achievements,
+        total_imported: words + srs_cards + review_logs + app_state + pets + achievements,
+    })
 }
 
 #[tauri::command]
