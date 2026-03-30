@@ -18,7 +18,33 @@ pub fn get_pet_state(db: State<Database>) -> Result<PetState, String> {
         .map_err(|e| format!("Failed to get pet state: {}", e))
 }
 
-/// Internal function to update pet after a study action
+/// Internal function to update pet after a review action.
+/// Both reviews and study actions update the pet (experience, streak, timestamps).
+/// Health decay is handled by init_pet_on_startup.
+pub fn update_pet_after_review(db: &Database) -> Result<PetState, String> {
+    let conn = db.get_connection();
+    let pets_repo = PetsRepository::new(conn);
+
+    let mut pet = pets_repo
+        .get_or_create()
+        .map_err(|e| format!("Failed to get pet: {}", e))?;
+
+    // Process study effects (experience, streak, vitality, timestamps)
+    PetEngine::process_study_action(&mut pet);
+
+    // Update last_review_at timestamp
+    pet.last_review_at = Some(chrono::Local::now().to_rfc3339());
+
+    pets_repo
+        .update(&pet)
+        .map_err(|e| format!("Failed to update pet: {}", e))?;
+
+    Ok(pet)
+}
+
+/// Internal function to update pet after a study action.
+/// Applies study effects (experience, streak, timestamps) without re-running
+/// health decay — health decay is handled by init_pet_on_startup on app launch.
 pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
     let conn = db.get_connection();
     let pets_repo = PetsRepository::new(conn);
@@ -27,8 +53,12 @@ pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
         .get_or_create()
         .map_err(|e| format!("Failed to get pet: {}", e))?;
 
-    // Process the study action
+    // Process the study action (streak, vitality, experience, timestamps).
+    // Health decay is handled by init_pet_on_startup so it's only applied once per session.
     PetEngine::process_study_action(&mut pet);
+
+    // Also update last_review_at since studying a new word counts as a review
+    pet.last_review_at = Some(chrono::Local::now().to_rfc3339());
 
     // Save updated pet
     pets_repo
@@ -38,7 +68,8 @@ pub fn update_pet_on_study(db: &Database) -> Result<PetState, String> {
     Ok(pet)
 }
 
-/// Initialize pet on app startup - process daily health check
+/// Initialize pet on app startup — apply daily health decay and save.
+/// Health decay should only run once per app session (here), not again on study actions.
 pub fn init_pet_on_startup(db: &Database) -> Result<(), String> {
     let conn = db.get_connection();
     let pets_repo = PetsRepository::new(conn);
@@ -47,7 +78,7 @@ pub fn init_pet_on_startup(db: &Database) -> Result<(), String> {
         .get_or_create()
         .map_err(|e| format!("Failed to get pet: {}", e))?;
 
-    // Process daily health check (decay health, check streak)
+    // Apply daily health decay and streak check
     PetEngine::process_daily_health_check(&mut pet);
 
     // Save updated pet

@@ -191,7 +191,7 @@ fn build_word_card_data(
 }
 
 fn update_pet_on_review(db: &Database) {
-    let _ = super::pet::update_pet_on_study(db);
+    let _ = super::pet::update_pet_after_review(db);
 }
 
 // ============================================================================

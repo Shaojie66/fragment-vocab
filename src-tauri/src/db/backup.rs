@@ -133,7 +133,7 @@ pub fn list_backups(app_data_dir: &Path) -> Result<Vec<BackupEntry>> {
 }
 
 /// Restore a backup by replacing the current database.
-/// The caller must close all DB connections before calling this.
+/// Caller (restore_backup command) is responsible for closing/reopening connections.
 pub fn restore_backup(app_data_dir: &Path, backup_file_name: &str) -> Result<()> {
     let dir = backup_dir(app_data_dir);
     let source = dir.join(backup_file_name);

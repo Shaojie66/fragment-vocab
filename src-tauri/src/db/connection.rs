@@ -5,11 +5,11 @@ use std::sync::{Arc, Mutex};
 
 pub struct Database {
     conn: Arc<Mutex<Connection>>,
+    pub db_path: PathBuf,
 }
 
 impl Database {
     pub fn new(db_path: PathBuf) -> Result<Self> {
-        // 确保父目录存在
         if let Some(parent) = db_path.parent() {
             std::fs::create_dir_all(parent).context("Failed to create database directory")?;
         }
@@ -17,12 +17,12 @@ impl Database {
         let conn = Connection::open(&db_path)
             .context(format!("Failed to open database at {:?}", db_path))?;
 
-        // 启用外键约束
         conn.execute("PRAGMA foreign_keys = ON", [])
             .context("Failed to enable foreign keys")?;
 
         Ok(Self {
             conn: Arc::new(Mutex::new(conn)),
+            db_path,
         })
     }
 
@@ -34,6 +34,39 @@ impl Database {
         let conn = self.conn.lock().unwrap();
         conn.execute_batch(sql)
             .context("Failed to execute migration")?;
+        Ok(())
+    }
+
+    /// Acquire a connection guard for the duration of a closure.
+    /// Returns the closure's result.
+    pub fn with_conn<T, F>(&self, f: F) -> Result<T>
+    where
+        F: FnOnce(&Connection) -> Result<T>,
+    {
+        let conn = self.conn.lock().unwrap();
+        f(&conn)
+    }
+
+    /// Close the connection, replacing it with a no-op that returns errors.
+    /// The caller must call reopen_connection() to restore functionality.
+    pub fn close_connection(&self) {
+        // Take the connection and replace with an in-memory DB
+        // This releases the file lock on the real database file
+        let _ = std::mem::replace(
+            &mut *self.conn.lock().unwrap(),
+            Connection::open_in_memory()
+                .expect("in-memory DB should always open"),
+        );
+    }
+
+    /// Reopen the connection to the current db_path. Must be called after
+    /// close_connection() and after the database file has been replaced.
+    pub fn reopen_connection(&self) -> Result<()> {
+        let mut conn = self.conn.lock().unwrap();
+        *conn = Connection::open(&self.db_path)
+            .context(format!("Failed to reopen database at {:?}", self.db_path))?;
+        conn.execute("PRAGMA foreign_keys = ON", [])
+            .context("Failed to enable foreign keys on reopen")?;
         Ok(())
     }
 }

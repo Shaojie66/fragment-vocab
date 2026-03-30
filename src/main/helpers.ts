@@ -1,3 +1,16 @@
+/**
+ * Escape HTML special characters to prevent XSS when inserting
+ * user-controlled or API-provided strings into innerHTML.
+ */
+export function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function cloneConfig<T>(config: T): T {
   return JSON.parse(JSON.stringify(config)) as T;
 }

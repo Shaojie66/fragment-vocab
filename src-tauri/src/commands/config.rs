@@ -940,19 +940,13 @@ pub fn load_today_stats(
     cards_repo: &CardsRepository,
     disabled_sources: &HashSet<String>,
 ) -> Result<TodayStats, String> {
-    let today_logs = logs_repo
-        .get_recent_logs(1000)
-        .map_err(|e| format!("Failed to get logs: {}", e))?;
-
     let day_start = local_day_start(Local::now());
-    let today_logs: Vec<_> = today_logs
-        .into_iter()
-        .filter(|log| {
-            DateTime::parse_from_rfc3339(&log.shown_at)
-                .map(|shown_at| shown_at.with_timezone(&Local) >= day_start)
-                .unwrap_or(false)
-        })
-        .collect();
+    let day_start_utc = day_start.with_timezone(&Utc).to_rfc3339();
+
+    // Fetch all logs since today started (no artificial 1000-row cap)
+    let today_logs = logs_repo
+        .get_logs_since(&day_start_utc)
+        .map_err(|e| format!("Failed to get logs: {}", e))?;
 
     let total_reviews = today_logs.len() as i64;
     let know_count = today_logs.iter().filter(|log| log.result == "know").count() as i64;
@@ -968,7 +962,6 @@ pub fn load_today_stats(
         0.0
     };
 
-    let day_start_utc = day_start.with_timezone(&Utc).to_rfc3339();
     let new_words_today = logs_repo
         .count_new_cards_since(&day_start_utc)
         .map_err(|e| format!("Failed to count new words today: {}", e))?;

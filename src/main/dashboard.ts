@@ -7,7 +7,7 @@ import {
 } from '../shared/config';
 import type { AppConfig, FeedbackRecord, RecommendationSummary, SchedulerSnapshot, TodayStats } from '../shared/types';
 import { mainElements } from './elements';
-import { formatDateTime, parseClockToMinutes } from './helpers';
+import { escapeHtml, formatDateTime, parseClockToMinutes } from './helpers';
 import { mainState } from './state';
 
 interface DashboardDependencies {
@@ -167,7 +167,7 @@ function renderFeedbackHistory(records: FeedbackRecord[] = []) {
         ? '提醒太多'
         : record.feedback_type === 'too_few_reminders'
           ? '提醒太少'
-          : `这张词先别再推${record.word ? ` · ${record.word}` : ''}`;
+          : `这张词先别再推${record.word ? ` · ${escapeHtml(record.word)}` : ''}`;
 
       return `<li>${label} · ${formatDateTime(record.created_at)} · 来自主${record.source === 'card' ? '卡片' : '页面'}</li>`;
     })

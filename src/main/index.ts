@@ -13,7 +13,7 @@ import type {
 import { initializeDashboard, renderDashboard, renderSchedulerControls } from './dashboard';
 import { mainElements } from './elements';
 import { initializeEvents, initScheduler, isSchedulerStarted, startDashboardRefreshPolling, stopScheduler } from './events';
-import { copyToClipboard, downloadTextFile, getErrorMessage } from './helpers';
+import { copyToClipboard, downloadTextFile, escapeHtml, getErrorMessage } from './helpers';
 import { initializeOnboarding, syncOnboardingVisibility } from './onboarding';
 import {
   initializeSettings,
@@ -410,7 +410,7 @@ function renderUpdateBanner(info: UpdateInfo) {
   banner.className = 'update-banner';
   banner.innerHTML = `
     <div class="update-banner-copy">
-      <strong>有新版本可用：${info.name ?? `v${info.version}`}</strong>
+      <strong>有新版本可用：${escapeHtml(info.name ?? `v${info.version}`)}</strong>
       <span>当前版本 v0.1.0</span>
     </div>
     <div class="update-banner-actions">

@@ -107,7 +107,10 @@ impl PetEngine {
         }
     }
 
-    /// Update streak based on last study date
+    /// Returns the new streak value based on last study date.
+    /// - 0: same day (no change)
+    /// - 1: first study or broken streak (start new)
+    /// - 2: consecutive day (add 1)
     pub fn update_streak(last_study_at: Option<&str>) -> u32 {
         if let Some(last) = last_study_at {
             if let Ok(dt) = DateTime::parse_from_rfc3339(last) {
@@ -115,19 +118,17 @@ impl PetEngine {
                 let today = Local::now().date_naive();
 
                 if last_date == today {
-                    // Same day, streak continues
-                    return 1; // Will be incremented by caller
+                    return 0; // Already studied today
                 } else {
                     let days_since = (today - last_date).num_days();
                     if days_since == 1 {
-                        // Consecutive day, streak continues
-                        return 1;
+                        return 2; // Consecutive: current_streak + 1
                     }
+                    // days_since > 1: broken streak, starts fresh
                 }
             }
         }
-        // First day or broken streak
-        1
+        1 // No prior study or broken streak, start new
     }
 
     /// Process a study completion event
@@ -135,8 +136,16 @@ impl PetEngine {
         let now = chrono::Local::now().to_rfc3339();
 
         // Update streak based on last study date
-        let new_streak = Self::update_streak(pet.last_study_at.as_deref());
-        pet.current_streak = pet.current_streak.saturating_add(new_streak);
+        let streak_delta = Self::update_streak(pet.last_study_at.as_deref());
+        if streak_delta == 0 {
+            // Same day, no streak change
+        } else if streak_delta == 2 {
+            // Consecutive day: add 1
+            pet.current_streak = pet.current_streak.saturating_add(1);
+        } else {
+            // First study or broken streak: reset to 1
+            pet.current_streak = 1;
+        }
 
         // Recalculate vitality multiplier based on updated streak
         pet.vitality_multiplier = Self::calculate_vitality_multiplier(pet.current_streak);

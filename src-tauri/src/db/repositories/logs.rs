@@ -106,6 +106,30 @@ impl LogsRepository {
         Ok(logs)
     }
 
+    /// Get all logs since a given UTC timestamp (inclusive), ordered by shown_at DESC.
+    pub fn get_logs_since(&self, since_utc: &str) -> Result<Vec<ReviewLog>> {
+        let conn = self.conn.lock().unwrap();
+        let mut stmt = conn.prepare(
+            "SELECT id, card_id, shown_at, result, trigger_type, response_ms, created_at FROM review_logs WHERE shown_at >= ?1 ORDER BY shown_at DESC"
+        )?;
+
+        let logs = stmt
+            .query_map([since_utc], |row| {
+                Ok(ReviewLog {
+                    id: row.get(0)?,
+                    card_id: row.get(1)?,
+                    shown_at: row.get(2)?,
+                    result: row.get(3)?,
+                    trigger_type: row.get(4)?,
+                    response_ms: row.get(5)?,
+                    created_at: row.get(6)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(logs)
+    }
+
     pub fn get_history_stats(&self, since_utc: &str) -> Result<Vec<DayStats>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(

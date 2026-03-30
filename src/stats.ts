@@ -400,7 +400,7 @@ function getFeedbackLabel(record: FeedbackRecord): string {
     return '提醒太少';
   }
 
-  return `这张词先别再推${record.word ? ` · ${record.word}` : ''}`;
+  return `这张词先别再推${record.word ? ` · ${escapeHtml(record.word)}` : ''}`;
 }
 
 function renderFeedback(records: FeedbackRecord[] = []) {
