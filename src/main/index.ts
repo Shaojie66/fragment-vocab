@@ -25,6 +25,7 @@ import {
 } from './settings';
 import { mainState } from './state';
 import { initializeTabs } from './tabs';
+import { checkForUpdate, dismissVersion, openReleaseUrl, type UpdateInfo } from '../shared/update-checker';
 import { initializeWordbooks, loadWordbooks } from './wordbooks';
 
 console.log('Fragment Vocab console booting...');
@@ -394,6 +395,47 @@ function initializeModules() {
   });
 }
 
+function renderUpdateBanner(info: UpdateInfo) {
+  const existing = document.getElementById('updateBanner');
+  if (existing) {
+    existing.remove();
+  }
+
+  if (!info.available || !info.version || !info.url) {
+    return;
+  }
+
+  const banner = document.createElement('section');
+  banner.id = 'updateBanner';
+  banner.className = 'update-banner';
+  banner.innerHTML = `
+    <div class="update-banner-copy">
+      <strong>有新版本可用：${info.name ?? `v${info.version}`}</strong>
+      <span>当前版本 v0.1.0</span>
+    </div>
+    <div class="update-banner-actions">
+      <button class="primary-btn" id="updateDownloadBtn" type="button">前往下载</button>
+      <button class="ghost-btn" id="updateDismissBtn" type="button">忽略此版本</button>
+    </div>
+  `;
+
+  const topline = document.querySelector('.topline');
+  if (topline) {
+    topline.insertAdjacentElement('afterend', banner);
+  } else {
+    document.querySelector('.app-shell')?.prepend(banner);
+  }
+
+  document.getElementById('updateDownloadBtn')?.addEventListener('click', () => {
+    openReleaseUrl(info.url!);
+  });
+
+  document.getElementById('updateDismissBtn')?.addEventListener('click', () => {
+    dismissVersion(info.version!);
+    banner.remove();
+  });
+}
+
 async function bootstrap() {
   initializeModules();
   renderSchedulerControls(false);
@@ -411,6 +453,9 @@ async function bootstrap() {
   populateOnboarding(mainState.currentConfig);
   renderDashboard();
   startDashboardRefreshPolling();
+
+  // Check for updates (non-blocking)
+  checkForUpdate().then(renderUpdateBanner).catch(() => {});
 }
 
 window.addEventListener('DOMContentLoaded', () => {

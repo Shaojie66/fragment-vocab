@@ -101,6 +101,11 @@ export const mainElements = {
   closeWordbookPreviewBtn: queryRequiredElement<HTMLButtonElement>('#closeWordbookPreviewBtn'),
   wordbookPreviewPrevBtn: queryRequiredElement<HTMLButtonElement>('#wordbookPreviewPrevBtn'),
   wordbookPreviewNextBtn: queryRequiredElement<HTMLButtonElement>('#wordbookPreviewNextBtn'),
+
+  tagNameInput: queryRequiredElement<HTMLInputElement>('#tagNameInput'),
+  createTagBtn: queryRequiredElement<HTMLButtonElement>('#createTagBtn'),
+  tagList: queryRequiredElement<HTMLElement>('#tagList'),
+
   downloadExportJsonBtn: queryRequiredElement<HTMLButtonElement>('#downloadExportJsonBtn'),
   exportSummaryOutput: queryRequiredElement<HTMLTextAreaElement>('#exportSummaryOutput'),
   exportJsonOutput: queryRequiredElement<HTMLTextAreaElement>('#exportJsonOutput'),

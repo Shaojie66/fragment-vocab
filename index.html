@@ -508,6 +508,22 @@
           <div class="wordbook-list" id="wordbookList">
             <div class="wordbook-empty">正在读取词库列表...</div>
           </div>
+          <section class="tag-management">
+            <div class="tag-management-head">
+              <div>
+                <p class="panel-kicker">Tags</p>
+                <h3>标签管理</h3>
+              </div>
+            </div>
+            <p class="hint-text">给单词添加自定义标签进行分组学习。在词条详情中可以为单词添加或移除标签。</p>
+            <div class="tag-create-row">
+              <input id="tagNameInput" type="text" placeholder="输入新标签名称" maxlength="50" autocomplete="off" class="tag-name-input" />
+              <button class="ghost-btn" id="createTagBtn" type="button">创建标签</button>
+            </div>
+            <div class="tag-list" id="tagList">
+              <div class="wordbook-empty">暂无标签，创建一个开始分组管理。</div>
+            </div>
+          </section>
           <section class="wordbook-preview hidden" id="wordbookPreview">
             <div class="wordbook-preview-head">
               <div>

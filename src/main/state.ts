@@ -4,6 +4,7 @@ import type {
   DashboardState,
   ExportBundle,
   SearchResult,
+  TagWithCount,
   TeamTemplate,
   WordbookListItem,
   WordbookWordItem,
@@ -22,6 +23,7 @@ export interface MainState {
   currentWordbookSearchResults: SearchResult[];
   isWordbookSearchLoading: boolean;
   currentExportBundle: ExportBundle | null;
+  currentTags: TagWithCount[];
   lastErrorMessage: string | null;
 }
 
@@ -38,5 +40,6 @@ export const mainState: MainState = {
   currentWordbookSearchResults: [],
   isWordbookSearchLoading: false,
   currentExportBundle: null,
+  currentTags: [],
   lastErrorMessage: null,
 };

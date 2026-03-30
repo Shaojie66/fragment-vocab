@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { SearchResult, WordbookImportSummary, WordbookListItem, WordbookWordItem } from '../shared/types';
+import type { SearchResult, TagWithCount, WordbookImportSummary, WordbookListItem, WordbookWordItem } from '../shared/types';
 import { createWordDetailModal } from '../shared/word-detail-modal';
 import { mainElements } from './elements';
 import { downloadTextFile, fileToBase64, formatDateTime, getErrorMessage } from './helpers';
@@ -464,6 +464,7 @@ export async function loadWordbooks() {
   mainState.currentWordbooks = await invoke<WordbookListItem[]>('list_wordbooks');
   renderWordSearch();
   renderWordbooks();
+  void loadTags();
 
   if (!mainState.currentWordbookPreviewSource) {
     return;
@@ -552,6 +553,95 @@ async function exportWordbookBySource(source: string, format: 'csv' | 'json') {
   }
 }
 
+function renderTags() {
+  if (!mainState.currentTags.length) {
+    mainElements.tagList.innerHTML = '<div class="wordbook-empty">暂无标签，创建一个开始分组管理。</div>';
+    return;
+  }
+
+  mainElements.tagList.innerHTML = '';
+
+  mainState.currentTags.forEach((tag) => {
+    const row = document.createElement('article');
+    row.className = 'tag-item';
+
+    const copy = document.createElement('div');
+    copy.className = 'tag-item-copy';
+
+    const name = document.createElement('strong');
+    name.textContent = tag.name;
+    copy.appendChild(name);
+
+    const meta = document.createElement('span');
+    meta.className = 'tag-item-meta';
+    meta.textContent = `${tag.word_count} 个单词`;
+    copy.appendChild(meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'tag-item-actions';
+
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'ghost-btn';
+    deleteButton.type = 'button';
+    deleteButton.dataset.tagId = String(tag.id);
+    deleteButton.dataset.action = 'delete-tag';
+    deleteButton.textContent = '删除';
+    actions.appendChild(deleteButton);
+
+    row.append(copy, actions);
+    mainElements.tagList.appendChild(row);
+  });
+}
+
+async function loadTags() {
+  try {
+    mainState.currentTags = await invoke<TagWithCount[]>('list_tags');
+    renderTags();
+  } catch (error) {
+    mainState.lastErrorMessage = getErrorMessage(error);
+    dependencies?.setSaveHint('获取标签列表失败。');
+  }
+}
+
+async function createTag(name: string) {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    dependencies?.setSaveHint('标签名称不能为空。');
+    return;
+  }
+
+  try {
+    const newTag = await invoke<TagWithCount>('create_tag', { name: trimmed });
+    mainState.currentTags.push(newTag);
+    mainState.currentTags.sort((a, b) => a.name.localeCompare(b.name));
+    renderTags();
+    mainElements.tagNameInput.value = '';
+    dependencies?.setSaveHint(`标签「${newTag.name}」已创建。`);
+  } catch (error) {
+    dependencies?.setSaveHint(getErrorMessage(error));
+  }
+}
+
+async function deleteTag(tagId: number) {
+  const tag = mainState.currentTags.find((t) => t.id === tagId);
+  if (!tag) {
+    return;
+  }
+
+  const confirmed = window.confirm(`确定删除标签「${tag.name}」吗？删除后标签与单词的关联也会移除。`);
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    mainState.currentTags = await invoke<TagWithCount[]>('delete_tag', { tagId });
+    renderTags();
+    dependencies?.setSaveHint(`标签「${tag.name}」已删除。`);
+  } catch (error) {
+    dependencies?.setSaveHint(getErrorMessage(error));
+  }
+}
+
 export function initializeWordbooks(nextDependencies: WordbookDependencies) {
   dependencies = nextDependencies;
   renderWordSearch();
@@ -561,6 +651,27 @@ export function initializeWordbooks(nextDependencies: WordbookDependencies) {
   });
   mainElements.wordbookSearchInput.addEventListener('input', () => {
     scheduleWordSearch(mainElements.wordbookSearchInput.value);
+  });
+  mainElements.createTagBtn.addEventListener('click', () => {
+    void createTag(mainElements.tagNameInput.value);
+  });
+  mainElements.tagNameInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      void createTag(mainElements.tagNameInput.value);
+    }
+  });
+  mainElements.tagList.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    const button = target?.closest<HTMLButtonElement>('button[data-action="delete-tag"][data-tag-id]');
+    if (!button) {
+      return;
+    }
+    const tagId = Number(button.dataset.tagId);
+    if (!Number.isFinite(tagId)) {
+      return;
+    }
+    void deleteTag(tagId);
   });
   mainElements.closeWordbookPreviewBtn.addEventListener('click', () => {
     closeWordbookPreview();

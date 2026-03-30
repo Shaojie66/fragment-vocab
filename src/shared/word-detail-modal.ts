@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { WordDetail } from './types';
+import type { Tag, TagWithCount, WordDetail } from './types';
 
 interface WordDetailModalOptions {
   onWrongBookChange?: (detail: WordDetail) => Promise<void> | void;
@@ -106,6 +106,17 @@ function buildDetailMarkup(detail: WordDetail): string {
         <span>累计答错</span>
         <strong>${detail.lifetime_wrong}</strong>
       </article>
+    </section>
+    <section class="word-detail-panel word-detail-tags-section">
+      <p class="word-detail-section-label">标签</p>
+      <div class="word-detail-tags" id="wordDetailTags">
+        <span class="word-detail-tags-loading">读取标签中...</span>
+      </div>
+      <div class="word-detail-tag-add">
+        <select class="word-detail-tag-select" id="wordDetailTagSelect">
+          <option value="">添加标签...</option>
+        </select>
+      </div>
     </section>
   `;
 }
@@ -285,6 +296,71 @@ function ensureStyles() {
       color: var(--accent-orange-text, #8b4f13);
     }
 
+    .word-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      min-height: 32px;
+    }
+
+    .word-detail-tags-loading {
+      color: var(--text-muted, #6a746d);
+      font-size: 13px;
+    }
+
+    .word-detail-tags-empty {
+      color: var(--text-muted, #6a746d);
+      font-size: 13px;
+    }
+
+    .word-detail-tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color, rgba(38, 65, 53, 0.12));
+      background: var(--accent-soft, rgba(53, 95, 76, 0.12));
+      color: var(--accent-soft-text, #2f5d4b);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .word-detail-tag-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-muted, #6a746d);
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .word-detail-tag-remove:hover {
+      background: var(--border-color, rgba(38, 65, 53, 0.12));
+      color: var(--text-primary, #1e2a26);
+    }
+
+    .word-detail-tag-add {
+      margin-top: 10px;
+    }
+
+    .word-detail-tag-select {
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border-input, rgba(38, 65, 53, 0.14));
+      background: var(--bg-input, rgba(255, 255, 255, 0.9));
+      color: var(--text-primary, #1e2a26);
+      font-size: 13px;
+    }
+
     @media (max-width: 760px) {
       .word-detail-modal-card {
         padding: 22px;
@@ -329,6 +405,8 @@ export function createWordDetailModal(options: WordDetailModalOptions = {}): Wor
 
   let activeWordId: number | null = null;
   let currentDetail: WordDetail | null = null;
+  let currentWordTags: Tag[] = [];
+  let allTags: TagWithCount[] = [];
   let requestId = 0;
 
   const close = () => {
@@ -361,6 +439,74 @@ export function createWordDetailModal(options: WordDetailModalOptions = {}): Wor
 
   const renderDetail = (detail: WordDetail) => {
     card.innerHTML = buildDetailMarkup(detail);
+    void loadWordTags();
+  };
+
+  const renderWordTagsInModal = () => {
+    const tagsContainer = card.querySelector('#wordDetailTags');
+    const tagSelect = card.querySelector('#wordDetailTagSelect') as HTMLSelectElement | null;
+
+    if (!tagsContainer) {
+      return;
+    }
+
+    if (currentWordTags.length === 0) {
+      tagsContainer.innerHTML = '<span class="word-detail-tags-empty">暂无标签</span>';
+    } else {
+      tagsContainer.innerHTML = '';
+      currentWordTags.forEach((tag) => {
+        const chip = document.createElement('span');
+        chip.className = 'word-detail-tag-chip';
+        chip.textContent = tag.name;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'word-detail-tag-remove';
+        removeBtn.type = 'button';
+        removeBtn.textContent = '\u00d7';
+        removeBtn.dataset.tagId = String(tag.id);
+        removeBtn.dataset.action = 'remove-word-tag';
+        removeBtn.setAttribute('aria-label', `移除标签 ${tag.name}`);
+        chip.appendChild(removeBtn);
+
+        tagsContainer.appendChild(chip);
+      });
+    }
+
+    if (tagSelect) {
+      const currentTagIds = new Set(currentWordTags.map((t) => t.id));
+      const availableTags = allTags.filter((t) => !currentTagIds.has(t.id));
+
+      tagSelect.innerHTML = '<option value="">添加标签...</option>';
+      availableTags.forEach((tag) => {
+        const option = document.createElement('option');
+        option.value = String(tag.id);
+        option.textContent = tag.name;
+        tagSelect.appendChild(option);
+      });
+
+      tagSelect.style.display = availableTags.length > 0 ? '' : 'none';
+    }
+  };
+
+  const loadWordTags = async () => {
+    if (activeWordId === null) {
+      return;
+    }
+
+    try {
+      const [wordTags, tags] = await Promise.all([
+        invoke<Tag[]>('get_word_tags', { wordId: activeWordId }),
+        invoke<TagWithCount[]>('list_tags'),
+      ]);
+      currentWordTags = wordTags;
+      allTags = tags;
+      renderWordTagsInModal();
+    } catch {
+      const tagsContainer = card.querySelector('#wordDetailTags');
+      if (tagsContainer) {
+        tagsContainer.innerHTML = '<span class="word-detail-tags-empty">标签加载失败</span>';
+      }
+    }
   };
 
   overlay.addEventListener('click', (event) => {
@@ -381,6 +527,22 @@ export function createWordDetailModal(options: WordDetailModalOptions = {}): Wor
       void invoke('speak_word', { text: currentDetail.word }).catch((error) => {
         options.onError?.(error instanceof Error ? error.message : String(error));
       });
+      return;
+    }
+
+    const removeTagBtn = target?.closest<HTMLButtonElement>('button[data-action="remove-word-tag"]');
+    if (removeTagBtn && activeWordId !== null) {
+      const tagId = Number(removeTagBtn.dataset.tagId);
+      if (Number.isFinite(tagId)) {
+        void invoke<Tag[]>('remove_word_tag', { wordId: activeWordId, tagId })
+          .then((tags) => {
+            currentWordTags = tags;
+            renderWordTagsInModal();
+          })
+          .catch((error) => {
+            options.onError?.(error instanceof Error ? error.message : String(error));
+          });
+      }
       return;
     }
 
@@ -405,6 +567,25 @@ export function createWordDetailModal(options: WordDetailModalOptions = {}): Wor
           options.onError?.(error instanceof Error ? error.message : String(error));
           renderDetail(detailSnapshot);
         });
+    }
+  });
+
+  card.addEventListener('change', (event) => {
+    const target = event.target as HTMLElement | null;
+    const select = target?.closest<HTMLSelectElement>('#wordDetailTagSelect');
+    if (select && activeWordId !== null) {
+      const tagId = Number(select.value);
+      if (Number.isFinite(tagId) && tagId > 0) {
+        select.value = '';
+        void invoke<Tag[]>('add_word_tag', { wordId: activeWordId, tagId })
+          .then((tags) => {
+            currentWordTags = tags;
+            renderWordTagsInModal();
+          })
+          .catch((error) => {
+            options.onError?.(error instanceof Error ? error.message : String(error));
+          });
+      }
     }
   });
 

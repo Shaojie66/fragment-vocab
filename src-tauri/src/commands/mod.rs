@@ -3,6 +3,7 @@ pub mod backup;
 pub mod config;
 pub mod pet;
 pub mod review;
+pub mod tags;
 mod types;
 mod utils;
 pub mod wordbook;

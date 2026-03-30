@@ -483,6 +483,12 @@ pub fn run() {
             commands::wrong_book::get_wrong_book_words,
             commands::wrong_book::remove_from_wrong_book,
             commands::wrong_book::set_wrong_book_state,
+            commands::tags::create_tag,
+            commands::tags::delete_tag,
+            commands::tags::list_tags,
+            commands::tags::add_word_tag,
+            commands::tags::remove_word_tag,
+            commands::tags::get_word_tags,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

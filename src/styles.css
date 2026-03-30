@@ -1167,3 +1167,121 @@ html[data-theme="dark"] .onboarding-frequency-option input:checked + .onboarding
     min-width: 0;
   }
 }
+
+/* Tag management */
+
+.tag-management {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-soft, rgba(38, 65, 53, 0.08));
+}
+
+.tag-management-head {
+  margin-bottom: 8px;
+}
+
+.tag-management-head h3 {
+  margin: 4px 0 0;
+  font-size: 16px;
+  color: var(--text-strong, #243930);
+}
+
+.tag-create-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tag-name-input {
+  flex: 1;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-input, rgba(38, 65, 53, 0.14));
+  background: var(--bg-input, rgba(255, 255, 255, 0.9));
+  color: var(--text-primary, #1e2a26);
+  font-size: 14px;
+}
+
+.tag-name-input:focus {
+  outline: none;
+  border-color: var(--accent, #2d5a45);
+  background: var(--bg-input-focus, #ffffff);
+  box-shadow: 0 0 0 3px var(--focus-ring, rgba(45, 90, 69, 0.1));
+}
+
+.tag-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft, rgba(38, 65, 53, 0.08));
+  background: var(--bg-card-soft, rgba(252, 249, 244, 0.82));
+}
+
+.tag-item-copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tag-item-copy strong {
+  font-size: 14px;
+  color: var(--text-strong, #243930);
+}
+
+.tag-item-meta {
+  font-size: 12px;
+  color: var(--text-muted, #6a746d);
+  white-space: nowrap;
+}
+
+.tag-item-actions {
+  flex-shrink: 0;
+}
+
+/* Update banner */
+
+.update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border-banner, rgba(198, 120, 68, 0.24));
+  background: linear-gradient(135deg, var(--bg-banner-start, rgba(255, 247, 234, 0.9)), var(--bg-banner-end, rgba(253, 240, 224, 0.82)));
+  box-shadow: 0 4px 16px var(--shadow-banner, rgba(164, 121, 74, 0.12));
+}
+
+.update-banner-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.update-banner-copy strong {
+  font-size: 14px;
+  color: var(--text-banner, #6a5b44);
+}
+
+.update-banner-copy span {
+  font-size: 12px;
+  color: var(--text-muted, #6a746d);
+}
+
+.update-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}

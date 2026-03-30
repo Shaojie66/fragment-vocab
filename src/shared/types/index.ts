@@ -287,3 +287,16 @@ export interface SearchResult {
   status: 'new' | 'learning' | 'mastered';
   source: string;
 }
+
+export interface Tag {
+  id: number;
+  name: string;
+  created_at: string;
+}
+
+export interface TagWithCount {
+  id: number;
+  name: string;
+  word_count: number;
+  created_at: string;
+}

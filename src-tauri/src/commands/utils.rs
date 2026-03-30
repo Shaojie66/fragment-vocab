@@ -176,6 +176,7 @@ pub fn persist_wrong_book_set(
         .map_err(|e| format!("Failed to save wrong book: {}", e))
 }
 
+#[allow(dead_code)]
 pub fn update_wrong_book(
     state_repo: &StateRepository,
     card_id: i64,

@@ -83,6 +83,7 @@ impl PetEngine {
     }
 
     /// Get the saturation and opacity CSS values for current health
+    #[allow(dead_code)]
     pub fn get_visual_state(health: f64) -> (u8, u8) {
         // Returns (saturation_percent, opacity_percent)
         match health {
@@ -95,6 +96,7 @@ impl PetEngine {
     }
 
     /// Get slime size in pixels for current stage
+    #[allow(dead_code)]
     pub fn get_slime_size(stage: u8) -> u32 {
         match stage {
             0 => 40,  // egg

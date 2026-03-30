@@ -32,6 +32,11 @@ impl Migrator {
         db.execute_migration(achievements_migration_sql)
             .context("Failed to run 004_achievements.sql migration")?;
 
+        let tags_migration_sql = include_str!("../../migrations/006_tags.sql");
+
+        db.execute_migration(tags_migration_sql)
+            .context("Failed to run 006_tags.sql migration")?;
+
         println!("✅ Database migrations completed successfully");
         Ok(())
     }
@@ -79,13 +84,13 @@ mod tests {
 
         let table_count: i32 = conn
             .query_row(
-                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('words', 'srs_cards', 'review_logs', 'app_state', 'achievements')",
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('words', 'srs_cards', 'review_logs', 'app_state', 'achievements', 'tags', 'word_tags')",
                 [],
                 |row| row.get(0),
             )
             .unwrap();
 
-        assert_eq!(table_count, 5);
+        assert_eq!(table_count, 7);
 
         let has_example_sentence: bool = conn
             .prepare("PRAGMA table_info(words)")
