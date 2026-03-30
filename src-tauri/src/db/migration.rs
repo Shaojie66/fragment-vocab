@@ -37,12 +37,40 @@ impl Migrator {
         db.execute_migration(tags_migration_sql)
             .context("Failed to run 006_tags.sql migration")?;
 
-        let fsrs_migration_sql = include_str!("../../migrations/007_fsrs.sql");
-
-        db.execute_migration(fsrs_migration_sql)
-            .context("Failed to run 007_fsrs.sql migration")?;
+        Self::add_fsrs_columns(db)?;
 
         println!("✅ Database migrations completed successfully");
+        Ok(())
+    }
+
+    fn add_fsrs_columns(db: &Database) -> Result<()> {
+        let conn = db.get_connection();
+        let conn = conn.lock().unwrap();
+
+        let mut stmt = conn.prepare("PRAGMA table_info(srs_cards)")?;
+        let existing_columns: Vec<String> = stmt
+            .query_map([], |row| row.get::<_, String>(1)).unwrap()
+            .collect::<std::result::Result<Vec<_>, _>>().unwrap();
+        drop(stmt);
+
+        let fsrs_additions = [
+            ("stability", "REAL DEFAULT 0"),
+            ("difficulty", "REAL DEFAULT 0"),
+            ("memory_strength", "REAL DEFAULT 0"),
+            ("reviews_count", "INTEGER DEFAULT 0"),
+            ("actual_interval", "INTEGER DEFAULT 0"),
+        ];
+
+        for (col, col_type) in fsrs_additions {
+            if !existing_columns.contains(&col.to_string()) {
+                conn.execute(
+                    &format!("ALTER TABLE srs_cards ADD COLUMN {} {}", col, col_type),
+                    [],
+                )
+                .context(format!("Failed to add column {} to srs_cards", col))?;
+            }
+        }
+
         Ok(())
     }
 
