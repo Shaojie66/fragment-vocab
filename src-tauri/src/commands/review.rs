@@ -39,7 +39,7 @@ fn result_to_rating(result: &str) -> Option<u32> {
 }
 
 /// Applies FSRS algorithm to calculate next card state
-fn apply_fsrs(card: &mut SrsCard, result: &str, _now: &str) {
+fn apply_fsrs(card: &mut SrsCard, result: &str, now: &str) {
     let rating = match result_to_rating(result) {
         Some(r) => r,
         None => return, // skip doesn't update FSRS state
@@ -50,11 +50,21 @@ fn apply_fsrs(card: &mut SrsCard, result: &str, _now: &str) {
         Err(_) => return, // FSRS initialization failed
     };
 
-    // Calculate days elapsed since last review
-    let days_elapsed: u32 = if card.reviews_count == 0 {
-        0 // new card
+    // Calculate actual days elapsed since last review (not the scheduled interval)
+    let days_elapsed: u32 = if card.reviews_count == 0 || card.last_seen_at.is_none() {
+        0 // new card or no last_seen_at
     } else {
-        minutes_to_days(card.actual_interval.max(1)) as u32
+        // Compute actual elapsed time from last_seen_at to now
+        if let (Ok(last_seen), Ok(now_parsed)) = (
+            chrono::DateTime::parse_from_rfc3339(card.last_seen_at.as_ref().unwrap()),
+            chrono::DateTime::parse_from_rfc3339(now),
+        ) {
+            let elapsed = now_parsed - last_seen;
+            (elapsed.num_minutes() as f32 / 1440.0).max(0.0) as u32
+        } else {
+            // Fallback to scheduled interval if parsing fails
+            minutes_to_days(card.actual_interval.max(1)) as u32
+        }
     };
 
     // Get current memory state from card's stability and difficulty
@@ -65,6 +75,20 @@ fn apply_fsrs(card: &mut SrsCard, result: &str, _now: &str) {
         })
     } else {
         None // new card
+    };
+
+    // Calculate pre-review retrievability (memory_strength before the update)
+    let pre_review_retrievability = if card.stability > 0.0 {
+        fsrs.current_retrievability(
+            MemoryState {
+                stability: card.stability as f32,
+                difficulty: card.difficulty.max(1.0).min(10.0) as f32,
+            },
+            days_elapsed,
+            DEFAULT_PARAMETERS[20],
+        )
+    } else {
+        1.0 // new card starts at full strength
     };
 
     // Get next states from FSRS
@@ -88,16 +112,8 @@ fn apply_fsrs(card: &mut SrsCard, result: &str, _now: &str) {
     card.reviews_count += 1;
     card.actual_interval = days_to_minutes(new_interval_days);
 
-    // Calculate current retrievability (memory strength)
-    let retrievability = fsrs.current_retrievability(
-        MemoryState {
-            stability: new_stability,
-            difficulty: new_difficulty,
-        },
-        days_elapsed,
-        DEFAULT_PARAMETERS[20],
-    );
-    card.memory_strength = retrievability as f64;
+    // Store pre-review retrievability as memory_strength (reflects state BEFORE this review)
+    card.memory_strength = pre_review_retrievability as f64;
 }
 
 fn select_card_candidate(
@@ -425,12 +441,9 @@ pub fn submit_review_for_db(db: &Database, card_id: i64, result: &str) -> Result
                 }
                 card.skip_cooldown_until = None;
 
-                // Update status: mastered if interval > 30 days
-                card.status = if card.actual_interval > 43200 { // 30 days in minutes
-                    "mastered".to_string()
-                } else {
-                    "learning".to_string()
-                };
+                // Keep status as "learning" so cards remain in the review queue
+                // (FSRS handles interval growth naturally; no "mastered" terminal state)
+                card.status = "learning".to_string();
             }
             "dont_know" => {
                 // Apply FSRS algorithm
