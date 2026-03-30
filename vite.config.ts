@@ -17,6 +17,7 @@ export default defineConfig(async () => ({
         main: resolve(__dirname, 'index.html'),
         card: resolve(__dirname, 'src/card.html'),
         stats: resolve(__dirname, 'src/stats.html'),
+        pet: resolve(__dirname, 'src/pet.html'),
       },
     },
   },
