@@ -12,7 +12,7 @@ interface SchedulerState {
   pauseUntil?: Date;
   lastShowTime?: Date;
   isCardVisible: boolean;
-  skipCooldownUntil?: Date;
+  hasTriggeredInCurrentIdleStreak: boolean;
   lastBlockReason: SchedulerBlockReason;
 }
 
@@ -21,6 +21,7 @@ export class TriggerScheduler {
   private state: SchedulerState = {
     isPaused: false,
     isCardVisible: false,
+    hasTriggeredInCurrentIdleStreak: false,
     lastBlockReason: 'idle_too_short',
   };
 
@@ -69,6 +70,7 @@ export class TriggerScheduler {
   resume() {
     this.state.isPaused = false;
     this.state.pauseUntil = undefined;
+    this.state.hasTriggeredInCurrentIdleStreak = false;
     this.state.lastBlockReason = 'idle_too_short';
     console.log('▶️  Resumed');
   }
@@ -128,6 +130,7 @@ export class TriggerScheduler {
       const shouldTrigger = await this.shouldTriggerCard();
 
       if (shouldTrigger && this.onTrigger) {
+        this.state.hasTriggeredInCurrentIdleStreak = true;
         console.log('🎯 Triggering card display');
         await this.onTrigger();
       }
@@ -182,10 +185,18 @@ export class TriggerScheduler {
     const idleSeconds = await this.getIdleSeconds();
     console.log(`⏱️  Idle: ${idleSeconds}s, Required: ${effectiveReminder.idle_threshold_sec}s`);
 
+    if (idleSeconds < effectiveReminder.idle_threshold_sec) {
+      this.state.hasTriggeredInCurrentIdleStreak = false;
+    }
+
     if (idleSeconds >= effectiveReminder.idle_threshold_sec) {
-      this.state.lastBlockReason = 'ready';
-      console.log('✅ Ready: idle time sufficient');
-      return true;
+      if (!this.state.hasTriggeredInCurrentIdleStreak) {
+        this.state.lastBlockReason = 'ready';
+        console.log('✅ Ready: idle time sufficient');
+        return true;
+      }
+
+      console.log('❌ Blocked: current idle streak already used');
     }
 
     if (effectiveReminder.fallback_enabled && this.state.lastShowTime) {

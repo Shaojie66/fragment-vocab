@@ -186,6 +186,26 @@ describe('TriggerScheduler', () => {
 
       vi.useRealTimers();
     });
+
+    it('同一次持续 idle 不会在卡片隐藏后立刻再次触发', async () => {
+      const onTrigger = vi.fn(async () => {
+        scheduler.markCardShown();
+        scheduler.markCardHidden();
+      });
+
+      (scheduler as any).onTrigger = onTrigger;
+      vi.mocked(invoke).mockResolvedValue(100);
+
+      const dayTime = new Date('2024-03-12T10:00:00+08:00');
+      vi.setSystemTime(dayTime);
+
+      await (scheduler as any).checkAndTrigger();
+      await (scheduler as any).checkAndTrigger();
+
+      expect(onTrigger).toHaveBeenCalledTimes(1);
+
+      vi.useRealTimers();
+    });
   });
 
   describe('main window activity', () => {
@@ -230,6 +250,23 @@ describe('TriggerScheduler', () => {
       const shouldTrigger = await (scheduler as any).shouldTriggerCard();
       expect(shouldTrigger).toBe(false);
     });
+
+    it('用户重新活动后，新的 idle 周期可以再次触发', async () => {
+      (scheduler as any).state.hasTriggeredInCurrentIdleStreak = true;
+      const dayTime = new Date('2024-03-12T10:00:00+08:00');
+      vi.setSystemTime(dayTime);
+
+      vi.mocked(invoke).mockResolvedValue(60);
+      let shouldTrigger = await (scheduler as any).shouldTriggerCard();
+      expect(shouldTrigger).toBe(false);
+      expect((scheduler as any).state.hasTriggeredInCurrentIdleStreak).toBe(false);
+
+      vi.mocked(invoke).mockResolvedValue(100);
+      shouldTrigger = await (scheduler as any).shouldTriggerCard();
+      expect(shouldTrigger).toBe(true);
+
+      vi.useRealTimers();
+    });
   });
 
   describe('fallback trigger', () => {
@@ -263,6 +300,21 @@ describe('TriggerScheduler', () => {
 
       const shouldTrigger = await (scheduler as any).shouldTriggerCard();
       expect(shouldTrigger).toBe(false);
+    });
+
+    it('当前 idle 周期已触发过时，仍可在达到 fallback 间隔后兜底触发', async () => {
+      const dayTime = new Date('2024-03-12T10:00:00+08:00');
+      vi.setSystemTime(dayTime);
+
+      (scheduler as any).state.hasTriggeredInCurrentIdleStreak = true;
+      (scheduler as any).state.lastShowTime = new Date(dayTime.getTime() - 30 * 60 * 1000);
+
+      vi.mocked(invoke).mockResolvedValue(100);
+
+      const shouldTrigger = await (scheduler as any).shouldTriggerCard();
+      expect(shouldTrigger).toBe(true);
+
+      vi.useRealTimers();
     });
   });
 
