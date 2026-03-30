@@ -48,36 +48,40 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
         // 根据鼠标位置定位窗口
         if let Ok(Some(monitor)) = window.current_monitor() {
             let screen_size = monitor.size();
+            let scale_factor = window.scale_factor().unwrap_or(1.0);
             let window_width = 480;
             let window_height = 460;
-            let margin_x = 24;
-            let margin_y = 24;
-            let offset = 20;
+            let margin = 40; // 更大的边距确保完全可见
 
-            // 定义安全区域边界
-            let safe_left = margin_x;
-            let safe_right = (screen_size.width as i32) - margin_x;
-            let safe_top = margin_y;
-            let safe_bottom = (screen_size.height as i32) - margin_y;
+            // 定义安全区域边界（使用物理像素）
+            let safe_left = margin;
+            let safe_right = (screen_size.width as i32) - margin;
+            let safe_top = margin;
+            let safe_bottom = (screen_size.height as i32) - margin;
 
-            // 获取鼠标位置
+            // 获取鼠标位置并转换为物理坐标
             let (mouse_x, mouse_y) = window
                 .cursor_position()
-                .map(|pos| (pos.x as i32, pos.y as i32))
-                .unwrap_or_else(|_| (screen_size.width as i32 / 2, screen_size.height as i32 / 2));
+                .map(|pos| {
+                    // cursor_position 返回 LogicalPosition，需要转换为物理坐标
+                    ((pos.x * scale_factor) as i32, (pos.y * scale_factor) as i32)
+                })
+                .unwrap_or_else(|_| {
+                    (screen_size.width as i32 / 2, screen_size.height as i32 / 2)
+                });
 
             // 尝试放在鼠标右下方
-            let mut x = mouse_x + offset;
-            let mut y = mouse_y + offset;
+            let mut x = mouse_x + 20;
+            let mut y = mouse_y + 20;
 
             // 如果右侧超出安全区域，尝试放在鼠标左侧
             if x + window_width > safe_right {
-                x = mouse_x - window_width - offset;
+                x = mouse_x - window_width - 20;
             }
 
             // 如果下方超出安全区域，尝试放在鼠标上方
             if y + window_height > safe_bottom {
-                y = mouse_y - window_height - offset;
+                y = mouse_y - window_height - 20;
             }
 
             // 确保窗口完全在安全区域内
