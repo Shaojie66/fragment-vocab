@@ -14,7 +14,7 @@ use fragment_vocab_lib::{
     },
     db::{
         migration::Migrator, CardsRepository, Database, LogsRepository, PetsRepository,
-        StateRepository, WordbookImporter, WordsRepository,
+        StateRepository, TagsRepository, WordbookImporter, WordsRepository,
     },
 };
 
@@ -264,4 +264,85 @@ fn pet_startup_and_study_actions_update_health_and_experience() {
     assert_eq!(pet_after_study.current_streak, 1);
     assert_close(pet_after_study.vitality_multiplier, 1.0);
     assert!(pet_after_study.last_study_at.is_some());
+}
+
+#[test]
+fn tag_management_create_assign_filter_delete() {
+    let ctx = TestDb::new("tag-management");
+
+    import_json_wordbook(
+        &ctx.db,
+        "custom-tagged",
+        "tagged.json",
+        r#"[
+            {"word":"apple","meaning_zh":"苹果","difficulty":1},
+            {"word":"banana","meaning_zh":"香蕉","difficulty":1},
+            {"word":"cherry","meaning_zh":"樱桃","difficulty":1}
+        ]"#,
+    );
+
+    let words_repo = WordsRepository::new(ctx.db.get_connection());
+    let tags_repo = TagsRepository::new(ctx.db.get_connection());
+
+    // Create tags
+    let fruit_tag = tags_repo.create("水果").expect("should create tag");
+    let fav_tag = tags_repo.create("最爱").expect("should create second tag");
+    assert_eq!(fruit_tag.name, "水果");
+    assert_eq!(fav_tag.name, "最爱");
+
+    // List tags (should show 0 words each)
+    let all_tags = tags_repo.list_with_counts().unwrap();
+    assert_eq!(all_tags.len(), 2);
+    assert!(all_tags.iter().all(|t| t.word_count == 0));
+
+    // Assign tags to words
+    let apple = words_repo.get_by_word("apple").unwrap().unwrap();
+    let banana = words_repo.get_by_word("banana").unwrap().unwrap();
+
+    tags_repo.add_word_tag(apple.id, fruit_tag.id).unwrap();
+    tags_repo.add_word_tag(banana.id, fruit_tag.id).unwrap();
+    tags_repo.add_word_tag(apple.id, fav_tag.id).unwrap();
+
+    // Verify word tags
+    let apple_tags = tags_repo.get_word_tags(apple.id).unwrap();
+    assert_eq!(apple_tags.len(), 2);
+
+    let banana_tags = tags_repo.get_word_tags(banana.id).unwrap();
+    assert_eq!(banana_tags.len(), 1);
+    assert_eq!(banana_tags[0].name, "水果");
+
+    // Verify counts
+    let all_tags = tags_repo.list_with_counts().unwrap();
+    let fruit = all_tags.iter().find(|t| t.name == "水果").unwrap();
+    let fav = all_tags.iter().find(|t| t.name == "最爱").unwrap();
+    assert_eq!(fruit.word_count, 2);
+    assert_eq!(fav.word_count, 1);
+
+    // List words by tag
+    let fruit_words = tags_repo.list_words_by_tag(fruit_tag.id).unwrap();
+    assert_eq!(fruit_words.len(), 2);
+
+    // Remove a word-tag association
+    tags_repo.remove_word_tag(apple.id, fav_tag.id).unwrap();
+    let apple_tags = tags_repo.get_word_tags(apple.id).unwrap();
+    assert_eq!(apple_tags.len(), 1);
+
+    // Delete a tag (should cascade)
+    tags_repo.delete(fruit_tag.id).unwrap();
+    let remaining_tags = tags_repo.list_with_counts().unwrap();
+    assert_eq!(remaining_tags.len(), 1);
+    assert_eq!(remaining_tags[0].name, "最爱");
+
+    // Word should have no tags after fruit tag deleted
+    let apple_tags = tags_repo.get_word_tags(apple.id).unwrap();
+    assert!(apple_tags.is_empty());
+}
+
+#[test]
+fn delete_wordbook_rejects_builtin_source() {
+    let ctx = TestDb::new("delete-builtin");
+
+    let result = delete_wordbook_for_db(&ctx.db, "ielts-core");
+    assert!(result.is_err());
+    assert!(result.unwrap_err().contains("内置词库不能删除"));
 }

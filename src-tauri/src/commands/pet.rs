@@ -4,6 +4,9 @@ use crate::db::pet_model::PetState;
 use crate::db::{Database, PetsRepository};
 use crate::pet::PetEngine;
 
+const PET_WINDOW_X: i32 = 20;
+const PET_WINDOW_Y: i32 = 30;
+
 /// Get the current pet state
 #[tauri::command]
 pub fn get_pet_state(db: State<Database>) -> Result<PetState, String> {
@@ -61,8 +64,8 @@ pub fn show_pet_window(app: tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("pet") {
         // Position in top-left corner, below menu bar
         let _ = window.set_position(tauri::Position::Physical(tauri::PhysicalPosition {
-            x: 20,
-            y: 30,
+            x: PET_WINDOW_X,
+            y: PET_WINDOW_Y,
         }));
         let _ = window.show();
     }
