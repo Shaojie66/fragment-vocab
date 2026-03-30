@@ -1,0 +1,7975 @@
+[
+  {
+    "word": "abandon",
+    "phonetic": "/əˈbændən/",
+    "part_of_speech": "v.",
+    "meaning_zh": "放弃；抛弃",
+    "difficulty": 1
+  },
+  {
+    "word": "ability",
+    "phonetic": "/əˈbɪləti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "能力；才能",
+    "difficulty": 1
+  },
+  {
+    "word": "able",
+    "phonetic": "/ˈeɪbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "能够的；有能力的",
+    "difficulty": 1
+  },
+  {
+    "word": "aboard",
+    "phonetic": "/əˈbɔːd/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "在船上；上车",
+    "difficulty": 1
+  },
+  {
+    "word": "about",
+    "phonetic": "/əˈbaʊt/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "关于；大约",
+    "difficulty": 1
+  },
+  {
+    "word": "above",
+    "phonetic": "/əˈbʌv/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...上面；超过",
+    "difficulty": 1
+  },
+  {
+    "word": "abroad",
+    "phonetic": "/əˈbrɔːd/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "在国外；到国外",
+    "difficulty": 1
+  },
+  {
+    "word": "absence",
+    "phonetic": "/ˈæbsəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "缺席；不在",
+    "difficulty": 2
+  },
+  {
+    "word": "absolute",
+    "phonetic": "/ˈæbsəluːt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "绝对的；完全的",
+    "difficulty": 2
+  },
+  {
+    "word": "absorb",
+    "phonetic": "/əbˈzɔːb/",
+    "part_of_speech": "v.",
+    "meaning_zh": "吸收；吸引",
+    "difficulty": 2
+  },
+  {
+    "word": "abstract",
+    "phonetic": "/ˈæbstrækt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "抽象的；理论上的",
+    "difficulty": 3
+  },
+  {
+    "word": "academic",
+    "phonetic": "/ˌækəˈdemɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "学术的；学院的",
+    "difficulty": 2
+  },
+  {
+    "word": "accept",
+    "phonetic": "/əkˈsept/",
+    "part_of_speech": "v.",
+    "meaning_zh": "接受；承认",
+    "difficulty": 1
+  },
+  {
+    "word": "access",
+    "phonetic": "/ˈækses/",
+    "part_of_speech": "n.",
+    "meaning_zh": "进入；使用权；通道",
+    "difficulty": 2
+  },
+  {
+    "word": "accident",
+    "phonetic": "/ˈæksɪdənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "事故；意外",
+    "difficulty": 1
+  },
+  {
+    "word": "accompany",
+    "phonetic": "/əˈkʌmpəni/",
+    "part_of_speech": "v.",
+    "meaning_zh": "陪伴；伴随",
+    "difficulty": 2
+  },
+  {
+    "word": "accomplish",
+    "phonetic": "/əˈkʌmplɪʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "完成；达到",
+    "difficulty": 3
+  },
+  {
+    "word": "according",
+    "phonetic": "/əˈkɔːdɪŋ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "根据；按照",
+    "difficulty": 2
+  },
+  {
+    "word": "account",
+    "phonetic": "/əˈkaʊnt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "账户；叙述",
+    "difficulty": 2
+  },
+  {
+    "word": "accumulate",
+    "phonetic": "/əˈkjuːmjəleɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "积累；积聚",
+    "difficulty": 3
+  },
+  {
+    "word": "accurate",
+    "phonetic": "/ˈækjərət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "准确的；精确的",
+    "difficulty": 2
+  },
+  {
+    "word": "achieve",
+    "phonetic": "/əˈtʃiːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "实现；达到",
+    "difficulty": 1
+  },
+  {
+    "word": "acknowledge",
+    "phonetic": "/əkˈnɒlɪdʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "承认；确认",
+    "difficulty": 3
+  },
+  {
+    "word": "acquire",
+    "phonetic": "/əˈkwaɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "获得；学到",
+    "difficulty": 2
+  },
+  {
+    "word": "across",
+    "phonetic": "/əˈkrɒs/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "穿过；横跨",
+    "difficulty": 1
+  },
+  {
+    "word": "activate",
+    "phonetic": "/ˈæktɪveɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "激活；使活动",
+    "difficulty": 3
+  },
+  {
+    "word": "activity",
+    "phonetic": "/ækˈtɪvəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "活动；行动",
+    "difficulty": 1
+  },
+  {
+    "word": "actual",
+    "phonetic": "/ˈæktʃuəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "实际的；真实的",
+    "difficulty": 2
+  },
+  {
+    "word": "adapt",
+    "phonetic": "/əˈdæpt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "适应；改编",
+    "difficulty": 2
+  },
+  {
+    "word": "add",
+    "phonetic": "/æd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "添加；增加",
+    "difficulty": 1
+  },
+  {
+    "word": "address",
+    "phonetic": "/əˈdres/",
+    "part_of_speech": "n.",
+    "meaning_zh": "地址；演说",
+    "difficulty": 2
+  },
+  {
+    "word": "adequate",
+    "phonetic": "/ˈædɪkwət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "足够的；适当的",
+    "difficulty": 3
+  },
+  {
+    "word": "adjust",
+    "phonetic": "/əˈdʒʌst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "调整；适应",
+    "difficulty": 2
+  },
+  {
+    "word": "administration",
+    "phonetic": "/ədˌmɪnɪˈstreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "管理；行政",
+    "difficulty": 3
+  },
+  {
+    "word": "admire",
+    "phonetic": "/ədˈmaɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "钦佩；羡慕",
+    "difficulty": 2
+  },
+  {
+    "word": "admit",
+    "phonetic": "/ədˈmɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "承认；准许进入",
+    "difficulty": 2
+  },
+  {
+    "word": "adopt",
+    "phonetic": "/əˈdɒpt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "采用；收养",
+    "difficulty": 2
+  },
+  {
+    "word": "adult",
+    "phonetic": "/ˈædʌlt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "成年人",
+    "difficulty": 1
+  },
+  {
+    "word": "advance",
+    "phonetic": "/ədˈvɑːns/",
+    "part_of_speech": "v.",
+    "meaning_zh": "前进；推进",
+    "difficulty": 2
+  },
+  {
+    "word": "advantage",
+    "phonetic": "/ədˈvɑːntɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "优势；有利条件",
+    "difficulty": 1
+  },
+  {
+    "word": "adventure",
+    "phonetic": "/ədˈventʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "冒险；奇遇",
+    "difficulty": 2
+  },
+  {
+    "word": "advertise",
+    "phonetic": "/ˈædvətaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "做广告；宣传",
+    "difficulty": 2
+  },
+  {
+    "word": "advice",
+    "phonetic": "/ədˈvaɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建议；劝告",
+    "difficulty": 1
+  },
+  {
+    "word": "advise",
+    "phonetic": "/ədˈvaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "建议；劝告",
+    "difficulty": 2
+  },
+  {
+    "word": "affair",
+    "phonetic": "/əˈfeə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "事件；事务",
+    "difficulty": 2
+  },
+  {
+    "word": "affect",
+    "phonetic": "/əˈfekt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "影响；感染",
+    "difficulty": 2
+  },
+  {
+    "word": "afford",
+    "phonetic": "/əˈfɔːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "负担得起；提供",
+    "difficulty": 2
+  },
+  {
+    "word": "afraid",
+    "phonetic": "/əˈfreɪd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "害怕的；担心的",
+    "difficulty": 1
+  },
+  {
+    "word": "after",
+    "phonetic": "/ˈɑːftə/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...之后",
+    "difficulty": 1
+  },
+  {
+    "word": "afternoon",
+    "phonetic": "/ˌɑːftəˈnuːn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "下午",
+    "difficulty": 1
+  },
+  {
+    "word": "again",
+    "phonetic": "/əˈɡen/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "再；又",
+    "difficulty": 1
+  },
+  {
+    "word": "against",
+    "phonetic": "/əˈɡenst/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "反对；靠着",
+    "difficulty": 1
+  },
+  {
+    "word": "age",
+    "phonetic": "/eɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "年龄；时代",
+    "difficulty": 1
+  },
+  {
+    "word": "agency",
+    "phonetic": "/ˈeɪdʒənsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代理；机构",
+    "difficulty": 2
+  },
+  {
+    "word": "agent",
+    "phonetic": "/ˈeɪdʒənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代理人；经纪人",
+    "difficulty": 2
+  },
+  {
+    "word": "aggressive",
+    "phonetic": "/əˈɡresɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "侵略性的；好斗的",
+    "difficulty": 3
+  },
+  {
+    "word": "ago",
+    "phonetic": "/əˈɡəʊ/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "以前",
+    "difficulty": 1
+  },
+  {
+    "word": "agree",
+    "phonetic": "/əˈɡriː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "同意；赞成",
+    "difficulty": 1
+  },
+  {
+    "word": "agreement",
+    "phonetic": "/əˈɡriːmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "协议；一致",
+    "difficulty": 2
+  },
+  {
+    "word": "ahead",
+    "phonetic": "/əˈhed/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "向前；在前面",
+    "difficulty": 1
+  },
+  {
+    "word": "aid",
+    "phonetic": "/eɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "帮助；援助",
+    "difficulty": 2
+  },
+  {
+    "word": "aim",
+    "phonetic": "/eɪm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "瞄准；致力于",
+    "difficulty": 1
+  },
+  {
+    "word": "air",
+    "phonetic": "/eə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "空气；空中",
+    "difficulty": 1
+  },
+  {
+    "word": "aircraft",
+    "phonetic": "/ˈeəkrɑːft/",
+    "part_of_speech": "n.",
+    "meaning_zh": "飞机；航空器",
+    "difficulty": 2
+  },
+  {
+    "word": "airline",
+    "phonetic": "/ˈeəlaɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "航空公司",
+    "difficulty": 2
+  },
+  {
+    "word": "airport",
+    "phonetic": "/ˈeəpɔːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "机场",
+    "difficulty": 1
+  },
+  {
+    "word": "alarm",
+    "phonetic": "/əˈlɑːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "警报；惊恐",
+    "difficulty": 2
+  },
+  {
+    "word": "album",
+    "phonetic": "/ˈælbəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "相册；专辑",
+    "difficulty": 2
+  },
+  {
+    "word": "alcohol",
+    "phonetic": "/ˈælkəhɒl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "酒精；酒",
+    "difficulty": 2
+  },
+  {
+    "word": "alike",
+    "phonetic": "/əˈlaɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "相似的",
+    "difficulty": 2
+  },
+  {
+    "word": "alive",
+    "phonetic": "/əˈlaɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "活着的；有活力的",
+    "difficulty": 1
+  },
+  {
+    "word": "allow",
+    "phonetic": "/əˈlaʊ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "允许；给予",
+    "difficulty": 1
+  },
+  {
+    "word": "almost",
+    "phonetic": "/ˈɔːlməʊst/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "几乎；差不多",
+    "difficulty": 1
+  },
+  {
+    "word": "alone",
+    "phonetic": "/əˈləʊn/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "单独的；孤独的",
+    "difficulty": 1
+  },
+  {
+    "word": "along",
+    "phonetic": "/əˈlɒŋ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "沿着；一起",
+    "difficulty": 1
+  },
+  {
+    "word": "already",
+    "phonetic": "/ɔːlˈredi/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "已经",
+    "difficulty": 1
+  },
+  {
+    "word": "also",
+    "phonetic": "/ˈɔːlsəʊ/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "也；同样",
+    "difficulty": 1
+  },
+  {
+    "word": "alter",
+    "phonetic": "/ˈɔːltə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "改变；修改",
+    "difficulty": 3
+  },
+  {
+    "word": "alternative",
+    "phonetic": "/ɔːlˈtɜːnətɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "替代的；选择性的",
+    "difficulty": 3
+  },
+  {
+    "word": "although",
+    "phonetic": "/ɔːlˈðəʊ/",
+    "part_of_speech": "conj.",
+    "meaning_zh": "虽然；尽管",
+    "difficulty": 2
+  },
+  {
+    "word": "always",
+    "phonetic": "/ˈɔːlweɪz/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "总是；永远",
+    "difficulty": 1
+  },
+  {
+    "word": "amaze",
+    "phonetic": "/əˈmeɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使惊奇；使诧异",
+    "difficulty": 2
+  },
+  {
+    "word": "ambition",
+    "phonetic": "/æmˈbɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "雄心；抱负",
+    "difficulty": 3
+  },
+  {
+    "word": "ambitious",
+    "phonetic": "/æmˈbɪʃəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "有雄心的；热切的",
+    "difficulty": 3
+  },
+  {
+    "word": "amend",
+    "phonetic": "/əˈmend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "修改；修订",
+    "difficulty": 3
+  },
+  {
+    "word": "among",
+    "phonetic": "/əˈmʌŋ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...之中",
+    "difficulty": 2
+  },
+  {
+    "word": "amount",
+    "phonetic": "/əˈmaʊnt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "数量；总额",
+    "difficulty": 2
+  },
+  {
+    "word": "amuse",
+    "phonetic": "/əˈmjuːz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使愉快；逗笑",
+    "difficulty": 2
+  },
+  {
+    "word": "analyze",
+    "phonetic": "/ˈænəlaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "分析；分解",
+    "difficulty": 2
+  },
+  {
+    "word": "analysis",
+    "phonetic": "/əˈnæləsɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "分析；解析",
+    "difficulty": 2
+  },
+  {
+    "word": "ancestor",
+    "phonetic": "/ˈænsestə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "祖先；祖宗",
+    "difficulty": 3
+  },
+  {
+    "word": "ancient",
+    "phonetic": "/ˈeɪnʃənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "古代的；古老的",
+    "difficulty": 2
+  },
+  {
+    "word": "anger",
+    "phonetic": "/ˈæŋɡə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "愤怒；怒气",
+    "difficulty": 2
+  },
+  {
+    "word": "angle",
+    "phonetic": "/ˈæŋɡl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "角度；观点",
+    "difficulty": 2
+  },
+  {
+    "word": "angry",
+    "phonetic": "/ˈæŋɡri/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "生气的；愤怒的",
+    "difficulty": 1
+  },
+  {
+    "word": "animal",
+    "phonetic": "/ˈænɪml/",
+    "part_of_speech": "n.",
+    "meaning_zh": "动物",
+    "difficulty": 1
+  },
+  {
+    "word": "announce",
+    "phonetic": "/əˈnaʊns/",
+    "part_of_speech": "v.",
+    "meaning_zh": "宣布；通知",
+    "difficulty": 2
+  },
+  {
+    "word": "annoy",
+    "phonetic": "/əˈnɔɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使烦恼；打扰",
+    "difficulty": 2
+  },
+  {
+    "word": "annual",
+    "phonetic": "/ˈænjuəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "每年的；年度的",
+    "difficulty": 2
+  },
+  {
+    "word": "another",
+    "phonetic": "/əˈnʌðə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "另一；又一个",
+    "difficulty": 1
+  },
+  {
+    "word": "answer",
+    "phonetic": "/ˈɑːnsə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "回答；答复",
+    "difficulty": 1
+  },
+  {
+    "word": "anticipate",
+    "phonetic": "/ænˈtɪsɪpeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "预期；期待",
+    "difficulty": 3
+  },
+  {
+    "word": "anxiety",
+    "phonetic": "/æŋˈzaɪəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "焦虑；担心",
+    "difficulty": 3
+  },
+  {
+    "word": "anxious",
+    "phonetic": "/ˈæŋkʃəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "焦虑的；担心的",
+    "difficulty": 2
+  },
+  {
+    "word": "any",
+    "phonetic": "/ˈeni/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "任何；任一",
+    "difficulty": 1
+  },
+  {
+    "word": "anybody",
+    "phonetic": "/ˈenibɒdi/",
+    "part_of_speech": "pron.",
+    "meaning_zh": "任何人",
+    "difficulty": 1
+  },
+  {
+    "word": "anyone",
+    "phonetic": "/ˈeniwʌn/",
+    "part_of_speech": "pron.",
+    "meaning_zh": "任何人",
+    "difficulty": 1
+  },
+  {
+    "word": "anything",
+    "phonetic": "/ˈeniθɪŋ/",
+    "part_of_speech": "pron.",
+    "meaning_zh": "任何事",
+    "difficulty": 1
+  },
+  {
+    "word": "anyway",
+    "phonetic": "/ˈeniweɪ/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "无论如何",
+    "difficulty": 2
+  },
+  {
+    "word": "anywhere",
+    "phonetic": "/ˈeniweə/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "任何地方",
+    "difficulty": 1
+  },
+  {
+    "word": "apart",
+    "phonetic": "/əˈpɑːt/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "分开；相隔",
+    "difficulty": 2
+  },
+  {
+    "word": "apartment",
+    "phonetic": "/əˈpɑːtmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公寓；房间",
+    "difficulty": 2
+  },
+  {
+    "word": "apologize",
+    "phonetic": "/əˈpɒlədʒaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "道歉；认错",
+    "difficulty": 2
+  },
+  {
+    "word": "apology",
+    "phonetic": "/əˈpɒlədʒi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "道歉；歉意",
+    "difficulty": 2
+  },
+  {
+    "word": "apparent",
+    "phonetic": "/əˈpærənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "明显的；表面上的",
+    "difficulty": 3
+  },
+  {
+    "word": "appeal",
+    "phonetic": "/əˈpiːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "吸引；呼吁",
+    "difficulty": 2
+  },
+  {
+    "word": "appear",
+    "phonetic": "/əˈpɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "出现；显得",
+    "difficulty": 1
+  },
+  {
+    "word": "appearance",
+    "phonetic": "/əˈpɪərəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "外观；出现",
+    "difficulty": 2
+  },
+  {
+    "word": "appetite",
+    "phonetic": "/ˈæpɪtaɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "食欲；欲望",
+    "difficulty": 2
+  },
+  {
+    "word": "applaud",
+    "phonetic": "/əˈplɔːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "鼓掌；称赞",
+    "difficulty": 2
+  },
+  {
+    "word": "apple",
+    "phonetic": "/ˈæpl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "苹果",
+    "difficulty": 1
+  },
+  {
+    "word": "application",
+    "phonetic": "/ˌæplɪˈkeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "申请；应用",
+    "difficulty": 2
+  },
+  {
+    "word": "apply",
+    "phonetic": "/əˈplaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "申请；应用",
+    "difficulty": 2
+  },
+  {
+    "word": "appoint",
+    "phonetic": "/əˈpɔɪnt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "任命；指定",
+    "difficulty": 3
+  },
+  {
+    "word": "appointment",
+    "phonetic": "/əˈpɔɪntmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "约定；约会",
+    "difficulty": 2
+  },
+  {
+    "word": "appreciate",
+    "phonetic": "/əˈpriːʃieɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "欣赏；感激",
+    "difficulty": 2
+  },
+  {
+    "word": "approach",
+    "phonetic": "/əˈprəʊtʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "接近；靠近",
+    "difficulty": 2
+  },
+  {
+    "word": "appropriate",
+    "phonetic": "/əˈprəʊpriət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "适当的；合适的",
+    "difficulty": 3
+  },
+  {
+    "word": "approve",
+    "phonetic": "/əˈpruːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "批准；赞成",
+    "difficulty": 3
+  },
+  {
+    "word": "approximate",
+    "phonetic": "/əˈprɒksɪmət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "大约的；近似的",
+    "difficulty": 3
+  },
+  {
+    "word": "architect",
+    "phonetic": "/ˈɑːkɪtekt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建筑师",
+    "difficulty": 2
+  },
+  {
+    "word": "architecture",
+    "phonetic": "/ˈɑːkɪtektʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建筑学；结构",
+    "difficulty": 2
+  },
+  {
+    "word": "area",
+    "phonetic": "/ˈeəriə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "地区；面积",
+    "difficulty": 1
+  },
+  {
+    "word": "argue",
+    "phonetic": "/ˈɑːɡjuː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "争论；辩论",
+    "difficulty": 2
+  },
+  {
+    "word": "argument",
+    "phonetic": "/ˈɑːɡjumənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "争论；论据",
+    "difficulty": 2
+  },
+  {
+    "word": "arise",
+    "phonetic": "/əˈraɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "出现；产生",
+    "difficulty": 3
+  },
+  {
+    "word": "arm",
+    "phonetic": "/ɑːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "手臂；武器",
+    "difficulty": 1
+  },
+  {
+    "word": "army",
+    "phonetic": "/ˈɑːmi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "军队；陆军",
+    "difficulty": 1
+  },
+  {
+    "word": "around",
+    "phonetic": "/əˈraʊnd/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...周围",
+    "difficulty": 1
+  },
+  {
+    "word": "arrange",
+    "phonetic": "/əˈreɪndʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "安排；筹备",
+    "difficulty": 2
+  },
+  {
+    "word": "arrangement",
+    "phonetic": "/əˈreɪndʒmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "安排；筹备",
+    "difficulty": 2
+  },
+  {
+    "word": "arrest",
+    "phonetic": "/əˈrest/",
+    "part_of_speech": "v.",
+    "meaning_zh": "逮捕；拘留",
+    "difficulty": 2
+  },
+  {
+    "word": "arrival",
+    "phonetic": "/əˈraɪvl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "到达；到来",
+    "difficulty": 2
+  },
+  {
+    "word": "arrive",
+    "phonetic": "/əˈraɪv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "到达；到来",
+    "difficulty": 1
+  },
+  {
+    "word": "arrow",
+    "phonetic": "/ˈærəʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "箭；箭头",
+    "difficulty": 1
+  },
+  {
+    "word": "article",
+    "phonetic": "/ˈɑːtɪkl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "文章；物品",
+    "difficulty": 1
+  },
+  {
+    "word": "artificial",
+    "phonetic": "/ˌɑːtɪˈfɪʃl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "人工的；假的",
+    "difficulty": 3
+  },
+  {
+    "word": "artist",
+    "phonetic": "/ˈɑːtɪst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "艺术家",
+    "difficulty": 1
+  },
+  {
+    "word": "artistic",
+    "phonetic": "/ɑːˈtɪstɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "艺术的；有艺术性的",
+    "difficulty": 2
+  },
+  {
+    "word": "aside",
+    "phonetic": "/əˈsaɪd/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "在旁边；到一边",
+    "difficulty": 2
+  },
+  {
+    "word": "ask",
+    "phonetic": "/ɑːsk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "问；请求",
+    "difficulty": 1
+  },
+  {
+    "word": "asleep",
+    "phonetic": "/əˈsliːp/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "睡着的",
+    "difficulty": 1
+  },
+  {
+    "word": "aspect",
+    "phonetic": "/ˈæspekt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "方面；外观",
+    "difficulty": 2
+  },
+  {
+    "word": "assert",
+    "phonetic": "/əˈsɜːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "断言；维护",
+    "difficulty": 3
+  },
+  {
+    "word": "assess",
+    "phonetic": "/əˈses/",
+    "part_of_speech": "v.",
+    "meaning_zh": "评估；评定",
+    "difficulty": 3
+  },
+  {
+    "word": "asset",
+    "phonetic": "/ˈæset/",
+    "part_of_speech": "n.",
+    "meaning_zh": "资产；财产",
+    "difficulty": 2
+  },
+  {
+    "word": "assign",
+    "phonetic": "/əˈsaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "分配；指派",
+    "difficulty": 3
+  },
+  {
+    "word": "assist",
+    "phonetic": "/əˈsɪst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "帮助；协助",
+    "difficulty": 2
+  },
+  {
+    "word": "assistance",
+    "phonetic": "/əˈsɪstəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "帮助；援助",
+    "difficulty": 2
+  },
+  {
+    "word": "associate",
+    "phonetic": "/əˈsəʊʃieɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "联系；交往",
+    "difficulty": 2
+  },
+  {
+    "word": "association",
+    "phonetic": "/əˌsəʊsiˈeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "协会；联系",
+    "difficulty": 2
+  },
+  {
+    "word": "assume",
+    "phonetic": "/əˈsjuːm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "假设；认为",
+    "difficulty": 2
+  },
+  {
+    "word": "assure",
+    "phonetic": "/əˈʃɔː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "保证；使确信",
+    "difficulty": 3
+  },
+  {
+    "word": "astonish",
+    "phonetic": "/əˈstɒnɪʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使惊讶",
+    "difficulty": 2
+  },
+  {
+    "word": "athlete",
+    "phonetic": "/ˈæθliːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "运动员",
+    "difficulty": 2
+  },
+  {
+    "word": "atmosphere",
+    "phonetic": "/ˈætməsfɪə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "大气；气氛",
+    "difficulty": 2
+  },
+  {
+    "word": "attach",
+    "phonetic": "/əˈtætʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "附上；贴上",
+    "difficulty": 2
+  },
+  {
+    "word": "attack",
+    "phonetic": "/əˈtæk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "攻击；袭击",
+    "difficulty": 1
+  },
+  {
+    "word": "attempt",
+    "phonetic": "/əˈtempt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "尝试；企图",
+    "difficulty": 2
+  },
+  {
+    "word": "attend",
+    "phonetic": "/əˈtend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "参加；照顾",
+    "difficulty": 2
+  },
+  {
+    "word": "attention",
+    "phonetic": "/əˈtenʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "注意；关注",
+    "difficulty": 1
+  },
+  {
+    "word": "attitude",
+    "phonetic": "/ˈætɪtjuːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "态度；看法",
+    "difficulty": 2
+  },
+  {
+    "word": "attorney",
+    "phonetic": "/əˈtɜːni/",
+    "part_of_speech": "n.",
+    "meaning_zh": "律师；代理人",
+    "difficulty": 3
+  },
+  {
+    "word": "attract",
+    "phonetic": "/əˈtrækt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "吸引；引起",
+    "difficulty": 2
+  },
+  {
+    "word": "attraction",
+    "phonetic": "/əˈtrækʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "吸引力；吸引物",
+    "difficulty": 2
+  },
+  {
+    "word": "audience",
+    "phonetic": "/ˈɔːdiəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "观众；听众",
+    "difficulty": 2
+  },
+  {
+    "word": "author",
+    "phonetic": "/ˈɔːθə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "作者；作家",
+    "difficulty": 2
+  },
+  {
+    "word": "authority",
+    "phonetic": "/ɔːˈθɒrəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "权威；权力",
+    "difficulty": 2
+  },
+  {
+    "word": "auto",
+    "phonetic": "/ˈɔːtəʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "汽车",
+    "difficulty": 1
+  },
+  {
+    "word": "automatic",
+    "phonetic": "/ˌɔːtəˈmætɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "自动的",
+    "difficulty": 2
+  },
+  {
+    "word": "available",
+    "phonetic": "/əˈveɪləbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "可利用的；有空的",
+    "difficulty": 2
+  },
+  {
+    "word": "average",
+    "phonetic": "/ˈævərɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "平均；平均数",
+    "difficulty": 2
+  },
+  {
+    "word": "avoid",
+    "phonetic": "/əˈvɔɪd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "避免；回避",
+    "difficulty": 2
+  },
+  {
+    "word": "awake",
+    "phonetic": "/əˈweɪk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "醒来；唤醒",
+    "difficulty": 1
+  },
+  {
+    "word": "award",
+    "phonetic": "/əˈwɔːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "奖；奖品",
+    "difficulty": 2
+  },
+  {
+    "word": "aware",
+    "phonetic": "/əˈweə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "意识到的",
+    "difficulty": 2
+  },
+  {
+    "word": "away",
+    "phonetic": "/əˈweɪ/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "离开；远离",
+    "difficulty": 1
+  },
+  {
+    "word": "awful",
+    "phonetic": "/ˈɔːfl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "糟糕的；可怕的",
+    "difficulty": 2
+  },
+  {
+    "word": "baby",
+    "phonetic": "/ˈbeɪbi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "婴儿；宝贝",
+    "difficulty": 1
+  },
+  {
+    "word": "back",
+    "phonetic": "/bæk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "背部；后面",
+    "difficulty": 1
+  },
+  {
+    "word": "background",
+    "phonetic": "/ˈbækɡraʊnd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "背景；经历",
+    "difficulty": 2
+  },
+  {
+    "word": "bacteria",
+    "phonetic": "/bækˈtɪəriə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "细菌",
+    "difficulty": 3
+  },
+  {
+    "word": "bad",
+    "phonetic": "/bæd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "坏的；差的",
+    "difficulty": 1
+  },
+  {
+    "word": "badly",
+    "phonetic": "/ˈbædli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "坏地；差地",
+    "difficulty": 2
+  },
+  {
+    "word": "balance",
+    "phonetic": "/ˈbæləns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "平衡；余额",
+    "difficulty": 2
+  },
+  {
+    "word": "ball",
+    "phonetic": "/bɔːl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "球；舞会",
+    "difficulty": 1
+  },
+  {
+    "word": "ban",
+    "phonetic": "/bæn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "禁止；取缔",
+    "difficulty": 2
+  },
+  {
+    "word": "band",
+    "phonetic": "/bænd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "乐队；带子",
+    "difficulty": 1
+  },
+  {
+    "word": "bank",
+    "phonetic": "/bæŋk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "银行；岸",
+    "difficulty": 1
+  },
+  {
+    "word": "bar",
+    "phonetic": "/bɑː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "酒吧；棒",
+    "difficulty": 1
+  },
+  {
+    "word": "barrier",
+    "phonetic": "/ˈbæriə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "障碍；屏障",
+    "difficulty": 3
+  },
+  {
+    "word": "base",
+    "phonetic": "/beɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "基础；基地",
+    "difficulty": 1
+  },
+  {
+    "word": "basic",
+    "phonetic": "/ˈbeɪsɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "基本的；基础的",
+    "difficulty": 2
+  },
+  {
+    "word": "basis",
+    "phonetic": "/ˈbeɪsɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "基础；根据",
+    "difficulty": 2
+  },
+  {
+    "word": "basket",
+    "phonetic": "/ˈbɑːskɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "篮子；筐",
+    "difficulty": 1
+  },
+  {
+    "word": "bath",
+    "phonetic": "/bɑːθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "沐浴；浴室",
+    "difficulty": 1
+  },
+  {
+    "word": "bathroom",
+    "phonetic": "/ˈbɑːθruːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "浴室；卫生间",
+    "difficulty": 1
+  },
+  {
+    "word": "battery",
+    "phonetic": "/ˈbætəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "电池",
+    "difficulty": 2
+  },
+  {
+    "word": "battle",
+    "phonetic": "/ˈbætl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "战斗；战役",
+    "difficulty": 2
+  },
+  {
+    "word": "beach",
+    "phonetic": "/biːtʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "海滩；湖滨",
+    "difficulty": 1
+  },
+  {
+    "word": "bear",
+    "phonetic": "/beə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "承受；忍受",
+    "difficulty": 2
+  },
+  {
+    "word": "beast",
+    "phonetic": "/biːst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "野兽；牲畜",
+    "difficulty": 2
+  },
+  {
+    "word": "beat",
+    "phonetic": "/biːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "打败；敲打",
+    "difficulty": 1
+  },
+  {
+    "word": "beautiful",
+    "phonetic": "/ˈbjuːtɪfl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "美丽的；美好的",
+    "difficulty": 1
+  },
+  {
+    "word": "beauty",
+    "phonetic": "/ˈbjuːti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "美丽；美人",
+    "difficulty": 1
+  },
+  {
+    "word": "because",
+    "phonetic": "/bɪˈkɒz/",
+    "part_of_speech": "conj.",
+    "meaning_zh": "因为",
+    "difficulty": 1
+  },
+  {
+    "word": "become",
+    "phonetic": "/bɪˈkʌm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "变成；成为",
+    "difficulty": 1
+  },
+  {
+    "word": "bed",
+    "phonetic": "/bed/",
+    "part_of_speech": "n.",
+    "meaning_zh": "床；河床",
+    "difficulty": 1
+  },
+  {
+    "word": "bedroom",
+    "phonetic": "/ˈbedruːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "卧室",
+    "difficulty": 1
+  },
+  {
+    "word": "bee",
+    "phonetic": "/biː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "蜜蜂",
+    "difficulty": 1
+  },
+  {
+    "word": "beef",
+    "phonetic": "/biːf/",
+    "part_of_speech": "n.",
+    "meaning_zh": "牛肉",
+    "difficulty": 1
+  },
+  {
+    "word": "beer",
+    "phonetic": "/bɪə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "啤酒",
+    "difficulty": 1
+  },
+  {
+    "word": "before",
+    "phonetic": "/bɪˈfɔː/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...之前",
+    "difficulty": 1
+  },
+  {
+    "word": "begin",
+    "phonetic": "/bɪˈɡɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "开始",
+    "difficulty": 1
+  },
+  {
+    "word": "behalf",
+    "phonetic": "/bɪˈhɑːf/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代表；利益",
+    "difficulty": 3
+  },
+  {
+    "word": "behavior",
+    "phonetic": "/bɪˈheɪvjə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "行为；举止",
+    "difficulty": 2
+  },
+  {
+    "word": "behind",
+    "phonetic": "/bɪˈhaɪnd/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...后面",
+    "difficulty": 1
+  },
+  {
+    "word": "being",
+    "phonetic": "/ˈbiːɪŋ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "存在；生物",
+    "difficulty": 2
+  },
+  {
+    "word": "belief",
+    "phonetic": "/bɪˈliːf/",
+    "part_of_speech": "n.",
+    "meaning_zh": "信念；信仰",
+    "difficulty": 2
+  },
+  {
+    "word": "believe",
+    "phonetic": "/bɪˈliːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "相信；认为",
+    "difficulty": 1
+  },
+  {
+    "word": "bell",
+    "phonetic": "/bel/",
+    "part_of_speech": "n.",
+    "meaning_zh": "钟；铃",
+    "difficulty": 1
+  },
+  {
+    "word": "belong",
+    "phonetic": "/bɪˈlɒŋ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "属于",
+    "difficulty": 2
+  },
+  {
+    "word": "below",
+    "phonetic": "/bɪˈləʊ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...下面",
+    "difficulty": 1
+  },
+  {
+    "word": "bench",
+    "phonetic": "/bentʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "长凳；工作台",
+    "difficulty": 1
+  },
+  {
+    "word": "bend",
+    "phonetic": "/bend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "弯曲；弯腰",
+    "difficulty": 2
+  },
+  {
+    "word": "beneath",
+    "phonetic": "/bɪˈniːθ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...之下",
+    "difficulty": 2
+  },
+  {
+    "word": "benefit",
+    "phonetic": "/ˈbenɪfɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "利益；好处",
+    "difficulty": 2
+  },
+  {
+    "word": "beside",
+    "phonetic": "/bɪˈsaɪd/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...旁边",
+    "difficulty": 1
+  },
+  {
+    "word": "besides",
+    "phonetic": "/bɪˈsaɪdz/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "此外；而且",
+    "difficulty": 2
+  },
+  {
+    "word": "best",
+    "phonetic": "/best/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "最好的",
+    "difficulty": 1
+  },
+  {
+    "word": "better",
+    "phonetic": "/ˈbetə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "更好的",
+    "difficulty": 1
+  },
+  {
+    "word": "between",
+    "phonetic": "/bɪˈtwiːn/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...之间",
+    "difficulty": 1
+  },
+  {
+    "word": "beyond",
+    "phonetic": "/bɪˈjɒnd/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "超出；超过",
+    "difficulty": 2
+  },
+  {
+    "word": "bias",
+    "phonetic": "/ˈbaɪəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "偏见；倾向",
+    "difficulty": 3
+  },
+  {
+    "word": "bible",
+    "phonetic": "/ˈbaɪbl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圣经",
+    "difficulty": 2
+  },
+  {
+    "word": "bicycle",
+    "phonetic": "/ˈbaɪsɪkl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "自行车",
+    "difficulty": 1
+  },
+  {
+    "word": "bid",
+    "phonetic": "/bɪd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "出价；投标",
+    "difficulty": 2
+  },
+  {
+    "word": "bill",
+    "phonetic": "/bɪl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "账单；法案",
+    "difficulty": 1
+  },
+  {
+    "word": "billion",
+    "phonetic": "/ˈbɪljən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "十亿",
+    "difficulty": 2
+  },
+  {
+    "word": "bind",
+    "phonetic": "/baɪnd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "捆绑；约束",
+    "difficulty": 2
+  },
+  {
+    "word": "biology",
+    "phonetic": "/baɪˈɒlədʒi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "生物学",
+    "difficulty": 2
+  },
+  {
+    "word": "bird",
+    "phonetic": "/bɜːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鸟",
+    "difficulty": 1
+  },
+  {
+    "word": "birth",
+    "phonetic": "/bɜːθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "出生；起源",
+    "difficulty": 1
+  },
+  {
+    "word": "birthday",
+    "phonetic": "/ˈbɜːθdeɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "生日",
+    "difficulty": 1
+  },
+  {
+    "word": "biscuit",
+    "phonetic": "/ˈbɪskɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "饼干",
+    "difficulty": 1
+  },
+  {
+    "word": "bishop",
+    "phonetic": "/ˈbɪʃəp/",
+    "part_of_speech": "n.",
+    "meaning_zh": "主教",
+    "difficulty": 3
+  },
+  {
+    "word": "bit",
+    "phonetic": "/bɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一点；少量",
+    "difficulty": 1
+  },
+  {
+    "word": "bite",
+    "phonetic": "/baɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "咬；叮",
+    "difficulty": 1
+  },
+  {
+    "word": "black",
+    "phonetic": "/blæk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "黑色的",
+    "difficulty": 1
+  },
+  {
+    "word": "blade",
+    "phonetic": "/bleɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "刀片；叶片",
+    "difficulty": 2
+  },
+  {
+    "word": "blame",
+    "phonetic": "/bleɪm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "责备；归咎于",
+    "difficulty": 2
+  },
+  {
+    "word": "blank",
+    "phonetic": "/blæŋk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "空白的",
+    "difficulty": 2
+  },
+  {
+    "word": "blanket",
+    "phonetic": "/ˈblæŋkɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "毯子",
+    "difficulty": 1
+  },
+  {
+    "word": "blast",
+    "phonetic": "/blɑːst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "爆炸；冲击",
+    "difficulty": 2
+  },
+  {
+    "word": "blaze",
+    "phonetic": "/bleɪz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "火焰；燃烧",
+    "difficulty": 2
+  },
+  {
+    "word": "blend",
+    "phonetic": "/blend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "混合；融合",
+    "difficulty": 2
+  },
+  {
+    "word": "bless",
+    "phonetic": "/bles/",
+    "part_of_speech": "v.",
+    "meaning_zh": "祝福；保佑",
+    "difficulty": 2
+  },
+  {
+    "word": "blind",
+    "phonetic": "/blaɪnd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "瞎的；盲目的",
+    "difficulty": 2
+  },
+  {
+    "word": "block",
+    "phonetic": "/blɒk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "块；街区",
+    "difficulty": 1
+  },
+  {
+    "word": "blood",
+    "phonetic": "/blʌd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "血液；血统",
+    "difficulty": 1
+  },
+  {
+    "word": "bloom",
+    "phonetic": "/bluːm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "开花；繁荣",
+    "difficulty": 2
+  },
+  {
+    "word": "blossom",
+    "phonetic": "/ˈblɒsəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "花簇；开花期",
+    "difficulty": 2
+  },
+  {
+    "word": "blow",
+    "phonetic": "/bləʊ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "吹；打击",
+    "difficulty": 1
+  },
+  {
+    "word": "blue",
+    "phonetic": "/bluː/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "蓝色的；忧郁的",
+    "difficulty": 1
+  },
+  {
+    "word": "board",
+    "phonetic": "/bɔːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "木板；董事会",
+    "difficulty": 1
+  },
+  {
+    "word": "boast",
+    "phonetic": "/bəʊst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "夸耀；吹嘘",
+    "difficulty": 2
+  },
+  {
+    "word": "boat",
+    "phonetic": "/bəʊt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "船；小船",
+    "difficulty": 1
+  },
+  {
+    "word": "body",
+    "phonetic": "/ˈbɒdi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "身体；躯体",
+    "difficulty": 1
+  },
+  {
+    "word": "boil",
+    "phonetic": "/bɔɪl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "沸腾；煮",
+    "difficulty": 2
+  },
+  {
+    "word": "bold",
+    "phonetic": "/bəʊld/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "大胆的；粗体的",
+    "difficulty": 2
+  },
+  {
+    "word": "bolt",
+    "phonetic": "/bəʊlt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "螺栓；门闩",
+    "difficulty": 2
+  },
+  {
+    "word": "bomb",
+    "phonetic": "/bɒm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "炸弹",
+    "difficulty": 1
+  },
+  {
+    "word": "bond",
+    "phonetic": "/bɒnd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "债券；纽带",
+    "difficulty": 2
+  },
+  {
+    "word": "bone",
+    "phonetic": "/bəʊn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "骨头；骨质",
+    "difficulty": 1
+  },
+  {
+    "word": "bonus",
+    "phonetic": "/ˈbəʊnəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "奖金；红利",
+    "difficulty": 2
+  },
+  {
+    "word": "book",
+    "phonetic": "/bʊk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "书；预订",
+    "difficulty": 1
+  },
+  {
+    "word": "boom",
+    "phonetic": "/buːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "繁荣；轰鸣",
+    "difficulty": 2
+  },
+  {
+    "word": "boost",
+    "phonetic": "/buːst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "促进；提升",
+    "difficulty": 2
+  },
+  {
+    "word": "boot",
+    "phonetic": "/buːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "靴子",
+    "difficulty": 1
+  },
+  {
+    "word": "border",
+    "phonetic": "/ˈbɔːdə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "边界；边境",
+    "difficulty": 2
+  },
+  {
+    "word": "bore",
+    "phonetic": "/bɔː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使厌烦；钻孔",
+    "difficulty": 2
+  },
+  {
+    "word": "born",
+    "phonetic": "/bɔːn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "出生",
+    "difficulty": 1
+  },
+  {
+    "word": "borrow",
+    "phonetic": "/ˈbɒrəʊ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "借；借用",
+    "difficulty": 1
+  },
+  {
+    "word": "boss",
+    "phonetic": "/bɒs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "老板；上司",
+    "difficulty": 1
+  },
+  {
+    "word": "both",
+    "phonetic": "/bəʊθ/",
+    "part_of_speech": "pron.",
+    "meaning_zh": "两者都",
+    "difficulty": 1
+  },
+  {
+    "word": "bother",
+    "phonetic": "/ˈbɒðə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "打扰；使烦恼",
+    "difficulty": 2
+  },
+  {
+    "word": "bottle",
+    "phonetic": "/ˈbɒtl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "瓶子",
+    "difficulty": 1
+  },
+  {
+    "word": "bottom",
+    "phonetic": "/ˈbɒtəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "底部；末尾",
+    "difficulty": 1
+  },
+  {
+    "word": "bounce",
+    "phonetic": "/baʊns/",
+    "part_of_speech": "v.",
+    "meaning_zh": "弹跳；弹起",
+    "difficulty": 2
+  },
+  {
+    "word": "bound",
+    "phonetic": "/baʊnd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "跳跃；限制",
+    "difficulty": 2
+  },
+  {
+    "word": "boundary",
+    "phonetic": "/ˈbaʊndəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "边界；分界线",
+    "difficulty": 2
+  },
+  {
+    "word": "bow",
+    "phonetic": "/bəʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鞠躬；弓",
+    "difficulty": 1
+  },
+  {
+    "word": "bowl",
+    "phonetic": "/bəʊl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "碗；钵",
+    "difficulty": 1
+  },
+  {
+    "word": "box",
+    "phonetic": "/bɒks/",
+    "part_of_speech": "n.",
+    "meaning_zh": "盒子；箱",
+    "difficulty": 1
+  },
+  {
+    "word": "boy",
+    "phonetic": "/bɔɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "男孩",
+    "difficulty": 1
+  },
+  {
+    "word": "brain",
+    "phonetic": "/breɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "大脑；脑力",
+    "difficulty": 1
+  },
+  {
+    "word": "brake",
+    "phonetic": "/breɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "刹车；制动器",
+    "difficulty": 2
+  },
+  {
+    "word": "branch",
+    "phonetic": "/brɑːntʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "分支；树枝",
+    "difficulty": 1
+  },
+  {
+    "word": "brand",
+    "phonetic": "/brænd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "品牌；烙印",
+    "difficulty": 2
+  },
+  {
+    "word": "brave",
+    "phonetic": "/breɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "勇敢的",
+    "difficulty": 1
+  },
+  {
+    "word": "bread",
+    "phonetic": "/bred/",
+    "part_of_speech": "n.",
+    "meaning_zh": "面包",
+    "difficulty": 1
+  },
+  {
+    "word": "break",
+    "phonetic": "/breɪk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "打破；休息",
+    "difficulty": 1
+  },
+  {
+    "word": "breakfast",
+    "phonetic": "/ˈbrekfəst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "早餐",
+    "difficulty": 1
+  },
+  {
+    "word": "breast",
+    "phonetic": "/brest/",
+    "part_of_speech": "n.",
+    "meaning_zh": "胸部；乳房",
+    "difficulty": 2
+  },
+  {
+    "word": "breath",
+    "phonetic": "/breθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "呼吸；气息",
+    "difficulty": 2
+  },
+  {
+    "word": "breathe",
+    "phonetic": "/briːð/",
+    "part_of_speech": "v.",
+    "meaning_zh": "呼吸",
+    "difficulty": 1
+  },
+  {
+    "word": "breed",
+    "phonetic": "/briːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "繁殖；饲养",
+    "difficulty": 2
+  },
+  {
+    "word": "breeze",
+    "phonetic": "/briːz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "微风；轻风",
+    "difficulty": 2
+  },
+  {
+    "word": "brick",
+    "phonetic": "/brɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "砖块；砖",
+    "difficulty": 1
+  },
+  {
+    "word": "bride",
+    "phonetic": "/braɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "新娘",
+    "difficulty": 2
+  },
+  {
+    "word": "bridge",
+    "phonetic": "/brɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "桥梁；桥牌",
+    "difficulty": 1
+  },
+  {
+    "word": "brief",
+    "phonetic": "/briːf/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "简短的；简洁的",
+    "difficulty": 2
+  },
+  {
+    "word": "bright",
+    "phonetic": "/braɪt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "明亮的；聪明的",
+    "difficulty": 1
+  },
+  {
+    "word": "brilliant",
+    "phonetic": "/ˈbrɪljənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "光辉的；卓越的",
+    "difficulty": 2
+  },
+  {
+    "word": "bring",
+    "phonetic": "/brɪŋ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "带来；引起",
+    "difficulty": 1
+  },
+  {
+    "word": "broad",
+    "phonetic": "/brɔːd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "宽阔的；广泛的",
+    "difficulty": 2
+  },
+  {
+    "word": "broadcast",
+    "phonetic": "/ˈbrɔːdkɑːst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "广播；播送",
+    "difficulty": 2
+  },
+  {
+    "word": "brochure",
+    "phonetic": "/brəʊˈʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "小册子；手册",
+    "difficulty": 3
+  },
+  {
+    "word": "broken",
+    "phonetic": "/ˈbrəʊkən/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "破碎的；损坏的",
+    "difficulty": 1
+  },
+  {
+    "word": "bronze",
+    "phonetic": "/brɒnz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "青铜；铜牌",
+    "difficulty": 2
+  },
+  {
+    "word": "brother",
+    "phonetic": "/ˈbrʌðə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "兄弟",
+    "difficulty": 1
+  },
+  {
+    "word": "brown",
+    "phonetic": "/braʊn/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "棕色的；褐色的",
+    "difficulty": 1
+  },
+  {
+    "word": "brush",
+    "phonetic": "/brʌʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "刷子；画笔",
+    "difficulty": 1
+  },
+  {
+    "word": "bubble",
+    "phonetic": "/ˈbʌbl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "气泡；泡沫",
+    "difficulty": 2
+  },
+  {
+    "word": "bucket",
+    "phonetic": "/ˈbʌkɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "水桶；吊桶",
+    "difficulty": 1
+  },
+  {
+    "word": "budget",
+    "phonetic": "/ˈbʌdʒɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "预算",
+    "difficulty": 2
+  },
+  {
+    "word": "buffet",
+    "phonetic": "/ˈbʌfeɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "自助餐",
+    "difficulty": 2
+  },
+  {
+    "word": "build",
+    "phonetic": "/bɪld/",
+    "part_of_speech": "v.",
+    "meaning_zh": "建造；建立",
+    "difficulty": 1
+  },
+  {
+    "word": "building",
+    "phonetic": "/ˈbɪldɪŋ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建筑物",
+    "difficulty": 1
+  },
+  {
+    "word": "bullet",
+    "phonetic": "/ˈbʊlɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "子弹",
+    "difficulty": 2
+  },
+  {
+    "word": "bunch",
+    "phonetic": "/bʌntʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "串；束",
+    "difficulty": 1
+  },
+  {
+    "word": "bundle",
+    "phonetic": "/ˈbʌndl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "捆；束；包",
+    "difficulty": 2
+  },
+  {
+    "word": "burden",
+    "phonetic": "/ˈbɜːdn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "负担；责任",
+    "difficulty": 2
+  },
+  {
+    "word": "bureau",
+    "phonetic": "/ˈbjʊərəʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "局；办公桌",
+    "difficulty": 3
+  },
+  {
+    "word": "burn",
+    "phonetic": "/bɜːn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "燃烧；烧伤",
+    "difficulty": 1
+  },
+  {
+    "word": "burst",
+    "phonetic": "/bɜːst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "爆炸；爆发",
+    "difficulty": 2
+  },
+  {
+    "word": "bury",
+    "phonetic": "/ˈberi/",
+    "part_of_speech": "v.",
+    "meaning_zh": "埋葬；埋藏",
+    "difficulty": 2
+  },
+  {
+    "word": "bus",
+    "phonetic": "/bʌs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公共汽车",
+    "difficulty": 1
+  },
+  {
+    "word": "bush",
+    "phonetic": "/bʊʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "灌木；灌木丛",
+    "difficulty": 1
+  },
+  {
+    "word": "business",
+    "phonetic": "/ˈbɪznəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "商业；生意",
+    "difficulty": 1
+  },
+  {
+    "word": "busy",
+    "phonetic": "/ˈbɪzi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "忙碌的；繁忙的",
+    "difficulty": 1
+  },
+  {
+    "word": "but",
+    "phonetic": "/bʌt/",
+    "part_of_speech": "conj.",
+    "meaning_zh": "但是；然而",
+    "difficulty": 1
+  },
+  {
+    "word": "butter",
+    "phonetic": "/ˈbʌtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黄油",
+    "difficulty": 1
+  },
+  {
+    "word": "button",
+    "phonetic": "/ˈbʌtn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "按钮；纽扣",
+    "difficulty": 1
+  },
+  {
+    "word": "buy",
+    "phonetic": "/baɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "买；购买",
+    "difficulty": 1
+  },
+  {
+    "word": "buyer",
+    "phonetic": "/ˈbaɪə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "买家；买主",
+    "difficulty": 2
+  },
+  {
+    "word": "by",
+    "phonetic": "/baɪ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "通过；被",
+    "difficulty": 1
+  },
+  {
+    "word": "cabin",
+    "phonetic": "/ˈkæbɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "小屋；船舱",
+    "difficulty": 2
+  },
+  {
+    "word": "cabinet",
+    "phonetic": "/ˈkæbɪnət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "内阁；柜子",
+    "difficulty": 2
+  },
+  {
+    "word": "cable",
+    "phonetic": "/ˈkeɪbl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "电缆；电报",
+    "difficulty": 2
+  },
+  {
+    "word": "cafe",
+    "phonetic": "/ˈkæfeɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "咖啡馆；小餐馆",
+    "difficulty": 1
+  },
+  {
+    "word": "cage",
+    "phonetic": "/keɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "笼子；鸟笼",
+    "difficulty": 1
+  },
+  {
+    "word": "cake",
+    "phonetic": "/keɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "蛋糕",
+    "difficulty": 1
+  },
+  {
+    "word": "calculate",
+    "phonetic": "/ˈkælkjəleɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "计算；估计",
+    "difficulty": 2
+  },
+  {
+    "word": "calendar",
+    "phonetic": "/ˈkælɪndə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "日历；日程",
+    "difficulty": 2
+  },
+  {
+    "word": "call",
+    "phonetic": "/kɔːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "打电话；称呼",
+    "difficulty": 1
+  },
+  {
+    "word": "calm",
+    "phonetic": "/kɑːm/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "平静的；冷静的",
+    "difficulty": 2
+  },
+  {
+    "word": "camera",
+    "phonetic": "/ˈkæmərə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "相机；摄影机",
+    "difficulty": 1
+  },
+  {
+    "word": "camp",
+    "phonetic": "/kæmp/",
+    "part_of_speech": "n.",
+    "meaning_zh": "营地；野营",
+    "difficulty": 1
+  },
+  {
+    "word": "campaign",
+    "phonetic": "/kæmˈpeɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "运动；战役",
+    "difficulty": 2
+  },
+  {
+    "word": "campus",
+    "phonetic": "/ˈkæmpəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "校园；大学",
+    "difficulty": 2
+  },
+  {
+    "word": "can",
+    "phonetic": "/kæn/",
+    "part_of_speech": "modal v.",
+    "meaning_zh": "能；可以",
+    "difficulty": 1
+  },
+  {
+    "word": "cancel",
+    "phonetic": "/ˈkænsl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "取消；撤销",
+    "difficulty": 2
+  },
+  {
+    "word": "cancer",
+    "phonetic": "/ˈkænsə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "癌症；肿瘤",
+    "difficulty": 2
+  },
+  {
+    "word": "candidate",
+    "phonetic": "/ˈkændɪdət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "候选人；求职者",
+    "difficulty": 2
+  },
+  {
+    "word": "candle",
+    "phonetic": "/ˈkændl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "蜡烛",
+    "difficulty": 1
+  },
+  {
+    "word": "candy",
+    "phonetic": "/ˈkændi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "糖果",
+    "difficulty": 1
+  },
+  {
+    "word": "capital",
+    "phonetic": "/ˈkæpɪtl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "首都；资本",
+    "difficulty": 2
+  },
+  {
+    "word": "captain",
+    "phonetic": "/ˈkæptɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "队长；船长",
+    "difficulty": 1
+  },
+  {
+    "word": "capture",
+    "phonetic": "/ˈkæptʃə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "捕获；占领",
+    "difficulty": 2
+  },
+  {
+    "word": "car",
+    "phonetic": "/kɑː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "汽车；车厢",
+    "difficulty": 1
+  },
+  {
+    "word": "carbon",
+    "phonetic": "/ˈkɑːbən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "碳；碳元素",
+    "difficulty": 2
+  },
+  {
+    "word": "card",
+    "phonetic": "/kɑːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "卡片；纸牌",
+    "difficulty": 1
+  },
+  {
+    "word": "care",
+    "phonetic": "/keə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "照顾；关心",
+    "difficulty": 1
+  },
+  {
+    "word": "career",
+    "phonetic": "/kəˈrɪə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "职业；事业",
+    "difficulty": 2
+  },
+  {
+    "word": "careful",
+    "phonetic": "/ˈkeəfl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "仔细的；小心的",
+    "difficulty": 1
+  },
+  {
+    "word": "careless",
+    "phonetic": "/ˈkeələs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "粗心的；疏忽的",
+    "difficulty": 2
+  },
+  {
+    "word": "cargo",
+    "phonetic": "/ˈkɑːɡəʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "货物；船货",
+    "difficulty": 2
+  },
+  {
+    "word": "carpet",
+    "phonetic": "/ˈkɑːpɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "地毯",
+    "difficulty": 1
+  },
+  {
+    "word": "carriage",
+    "phonetic": "/ˈkærɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "运输；四轮马车",
+    "difficulty": 2
+  },
+  {
+    "word": "carrier",
+    "phonetic": "/ˈkæriə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "运输公司；载体",
+    "difficulty": 2
+  },
+  {
+    "word": "carrot",
+    "phonetic": "/ˈkærət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "胡萝卜",
+    "difficulty": 1
+  },
+  {
+    "word": "carry",
+    "phonetic": "/ˈkæri/",
+    "part_of_speech": "v.",
+    "meaning_zh": "携带；运送",
+    "difficulty": 1
+  },
+  {
+    "word": "cart",
+    "phonetic": "/kɑːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "手推车；购物车",
+    "difficulty": 1
+  },
+  {
+    "word": "case",
+    "phonetic": "/keɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "情况；案例",
+    "difficulty": 1
+  },
+  {
+    "word": "cash",
+    "phonetic": "/kæʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "现金",
+    "difficulty": 1
+  },
+  {
+    "word": "cast",
+    "phonetic": "/kɑːst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "投射；铸造",
+    "difficulty": 2
+  },
+  {
+    "word": "castle",
+    "phonetic": "/ˈkɑːsl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "城堡",
+    "difficulty": 1
+  },
+  {
+    "word": "casual",
+    "phonetic": "/ˈkæʒuəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "随意的；偶然的",
+    "difficulty": 2
+  },
+  {
+    "word": "cat",
+    "phonetic": "/kæt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "猫",
+    "difficulty": 1
+  },
+  {
+    "word": "catalog",
+    "phonetic": "/ˈkætəlɒɡ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "目录；产品目录",
+    "difficulty": 2
+  },
+  {
+    "word": "catch",
+    "phonetic": "/kætʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "抓住；赶上",
+    "difficulty": 1
+  },
+  {
+    "word": "category",
+    "phonetic": "/ˈkætəɡəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "类别；范畴",
+    "difficulty": 2
+  },
+  {
+    "word": "cater",
+    "phonetic": "/ˈkeɪtə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "提供饮食；迎合",
+    "difficulty": 3
+  },
+  {
+    "word": "cathedral",
+    "phonetic": "/kəˈθiːdrəl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "大教堂",
+    "difficulty": 3
+  },
+  {
+    "word": "cause",
+    "phonetic": "/kɔːz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "导致；引起",
+    "difficulty": 1
+  },
+  {
+    "word": "caution",
+    "phonetic": "/ˈkɔːʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "谨慎；警告",
+    "difficulty": 2
+  },
+  {
+    "word": "cave",
+    "phonetic": "/keɪv/",
+    "part_of_speech": "n.",
+    "meaning_zh": "洞穴；山洞",
+    "difficulty": 1
+  },
+  {
+    "word": "cease",
+    "phonetic": "/siːs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "停止；终止",
+    "difficulty": 2
+  },
+  {
+    "word": "ceiling",
+    "phonetic": "/ˈsiːlɪŋ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "天花板；上限",
+    "difficulty": 2
+  },
+  {
+    "word": "celebrate",
+    "phonetic": "/ˈselɪbreɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "庆祝；赞美",
+    "difficulty": 2
+  },
+  {
+    "word": "celebration",
+    "phonetic": "/ˌselɪˈbreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "庆祝；庆典",
+    "difficulty": 2
+  },
+  {
+    "word": "cell",
+    "phonetic": "/sel/",
+    "part_of_speech": "n.",
+    "meaning_zh": "细胞；小房间",
+    "difficulty": 1
+  },
+  {
+    "word": "cellar",
+    "phonetic": "/ˈselə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "地窖；地下室",
+    "difficulty": 2
+  },
+  {
+    "word": "cement",
+    "phonetic": "/sɪˈment/",
+    "part_of_speech": "n.",
+    "meaning_zh": "水泥；胶合剂",
+    "difficulty": 2
+  },
+  {
+    "word": "cemetery",
+    "phonetic": "/ˈsemətri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "墓地；公墓",
+    "difficulty": 3
+  },
+  {
+    "word": "census",
+    "phonetic": "/ˈsensəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "人口普查；统计",
+    "difficulty": 3
+  },
+  {
+    "word": "center",
+    "phonetic": "/ˈsentə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "中心；中央",
+    "difficulty": 1
+  },
+  {
+    "word": "centigrade",
+    "phonetic": "/ˈsentɪɡreɪd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "摄氏度的",
+    "difficulty": 2
+  },
+  {
+    "word": "centimeter",
+    "phonetic": "/ˈsentɪmiːtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "厘米",
+    "difficulty": 1
+  },
+  {
+    "word": "central",
+    "phonetic": "/ˈsentrəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "中心的；主要的",
+    "difficulty": 2
+  },
+  {
+    "word": "century",
+    "phonetic": "/ˈsentʃəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "世纪；百年",
+    "difficulty": 1
+  },
+  {
+    "word": "cereal",
+    "phonetic": "/ˈsɪəriəl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "谷物；早餐麦片",
+    "difficulty": 2
+  },
+  {
+    "word": "ceremony",
+    "phonetic": "/ˈserəməni/",
+    "part_of_speech": "n.",
+    "meaning_zh": "仪式；典礼",
+    "difficulty": 2
+  },
+  {
+    "word": "certain",
+    "phonetic": "/ˈsɜːtn/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "确定的；某一",
+    "difficulty": 1
+  },
+  {
+    "word": "certainly",
+    "phonetic": "/ˈsɜːtnli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "当然；确定",
+    "difficulty": 1
+  },
+  {
+    "word": "certificate",
+    "phonetic": "/səˈtɪfɪkət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "证书；执照",
+    "difficulty": 2
+  },
+  {
+    "word": "chain",
+    "phonetic": "/tʃeɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "链条；连锁",
+    "difficulty": 1
+  },
+  {
+    "word": "chair",
+    "phonetic": "/tʃeə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "椅子；主席",
+    "difficulty": 1
+  },
+  {
+    "word": "chairman",
+    "phonetic": "/ˈtʃeəmən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "主席；董事长",
+    "difficulty": 2
+  },
+  {
+    "word": "chalk",
+    "phonetic": "/tʃɔːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "粉笔",
+    "difficulty": 1
+  },
+  {
+    "word": "challenge",
+    "phonetic": "/ˈtʃælɪndʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "挑战；质疑",
+    "difficulty": 2
+  },
+  {
+    "word": "chamber",
+    "phonetic": "/ˈtʃeɪmbə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "房间；会议厅",
+    "difficulty": 2
+  },
+  {
+    "word": "champion",
+    "phonetic": "/ˈtʃæmpiən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "冠军；拥护者",
+    "difficulty": 2
+  },
+  {
+    "word": "chance",
+    "phonetic": "/tʃɑːns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "机会；可能性",
+    "difficulty": 1
+  },
+  {
+    "word": "change",
+    "phonetic": "/tʃeɪndʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "改变；变化",
+    "difficulty": 1
+  },
+  {
+    "word": "channel",
+    "phonetic": "/ˈtʃænl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "频道；渠道",
+    "difficulty": 1
+  },
+  {
+    "word": "chaos",
+    "phonetic": "/ˈkeɪɒs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "混乱；混沌",
+    "difficulty": 2
+  },
+  {
+    "word": "chapter",
+    "phonetic": "/ˈtʃæptə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "章节；篇章",
+    "difficulty": 1
+  },
+  {
+    "word": "character",
+    "phonetic": "/ˈkærəktə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "性格；角色",
+    "difficulty": 1
+  },
+  {
+    "word": "characteristic",
+    "phonetic": "/ˌkærəktəˈrɪstɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "特征；特性",
+    "difficulty": 2
+  },
+  {
+    "word": "charge",
+    "phonetic": "/tʃɑːdʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "收费；指控",
+    "difficulty": 1
+  },
+  {
+    "word": "charity",
+    "phonetic": "/ˈtʃærəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "慈善；慈善机构",
+    "difficulty": 2
+  },
+  {
+    "word": "charm",
+    "phonetic": "/tʃɑːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "魅力；吸引力",
+    "difficulty": 2
+  },
+  {
+    "word": "charming",
+    "phonetic": "/ˈtʃɑːmɪŋ/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "迷人的；可爱的",
+    "difficulty": 2
+  },
+  {
+    "word": "chart",
+    "phonetic": "/tʃɑːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "图表；曲线图",
+    "difficulty": 1
+  },
+  {
+    "word": "chase",
+    "phonetic": "/tʃeɪs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "追逐；追赶",
+    "difficulty": 1
+  },
+  {
+    "word": "chat",
+    "phonetic": "/tʃæt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "聊天；闲谈",
+    "difficulty": 1
+  },
+  {
+    "word": "cheap",
+    "phonetic": "/tʃiːp/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "便宜的；廉价的",
+    "difficulty": 1
+  },
+  {
+    "word": "cheat",
+    "phonetic": "/tʃiːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "欺骗；作弊",
+    "difficulty": 2
+  },
+  {
+    "word": "check",
+    "phonetic": "/tʃek/",
+    "part_of_speech": "v.",
+    "meaning_zh": "检查；核对",
+    "difficulty": 1
+  },
+  {
+    "word": "cheek",
+    "phonetic": "/tʃiːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "脸颊；脸皮",
+    "difficulty": 1
+  },
+  {
+    "word": "cheer",
+    "phonetic": "/tʃɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "欢呼；喝彩",
+    "difficulty": 1
+  },
+  {
+    "word": "cheerful",
+    "phonetic": "/ˈtʃɪəfl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "快乐的；高兴的",
+    "difficulty": 2
+  },
+  {
+    "word": "cheese",
+    "phonetic": "/tʃiːz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "奶酪；芝士",
+    "difficulty": 1
+  },
+  {
+    "word": "chef",
+    "phonetic": "/ʃef/",
+    "part_of_speech": "n.",
+    "meaning_zh": "厨师；主厨",
+    "difficulty": 1
+  },
+  {
+    "word": "chemical",
+    "phonetic": "/ˈkemɪkl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "化学的",
+    "difficulty": 2
+  },
+  {
+    "word": "chemist",
+    "phonetic": "/ˈkemɪst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "化学家；药剂师",
+    "difficulty": 2
+  },
+  {
+    "word": "chemistry",
+    "phonetic": "/ˈkemɪstri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "化学",
+    "difficulty": 1
+  },
+  {
+    "word": "cheque",
+    "phonetic": "/tʃek/",
+    "part_of_speech": "n.",
+    "meaning_zh": "支票",
+    "difficulty": 2
+  },
+  {
+    "word": "cherry",
+    "phonetic": "/ˈtʃeri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "樱桃；樱桃树",
+    "difficulty": 1
+  },
+  {
+    "word": "chess",
+    "phonetic": "/tʃes/",
+    "part_of_speech": "n.",
+    "meaning_zh": "国际象棋",
+    "difficulty": 1
+  },
+  {
+    "word": "chest",
+    "phonetic": "/tʃest/",
+    "part_of_speech": "n.",
+    "meaning_zh": "胸部；箱子",
+    "difficulty": 1
+  },
+  {
+    "word": "chew",
+    "phonetic": "/tʃuː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "咀嚼；嚼碎",
+    "difficulty": 2
+  },
+  {
+    "word": "chicken",
+    "phonetic": "/ˈtʃɪkɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鸡肉；小鸡",
+    "difficulty": 1
+  },
+  {
+    "word": "chief",
+    "phonetic": "/tʃiːf/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "主要的；首席的",
+    "difficulty": 1
+  },
+  {
+    "word": "child",
+    "phonetic": "/tʃaɪld/",
+    "part_of_speech": "n.",
+    "meaning_zh": "孩子；儿童",
+    "difficulty": 1
+  },
+  {
+    "word": "childhood",
+    "phonetic": "/ˈtʃaɪldhʊd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "童年；幼年",
+    "difficulty": 2
+  },
+  {
+    "word": "chimney",
+    "phonetic": "/ˈtʃɪmni/",
+    "part_of_speech": "n.",
+    "meaning_zh": "烟囱；烟道",
+    "difficulty": 1
+  },
+  {
+    "word": "chin",
+    "phonetic": "/tʃɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "下巴；颏",
+    "difficulty": 1
+  },
+  {
+    "word": "china",
+    "phonetic": "/ˈtʃaɪnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "瓷器；中国",
+    "difficulty": 1
+  },
+  {
+    "word": "chip",
+    "phonetic": "/tʃɪp/",
+    "part_of_speech": "n.",
+    "meaning_zh": "芯片；薯片",
+    "difficulty": 1
+  },
+  {
+    "word": "chocolate",
+    "phonetic": "/ˈtʃɒklət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "巧克力",
+    "difficulty": 1
+  },
+  {
+    "word": "choice",
+    "phonetic": "/tʃɔɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "选择；抉择",
+    "difficulty": 1
+  },
+  {
+    "word": "choose",
+    "phonetic": "/tʃuːz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "选择；挑选",
+    "difficulty": 1
+  },
+  {
+    "word": "chop",
+    "phonetic": "/tʃɒp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "砍；剁；切",
+    "difficulty": 2
+  },
+  {
+    "word": "church",
+    "phonetic": "/tʃɜːtʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "教堂；教会",
+    "difficulty": 1
+  },
+  {
+    "word": "cigarette",
+    "phonetic": "/ˌsɪɡəˈret/",
+    "part_of_speech": "n.",
+    "meaning_zh": "香烟",
+    "difficulty": 2
+  },
+  {
+    "word": "circle",
+    "phonetic": "/ˈsɜːkl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圆圈；圈子",
+    "difficulty": 1
+  },
+  {
+    "word": "circuit",
+    "phonetic": "/ˈsɜːkɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "电路；环行",
+    "difficulty": 2
+  },
+  {
+    "word": "circular",
+    "phonetic": "/ˈsɜːkjələ/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "圆形的；循环的",
+    "difficulty": 2
+  },
+  {
+    "word": "circulate",
+    "phonetic": "/ˈsɜːkjəleɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "循环；流通",
+    "difficulty": 3
+  },
+  {
+    "word": "circumstance",
+    "phonetic": "/ˈsɜːkəmstæns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "环境；情况",
+    "difficulty": 3
+  },
+  {
+    "word": "citizen",
+    "phonetic": "/ˈsɪtɪzn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公民；市民",
+    "difficulty": 2
+  },
+  {
+    "word": "city",
+    "phonetic": "/ˈsɪti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "城市；都市",
+    "difficulty": 1
+  },
+  {
+    "word": "civil",
+    "phonetic": "/ˈsɪvl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "公民的；民用的",
+    "difficulty": 2
+  },
+  {
+    "word": "civilian",
+    "phonetic": "/sɪˈvɪliən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "平民；老百姓",
+    "difficulty": 2
+  },
+  {
+    "word": "civilization",
+    "phonetic": "/ˌsɪvɪlaɪˈzeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "文明；文化",
+    "difficulty": 2
+  },
+  {
+    "word": "claim",
+    "phonetic": "/kleɪm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "声称；要求",
+    "difficulty": 2
+  },
+  {
+    "word": "clap",
+    "phonetic": "/klæp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "拍手；鼓掌",
+    "difficulty": 1
+  },
+  {
+    "word": "clarify",
+    "phonetic": "/ˈklærəfaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "澄清；说明",
+    "difficulty": 3
+  },
+  {
+    "word": "clash",
+    "phonetic": "/klæʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "冲突；撞击",
+    "difficulty": 2
+  },
+  {
+    "word": "clasp",
+    "phonetic": "/klɑːsp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "扣紧；紧握",
+    "difficulty": 2
+  },
+  {
+    "word": "class",
+    "phonetic": "/klɑːs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "班级；阶级",
+    "difficulty": 1
+  },
+  {
+    "word": "classic",
+    "phonetic": "/ˈklæsɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "经典的；典型的",
+    "difficulty": 2
+  },
+  {
+    "word": "classical",
+    "phonetic": "/ˈklæsɪkl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "古典的；传统的",
+    "difficulty": 2
+  },
+  {
+    "word": "classification",
+    "phonetic": "/ˌklæsɪfɪˈkeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "分类；分级",
+    "difficulty": 3
+  },
+  {
+    "word": "classify",
+    "phonetic": "/ˈklæsɪfaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "分类；归类",
+    "difficulty": 2
+  },
+  {
+    "word": "classmate",
+    "phonetic": "/ˈklɑːsmeɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "同班同学",
+    "difficulty": 1
+  },
+  {
+    "word": "classroom",
+    "phonetic": "/ˈklɑːsruːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "教室；课堂",
+    "difficulty": 1
+  },
+  {
+    "word": "clause",
+    "phonetic": "/klɔːz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "条款；从句",
+    "difficulty": 3
+  },
+  {
+    "word": "claw",
+    "phonetic": "/klɔː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "爪；爪子",
+    "difficulty": 2
+  },
+  {
+    "word": "clay",
+    "phonetic": "/kleɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黏土；泥土",
+    "difficulty": 2
+  },
+  {
+    "word": "clean",
+    "phonetic": "/kliːn/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "干净的；清洁的",
+    "difficulty": 1
+  },
+  {
+    "word": "clear",
+    "phonetic": "/klɪə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "清楚的；清晰的",
+    "difficulty": 1
+  },
+  {
+    "word": "clerk",
+    "phonetic": "/klɑːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "职员；店员",
+    "difficulty": 1
+  },
+  {
+    "word": "clever",
+    "phonetic": "/ˈklevə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "聪明的；机灵的",
+    "difficulty": 1
+  },
+  {
+    "word": "click",
+    "phonetic": "/klɪk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "点击；发出咔嗒声",
+    "difficulty": 1
+  },
+  {
+    "word": "client",
+    "phonetic": "/ˈklaɪənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "客户；委托人",
+    "difficulty": 2
+  },
+  {
+    "word": "cliff",
+    "phonetic": "/klɪf/",
+    "part_of_speech": "n.",
+    "meaning_zh": "悬崖；峭壁",
+    "difficulty": 2
+  },
+  {
+    "word": "climate",
+    "phonetic": "/ˈklaɪmət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "气候；风气",
+    "difficulty": 2
+  },
+  {
+    "word": "climb",
+    "phonetic": "/klaɪm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "攀登；爬",
+    "difficulty": 1
+  },
+  {
+    "word": "cling",
+    "phonetic": "/klɪŋ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "紧紧抓住；依附",
+    "difficulty": 2
+  },
+  {
+    "word": "clinic",
+    "phonetic": "/ˈklɪnɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "诊所；门诊部",
+    "difficulty": 2
+  },
+  {
+    "word": "clip",
+    "phonetic": "/klɪp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "别住；夹住",
+    "difficulty": 2
+  },
+  {
+    "word": "cloak",
+    "phonetic": "/kləʊk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "斗篷；覆盖物",
+    "difficulty": 2
+  },
+  {
+    "word": "clock",
+    "phonetic": "/klɒk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "时钟；计时器",
+    "difficulty": 1
+  },
+  {
+    "word": "clone",
+    "phonetic": "/kləʊn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "克隆；复制",
+    "difficulty": 2
+  },
+  {
+    "word": "close",
+    "phonetic": "/kləʊz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "关闭；结束",
+    "difficulty": 1
+  },
+  {
+    "word": "closet",
+    "phonetic": "/ˈklɒzɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "壁橱；储藏室",
+    "difficulty": 1
+  },
+  {
+    "word": "cloth",
+    "phonetic": "/klɒθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "布；织物",
+    "difficulty": 1
+  },
+  {
+    "word": "clothe",
+    "phonetic": "/kləʊð/",
+    "part_of_speech": "v.",
+    "meaning_zh": "给...穿衣；覆盖",
+    "difficulty": 2
+  },
+  {
+    "word": "clothes",
+    "phonetic": "/kləʊðz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "衣服；服装",
+    "difficulty": 1
+  },
+  {
+    "word": "clothing",
+    "phonetic": "/ˈkləʊðɪŋ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "服装；衣着",
+    "difficulty": 2
+  },
+  {
+    "word": "cloud",
+    "phonetic": "/klaʊd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "云；云朵",
+    "difficulty": 1
+  },
+  {
+    "word": "cloudy",
+    "phonetic": "/ˈklaʊdi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "多云的；阴天的",
+    "difficulty": 1
+  },
+  {
+    "word": "club",
+    "phonetic": "/klʌb/",
+    "part_of_speech": "n.",
+    "meaning_zh": "俱乐部；社团",
+    "difficulty": 1
+  },
+  {
+    "word": "clue",
+    "phonetic": "/kluː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "线索；提示",
+    "difficulty": 2
+  },
+  {
+    "word": "clumsy",
+    "phonetic": "/ˈklʌmzi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "笨拙的；不灵活的",
+    "difficulty": 2
+  },
+  {
+    "word": "cluster",
+    "phonetic": "/ˈklʌstə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "串；簇；群",
+    "difficulty": 2
+  },
+  {
+    "word": "clutch",
+    "phonetic": "/klʌtʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "抓紧；紧握",
+    "difficulty": 2
+  },
+  {
+    "word": "coach",
+    "phonetic": "/kəʊtʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "教练；私人教师",
+    "difficulty": 1
+  },
+  {
+    "word": "coal",
+    "phonetic": "/kəʊl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "煤；煤块",
+    "difficulty": 1
+  },
+  {
+    "word": "coarse",
+    "phonetic": "/kɔːs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "粗糙的；粗劣的",
+    "difficulty": 2
+  },
+  {
+    "word": "coast",
+    "phonetic": "/kəʊst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "海岸；海滨",
+    "difficulty": 1
+  },
+  {
+    "word": "coastal",
+    "phonetic": "/ˈkəʊstl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "海岸的；沿海的",
+    "difficulty": 2
+  },
+  {
+    "word": "coat",
+    "phonetic": "/kəʊt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "外套；涂层",
+    "difficulty": 1
+  },
+  {
+    "word": "coconut",
+    "phonetic": "/ˈkəʊkənʌt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "椰子",
+    "difficulty": 1
+  },
+  {
+    "word": "code",
+    "phonetic": "/kəʊd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代码；密码",
+    "difficulty": 1
+  },
+  {
+    "word": "coffee",
+    "phonetic": "/ˈkɒfi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "咖啡",
+    "difficulty": 1
+  },
+  {
+    "word": "coffin",
+    "phonetic": "/ˈkɒfɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "棺材；灵柩",
+    "difficulty": 3
+  },
+  {
+    "word": "coil",
+    "phonetic": "/kɔɪl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "卷；盘绕",
+    "difficulty": 2
+  },
+  {
+    "word": "coin",
+    "phonetic": "/kɔɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "硬币；金属币",
+    "difficulty": 1
+  },
+  {
+    "word": "coincide",
+    "phonetic": "/ˌkəʊɪnˈsaɪd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "同时发生；一致",
+    "difficulty": 3
+  },
+  {
+    "word": "coincidence",
+    "phonetic": "/kəʊˈɪnsɪdəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "巧合；一致",
+    "difficulty": 3
+  },
+  {
+    "word": "cold",
+    "phonetic": "/kəʊld/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "冷的；寒冷的",
+    "difficulty": 1
+  },
+  {
+    "word": "collapse",
+    "phonetic": "/kəˈlæps/",
+    "part_of_speech": "v.",
+    "meaning_zh": "倒塌；崩溃",
+    "difficulty": 2
+  },
+  {
+    "word": "collar",
+    "phonetic": "/ˈkɒlə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "衣领；领子",
+    "difficulty": 1
+  },
+  {
+    "word": "colleague",
+    "phonetic": "/ˈkɒliːɡ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "同事；同行",
+    "difficulty": 2
+  },
+  {
+    "word": "collect",
+    "phonetic": "/kəˈlekt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "收集；采集",
+    "difficulty": 1
+  },
+  {
+    "word": "collection",
+    "phonetic": "/kəˈlekʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "收藏品；收集",
+    "difficulty": 2
+  },
+  {
+    "word": "collective",
+    "phonetic": "/kəˈlektɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "集体的；共同的",
+    "difficulty": 3
+  },
+  {
+    "word": "collector",
+    "phonetic": "/kəˈlektə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "收藏家；收集者",
+    "difficulty": 2
+  },
+  {
+    "word": "college",
+    "phonetic": "/ˈkɒlɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "学院；大学",
+    "difficulty": 1
+  },
+  {
+    "word": "collision",
+    "phonetic": "/kəˈlɪʒn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "碰撞；冲突",
+    "difficulty": 3
+  },
+  {
+    "word": "colonel",
+    "phonetic": "/ˈkɜːnl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "上校；团长",
+    "difficulty": 3
+  },
+  {
+    "word": "colonial",
+    "phonetic": "/kəˈləʊniəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "殖民的；殖民地的",
+    "difficulty": 3
+  },
+  {
+    "word": "colony",
+    "phonetic": "/ˈkɒləni/",
+    "part_of_speech": "n.",
+    "meaning_zh": "殖民地；聚居地",
+    "difficulty": 2
+  },
+  {
+    "word": "color",
+    "phonetic": "/ˈkʌlə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "颜色；色彩",
+    "difficulty": 1
+  },
+  {
+    "word": "column",
+    "phonetic": "/ˈkɒləm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圆柱；纵队",
+    "difficulty": 1
+  },
+  {
+    "word": "comb",
+    "phonetic": "/kəʊm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "梳子；梳理",
+    "difficulty": 1
+  },
+  {
+    "word": "combat",
+    "phonetic": "/ˈkɒmbæt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "与...战斗；防止",
+    "difficulty": 2
+  },
+  {
+    "word": "combination",
+    "phonetic": "/ˌkɒmbɪˈneɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "组合；结合",
+    "difficulty": 2
+  },
+  {
+    "word": "combine",
+    "phonetic": "/kəmˈbaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "结合；联合",
+    "difficulty": 2
+  },
+  {
+    "word": "come",
+    "phonetic": "/kʌm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "来；来到",
+    "difficulty": 1
+  },
+  {
+    "word": "comedy",
+    "phonetic": "/ˈkɒmədi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "喜剧；喜剧片",
+    "difficulty": 2
+  },
+  {
+    "word": "comfort",
+    "phonetic": "/ˈkʌmfət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "舒适；安慰",
+    "difficulty": 2
+  },
+  {
+    "word": "comfortable",
+    "phonetic": "/ˈkʌmftəbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "舒适的；舒服的",
+    "difficulty": 1
+  },
+  {
+    "word": "command",
+    "phonetic": "/kəˈmɑːnd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "命令；指挥",
+    "difficulty": 2
+  },
+  {
+    "word": "commander",
+    "phonetic": "/kəˈmɑːndə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "指挥官；司令官",
+    "difficulty": 2
+  },
+  {
+    "word": "comment",
+    "phonetic": "/ˈkɒment/",
+    "part_of_speech": "n.",
+    "meaning_zh": "评论；注释",
+    "difficulty": 2
+  },
+  {
+    "word": "commerce",
+    "phonetic": "/ˈkɒmɜːs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "商业；贸易",
+    "difficulty": 2
+  },
+  {
+    "word": "commercial",
+    "phonetic": "/kəˈmɜːʃl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "商业的；盈利的",
+    "difficulty": 2
+  },
+  {
+    "word": "commission",
+    "phonetic": "/kəˈmɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "委员会；佣金",
+    "difficulty": 2
+  },
+  {
+    "word": "commit",
+    "phonetic": "/kəˈmɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "犯；承诺",
+    "difficulty": 2
+  },
+  {
+    "word": "commitment",
+    "phonetic": "/kəˈmɪtmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "承诺；献身",
+    "difficulty": 2
+  },
+  {
+    "word": "committee",
+    "phonetic": "/kəˈmɪti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "委员会",
+    "difficulty": 2
+  },
+  {
+    "word": "common",
+    "phonetic": "/ˈkɒmən/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "常见的；共同的",
+    "difficulty": 1
+  },
+  {
+    "word": "communicate",
+    "phonetic": "/kəˈmjuːnɪkeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "交流；沟通",
+    "difficulty": 2
+  },
+  {
+    "word": "communication",
+    "phonetic": "/kəˌmjuːnɪˈkeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "交流；通讯",
+    "difficulty": 2
+  },
+  {
+    "word": "communism",
+    "phonetic": "/ˈkɒmjənɪzəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "共产主义",
+    "difficulty": 2
+  },
+  {
+    "word": "communist",
+    "phonetic": "/ˈkɒmjənɪst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "共产主义者",
+    "difficulty": 2
+  },
+  {
+    "word": "community",
+    "phonetic": "/kəˈmjuːnəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "社区；群落",
+    "difficulty": 2
+  },
+  {
+    "word": "compact",
+    "phonetic": "/kəmˈpækt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "紧凑的；紧密的",
+    "difficulty": 3
+  },
+  {
+    "word": "companion",
+    "phonetic": "/kəmˈpæniən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "同伴；伴侣",
+    "difficulty": 2
+  },
+  {
+    "word": "company",
+    "phonetic": "/ˈkʌmpəni/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公司；陪伴",
+    "difficulty": 1
+  },
+  {
+    "word": "compare",
+    "phonetic": "/kəmˈpeə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "比较；对比",
+    "difficulty": 1
+  },
+  {
+    "word": "comparison",
+    "phonetic": "/kəmˈpærɪsn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "比较；对照",
+    "difficulty": 2
+  },
+  {
+    "word": "compartment",
+    "phonetic": "/kəmˈpɑːtmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "隔间；车厢",
+    "difficulty": 3
+  },
+  {
+    "word": "compass",
+    "phonetic": "/ˈkʌmpəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "指南针；罗盘",
+    "difficulty": 2
+  },
+  {
+    "word": "compel",
+    "phonetic": "/kəmˈpel/",
+    "part_of_speech": "v.",
+    "meaning_zh": "强迫；迫使",
+    "difficulty": 2
+  },
+  {
+    "word": "compensate",
+    "phonetic": "/ˈkɒmpenseɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "补偿；赔偿",
+    "difficulty": 3
+  },
+  {
+    "word": "compensation",
+    "phonetic": "/ˌkɒmpenˈseɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "补偿；赔偿金",
+    "difficulty": 3
+  },
+  {
+    "word": "compete",
+    "phonetic": "/kəmˈpiːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "竞争；对抗",
+    "difficulty": 2
+  },
+  {
+    "word": "competition",
+    "phonetic": "/ˌkɒmpəˈtɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "竞争；比赛",
+    "difficulty": 2
+  },
+  {
+    "word": "competitive",
+    "phonetic": "/kəmˈpetətɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "竞争的；有竞争力的",
+    "difficulty": 2
+  },
+  {
+    "word": "competitor",
+    "phonetic": "/kəmˈpetɪtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "竞争者；对手",
+    "difficulty": 2
+  },
+  {
+    "word": "compile",
+    "phonetic": "/kəmˈpaɪl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "编译；编写",
+    "difficulty": 3
+  },
+  {
+    "word": "complain",
+    "phonetic": "/kəmˈpleɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "抱怨；投诉",
+    "difficulty": 2
+  },
+  {
+    "word": "complaint",
+    "phonetic": "/kəmˈpleɪnt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "抱怨；投诉",
+    "difficulty": 2
+  },
+  {
+    "word": "complement",
+    "phonetic": "/ˈkɒmplɪment/",
+    "part_of_speech": "n.",
+    "meaning_zh": "补充；补语",
+    "difficulty": 3
+  },
+  {
+    "word": "complete",
+    "phonetic": "/kəmˈpliːt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "完整的；完成的",
+    "difficulty": 1
+  },
+  {
+    "word": "complex",
+    "phonetic": "/ˈkɒmpleks/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "复杂的；复合的",
+    "difficulty": 2
+  },
+  {
+    "word": "complexity",
+    "phonetic": "/kəmˈpleksəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "复杂性；复杂度",
+    "difficulty": 3
+  },
+  {
+    "word": "compliance",
+    "phonetic": "/kəmˈplaɪəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "服从；遵守",
+    "difficulty": 3
+  },
+  {
+    "word": "complicate",
+    "phonetic": "/ˈkɒmplɪkeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使复杂化；使麻烦",
+    "difficulty": 2
+  },
+  {
+    "word": "complicated",
+    "phonetic": "/ˈkɒmplɪkeɪtɪd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "复杂的；难懂的",
+    "difficulty": 2
+  },
+  {
+    "word": "complication",
+    "phonetic": "/ˌkɒmplɪˈkeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "并发症；复杂化",
+    "difficulty": 3
+  },
+  {
+    "word": "compliment",
+    "phonetic": "/ˈkɒmplɪmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "恭维；称赞",
+    "difficulty": 2
+  },
+  {
+    "word": "comply",
+    "phonetic": "/kəmˈplaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "遵从；遵守",
+    "difficulty": 3
+  },
+  {
+    "word": "component",
+    "phonetic": "/kəmˈpəʊnənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "成分；组件",
+    "difficulty": 2
+  },
+  {
+    "word": "compose",
+    "phonetic": "/kəmˈpəʊz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "组成；创作",
+    "difficulty": 2
+  },
+  {
+    "word": "composer",
+    "phonetic": "/kəmˈpəʊzə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "作曲家；创作者",
+    "difficulty": 2
+  },
+  {
+    "word": "composition",
+    "phonetic": "/ˌkɒmpəˈzɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "构成；作品",
+    "difficulty": 2
+  },
+  {
+    "word": "compound",
+    "phonetic": "/ˈkɒmpaʊnd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "化合物；复合词",
+    "difficulty": 2
+  },
+  {
+    "word": "comprehension",
+    "phonetic": "/ˌkɒmprɪˈhenʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "理解；领悟",
+    "difficulty": 3
+  },
+  {
+    "word": "comprehensive",
+    "phonetic": "/ˌkɒmprɪˈhensɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "全面的；综合的",
+    "difficulty": 3
+  },
+  {
+    "word": "compress",
+    "phonetic": "/kəmˈpres/",
+    "part_of_speech": "v.",
+    "meaning_zh": "压缩；精简",
+    "difficulty": 3
+  },
+  {
+    "word": "compromise",
+    "phonetic": "/ˈkɒmprəmaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "妥协；让步",
+    "difficulty": 2
+  },
+  {
+    "word": "compute",
+    "phonetic": "/kəmˈpjuːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "计算；估算",
+    "difficulty": 2
+  },
+  {
+    "word": "computer",
+    "phonetic": "/kəmˈpjuːtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "电脑；计算机",
+    "difficulty": 1
+  },
+  {
+    "word": "conceal",
+    "phonetic": "/kənˈsiːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "隐藏；隐瞒",
+    "difficulty": 3
+  },
+  {
+    "word": "concede",
+    "phonetic": "/kənˈsiːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "承认；让步",
+    "difficulty": 3
+  },
+  {
+    "word": "concentrate",
+    "phonetic": "/ˈkɒnsntreɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "集中；聚集",
+    "difficulty": 2
+  },
+  {
+    "word": "concentration",
+    "phonetic": "/ˌkɒnsnˈtreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "集中；专心",
+    "difficulty": 2
+  },
+  {
+    "word": "concept",
+    "phonetic": "/ˈkɒnsept/",
+    "part_of_speech": "n.",
+    "meaning_zh": "概念；观念",
+    "difficulty": 2
+  },
+  {
+    "word": "conception",
+    "phonetic": "/kənˈsepʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "概念；怀孕",
+    "difficulty": 3
+  },
+  {
+    "word": "concern",
+    "phonetic": "/kənˈsɜːn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "涉及；关心",
+    "difficulty": 2
+  },
+  {
+    "word": "concerned",
+    "phonetic": "/kənˈsɜːnd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "担心的；关注的",
+    "difficulty": 2
+  },
+  {
+    "word": "concerning",
+    "phonetic": "/kənˈsɜːnɪŋ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "关于；涉及",
+    "difficulty": 2
+  },
+  {
+    "word": "concert",
+    "phonetic": "/ˈkɒnsət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "音乐会；一致",
+    "difficulty": 1
+  },
+  {
+    "word": "concession",
+    "phonetic": "/kənˈseʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "让步；特许权",
+    "difficulty": 3
+  },
+  {
+    "word": "conclude",
+    "phonetic": "/kənˈkluːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "推断；结束",
+    "difficulty": 2
+  },
+  {
+    "word": "conclusion",
+    "phonetic": "/kənˈkluːʒn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "结论；结局",
+    "difficulty": 2
+  },
+  {
+    "word": "concrete",
+    "phonetic": "/ˈkɒnkriːt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "具体的；混凝土的",
+    "difficulty": 2
+  },
+  {
+    "word": "condemn",
+    "phonetic": "/kənˈdem/",
+    "part_of_speech": "v.",
+    "meaning_zh": "谴责；判刑",
+    "difficulty": 3
+  },
+  {
+    "word": "condense",
+    "phonetic": "/kənˈdens/",
+    "part_of_speech": "v.",
+    "meaning_zh": "浓缩；压缩",
+    "difficulty": 3
+  },
+  {
+    "word": "condition",
+    "phonetic": "/kənˈdɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "条件；状况",
+    "difficulty": 1
+  },
+  {
+    "word": "conduct",
+    "phonetic": "/kənˈdʌkt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "指挥；引导",
+    "difficulty": 2
+  },
+  {
+    "word": "conductor",
+    "phonetic": "/kənˈdʌktə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "导体；指挥家",
+    "difficulty": 2
+  },
+  {
+    "word": "cone",
+    "phonetic": "/kəʊn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圆锥体；松果",
+    "difficulty": 2
+  },
+  {
+    "word": "conference",
+    "phonetic": "/ˈkɒnfərəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "会议；讨论会",
+    "difficulty": 2
+  },
+  {
+    "word": "confess",
+    "phonetic": "/kənˈfes/",
+    "part_of_speech": "v.",
+    "meaning_zh": "承认；坦白",
+    "difficulty": 2
+  },
+  {
+    "word": "confession",
+    "phonetic": "/kənˈfeʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "忏悔；承认",
+    "difficulty": 3
+  },
+  {
+    "word": "confidence",
+    "phonetic": "/ˈkɒnfɪdəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "信心；信任",
+    "difficulty": 2
+  },
+  {
+    "word": "confident",
+    "phonetic": "/ˈkɒnfɪdənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "自信的；有把握的",
+    "difficulty": 2
+  },
+  {
+    "word": "confine",
+    "phonetic": "/kənˈfaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "限制；禁闭",
+    "difficulty": 3
+  },
+  {
+    "word": "confirm",
+    "phonetic": "/kənˈfɜːm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "确认；证实",
+    "difficulty": 2
+  },
+  {
+    "word": "confirmation",
+    "phonetic": "/ˌkɒnfəˈmeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "确认；批准",
+    "difficulty": 2
+  },
+  {
+    "word": "conflict",
+    "phonetic": "/ˈkɒnflɪkt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "冲突；战斗",
+    "difficulty": 2
+  },
+  {
+    "word": "confront",
+    "phonetic": "/kənˈfrʌnt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "面对；正视",
+    "difficulty": 2
+  },
+  {
+    "word": "confrontation",
+    "phonetic": "/ˌkɒnfrʌnˈteɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "对抗；冲突",
+    "difficulty": 3
+  },
+  {
+    "word": "confuse",
+    "phonetic": "/kənˈfjuːz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使困惑；混淆",
+    "difficulty": 2
+  },
+  {
+    "word": "confused",
+    "phonetic": "/kənˈfjuːzd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "困惑的；糊涂的",
+    "difficulty": 2
+  },
+  {
+    "word": "confusing",
+    "phonetic": "/kənˈfjuːzɪŋ/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "令人困惑的",
+    "difficulty": 2
+  },
+  {
+    "word": "confusion",
+    "phonetic": "/kənˈfjuːʒn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "困惑；混乱",
+    "difficulty": 2
+  },
+  {
+    "word": "congestion",
+    "phonetic": "/kənˈdʒestʃən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "拥挤；拥塞",
+    "difficulty": 3
+  },
+  {
+    "word": "congratulate",
+    "phonetic": "/kənˈɡrætʃuleɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "祝贺；庆贺",
+    "difficulty": 2
+  },
+  {
+    "word": "congratulation",
+    "phonetic": "/kənˌɡrætʃuˈleɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "祝贺；贺词",
+    "difficulty": 2
+  },
+  {
+    "word": "congress",
+    "phonetic": "/ˈkɒŋɡres/",
+    "part_of_speech": "n.",
+    "meaning_zh": "国会；代表大会",
+    "difficulty": 2
+  },
+  {
+    "word": "congressional",
+    "phonetic": "/kənˈɡreʃənl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "国会的；会议的",
+    "difficulty": 3
+  },
+  {
+    "word": "conjunction",
+    "phonetic": "/kənˈdʒʌŋkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "连接词；结合",
+    "difficulty": 3
+  },
+  {
+    "word": "connect",
+    "phonetic": "/kəˈnekt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "连接；联系",
+    "difficulty": 1
+  },
+  {
+    "word": "connection",
+    "phonetic": "/kəˈnekʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "连接；关系",
+    "difficulty": 2
+  },
+  {
+    "word": "conquer",
+    "phonetic": "/ˈkɒŋkə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "征服；战胜",
+    "difficulty": 2
+  },
+  {
+    "word": "conquest",
+    "phonetic": "/ˈkɒŋkwest/",
+    "part_of_speech": "n.",
+    "meaning_zh": "征服；占领",
+    "difficulty": 2
+  },
+  {
+    "word": "conscience",
+    "phonetic": "/ˈkɒnʃəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "良心；道德心",
+    "difficulty": 2
+  },
+  {
+    "word": "conscious",
+    "phonetic": "/ˈkɒnʃəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "有意识的；神志清醒的",
+    "difficulty": 2
+  },
+  {
+    "word": "consciousness",
+    "phonetic": "/ˈkɒnʃəsnəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "意识；知觉",
+    "difficulty": 2
+  },
+  {
+    "word": "consent",
+    "phonetic": "/kənˈsent/",
+    "part_of_speech": "v.",
+    "meaning_zh": "同意；赞成",
+    "difficulty": 2
+  },
+  {
+    "word": "consequence",
+    "phonetic": "/ˈkɒnsɪkwəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "结果；后果",
+    "difficulty": 2
+  },
+  {
+    "word": "consequently",
+    "phonetic": "/ˈkɒnsɪkwəntli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "因此；所以",
+    "difficulty": 2
+  },
+  {
+    "word": "conservation",
+    "phonetic": "/ˌkɒnsəˈveɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "保护；保存",
+    "difficulty": 2
+  },
+  {
+    "word": "conservative",
+    "phonetic": "/kənˈsɜːvətɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "保守的；守旧的",
+    "difficulty": 2
+  },
+  {
+    "word": "conserve",
+    "phonetic": "/kənˈsɜːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "保护；保存",
+    "difficulty": 2
+  },
+  {
+    "word": "consider",
+    "phonetic": "/kənˈsɪdə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "考虑；认为",
+    "difficulty": 1
+  },
+  {
+    "word": "considerable",
+    "phonetic": "/kənˈsɪdərəbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "相当大的；重要的",
+    "difficulty": 2
+  },
+  {
+    "word": "considerate",
+    "phonetic": "/kənˈsɪdərət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "体贴的；考虑周到的",
+    "difficulty": 2
+  },
+  {
+    "word": "consideration",
+    "phonetic": "/kənˌsɪdəˈreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "考虑；体贴",
+    "difficulty": 2
+  },
+  {
+    "word": "consist",
+    "phonetic": "/kənˈsɪst/",
+    "part_of_speech": "v.",
+    "meaning_zh": "由...组成；在于",
+    "difficulty": 2
+  },
+  {
+    "word": "consistency",
+    "phonetic": "/kənˈsɪstənsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一致性；连贯性",
+    "difficulty": 3
+  },
+  {
+    "word": "consistent",
+    "phonetic": "/kənˈsɪstənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "一致的；连贯的",
+    "difficulty": 2
+  },
+  {
+    "word": "console",
+    "phonetic": "/kənˈsəʊl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "安慰；慰问",
+    "difficulty": 2
+  },
+  {
+    "word": "consolidate",
+    "phonetic": "/kənˈsɒlɪdeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "巩固；合并",
+    "difficulty": 3
+  },
+  {
+    "word": "conspiracy",
+    "phonetic": "/kənˈspɪrəsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "阴谋；共谋",
+    "difficulty": 3
+  },
+  {
+    "word": "constant",
+    "phonetic": "/ˈkɒnstənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "持续不断的；恒定的",
+    "difficulty": 2
+  },
+  {
+    "word": "constantly",
+    "phonetic": "/ˈkɒnstəntli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "不断地；经常地",
+    "difficulty": 2
+  },
+  {
+    "word": "constitute",
+    "phonetic": "/ˈkɒnstɪtjuːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "构成；制定",
+    "difficulty": 3
+  },
+  {
+    "word": "constitution",
+    "phonetic": "/ˌkɒnstɪˈtjuːʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "宪法；章程",
+    "difficulty": 2
+  },
+  {
+    "word": "construct",
+    "phonetic": "/kənˈstrʌkt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "建造；构造",
+    "difficulty": 2
+  },
+  {
+    "word": "construction",
+    "phonetic": "/kənˈstrʌkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建设；建筑物",
+    "difficulty": 2
+  },
+  {
+    "word": "consult",
+    "phonetic": "/kənˈsʌlt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "咨询；查阅",
+    "difficulty": 2
+  },
+  {
+    "word": "consultant",
+    "phonetic": "/kənˈsʌltənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "顾问；咨询师",
+    "difficulty": 2
+  },
+  {
+    "word": "consume",
+    "phonetic": "/kənˈsjuːm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "消耗；消费",
+    "difficulty": 2
+  },
+  {
+    "word": "consumer",
+    "phonetic": "/kənˈsjuːmə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "消费者；用户",
+    "difficulty": 2
+  },
+  {
+    "word": "consumption",
+    "phonetic": "/kənˈsʌmpʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "消耗；消费",
+    "difficulty": 2
+  },
+  {
+    "word": "contact",
+    "phonetic": "/ˈkɒntækt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "联系；接触",
+    "difficulty": 1
+  },
+  {
+    "word": "contain",
+    "phonetic": "/kənˈteɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "包含；容纳",
+    "difficulty": 1
+  },
+  {
+    "word": "container",
+    "phonetic": "/kənˈteɪnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "容器；集装箱",
+    "difficulty": 2
+  },
+  {
+    "word": "contaminate",
+    "phonetic": "/kənˈtæmɪneɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "污染；弄脏",
+    "difficulty": 3
+  },
+  {
+    "word": "contemplate",
+    "phonetic": "/ˈkɒntempleɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "沉思；考虑",
+    "difficulty": 3
+  },
+  {
+    "word": "contemporary",
+    "phonetic": "/kənˈtemprəri/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "当代的；同时代的",
+    "difficulty": 3
+  },
+  {
+    "word": "contempt",
+    "phonetic": "/kənˈtemt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "轻视；蔑视",
+    "difficulty": 3
+  },
+  {
+    "word": "contend",
+    "phonetic": "/kənˈtend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "竞争；主张",
+    "difficulty": 3
+  },
+  {
+    "word": "content",
+    "phonetic": "/kənˈtent/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "满足的；满意的",
+    "difficulty": 2
+  },
+  {
+    "word": "contest",
+    "phonetic": "/ˈkɒntest/",
+    "part_of_speech": "n.",
+    "meaning_zh": "比赛；竞争",
+    "difficulty": 2
+  },
+  {
+    "word": "context",
+    "phonetic": "/ˈkɒntekst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "上下文；背景",
+    "difficulty": 2
+  },
+  {
+    "word": "continent",
+    "phonetic": "/ˈkɒntɪnənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "大陆；洲",
+    "difficulty": 1
+  },
+  {
+    "word": "continual",
+    "phonetic": "/kənˈtɪnjuəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "连续的；持续的",
+    "difficulty": 2
+  },
+  {
+    "word": "continually",
+    "phonetic": "/kənˈtɪnjuəli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "不断地；频繁地",
+    "difficulty": 2
+  },
+  {
+    "word": "continue",
+    "phonetic": "/kənˈtɪnjuː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "继续；延续",
+    "difficulty": 1
+  },
+  {
+    "word": "continuity",
+    "phonetic": "/ˌkɒntɪˈnjuːəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "连续性；连贯性",
+    "difficulty": 3
+  },
+  {
+    "word": "continuous",
+    "phonetic": "/kənˈtɪnjuəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "连续不断的",
+    "difficulty": 2
+  },
+  {
+    "word": "contract",
+    "phonetic": "/ˈkɒntrækt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "合同；契约",
+    "difficulty": 2
+  },
+  {
+    "word": "contradict",
+    "phonetic": "/ˌkɒntrəˈdɪkt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "反驳；否认",
+    "difficulty": 3
+  },
+  {
+    "word": "contradiction",
+    "phonetic": "/ˌkɒntrəˈdɪkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "矛盾；反驳",
+    "difficulty": 3
+  },
+  {
+    "word": "contrary",
+    "phonetic": "/ˈkɒntrəri/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "相反的；对立的",
+    "difficulty": 2
+  },
+  {
+    "word": "contrast",
+    "phonetic": "/ˈkɒntrɑːst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "对比；对照",
+    "difficulty": 2
+  },
+  {
+    "word": "contribute",
+    "phonetic": "/kənˈtrɪbjuːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "贡献；捐赠",
+    "difficulty": 2
+  },
+  {
+    "word": "contribution",
+    "phonetic": "/ˌkɒntrɪˈbjuːʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "贡献；捐赠",
+    "difficulty": 2
+  },
+  {
+    "word": "contributor",
+    "phonetic": "/kənˈtrɪbjətə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "贡献者；捐赠者",
+    "difficulty": 2
+  },
+  {
+    "word": "control",
+    "phonetic": "/kənˈtrəʊl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "控制；管理",
+    "difficulty": 1
+  },
+  {
+    "word": "controversial",
+    "phonetic": "/ˌkɒntrəˈvɜːʃl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "有争议的",
+    "difficulty": 3
+  },
+  {
+    "word": "controversy",
+    "phonetic": "/ˈkɒntrəvɜːsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "争议；争论",
+    "difficulty": 3
+  },
+  {
+    "word": "convenience",
+    "phonetic": "/kənˈviːniəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "便利；方便",
+    "difficulty": 2
+  },
+  {
+    "word": "convenient",
+    "phonetic": "/kənˈviːniənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "便利的；方便的",
+    "difficulty": 2
+  },
+  {
+    "word": "convention",
+    "phonetic": "/kənˈvenʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "大会；惯例",
+    "difficulty": 2
+  },
+  {
+    "word": "conventional",
+    "phonetic": "/kənˈvenʃənl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "传统的；常规的",
+    "difficulty": 2
+  },
+  {
+    "word": "conversation",
+    "phonetic": "/ˌkɒnvəˈseɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "对话；交谈",
+    "difficulty": 1
+  },
+  {
+    "word": "converse",
+    "phonetic": "/kənˈvɜːs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "交谈；谈话",
+    "difficulty": 3
+  },
+  {
+    "word": "conversely",
+    "phonetic": "/kənˈvɜːsli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "相反地",
+    "difficulty": 3
+  },
+  {
+    "word": "conversion",
+    "phonetic": "/kənˈvɜːʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "转换；皈依",
+    "difficulty": 2
+  },
+  {
+    "word": "convert",
+    "phonetic": "/kənˈvɜːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "转变；改变信仰",
+    "difficulty": 2
+  },
+  {
+    "word": "convey",
+    "phonetic": "/kənˈveɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "传达；运输",
+    "difficulty": 3
+  },
+  {
+    "word": "convict",
+    "phonetic": "/kənˈvɪkt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "宣判...有罪",
+    "difficulty": 2
+  },
+  {
+    "word": "conviction",
+    "phonetic": "/kənˈvɪkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "定罪；信念",
+    "difficulty": 3
+  },
+  {
+    "word": "convince",
+    "phonetic": "/kənˈvɪns/",
+    "part_of_speech": "v.",
+    "meaning_zh": "说服；使相信",
+    "difficulty": 2
+  },
+  {
+    "word": "convincing",
+    "phonetic": "/kənˈvɪnsɪŋ/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "令人信服的",
+    "difficulty": 2
+  },
+  {
+    "word": "cook",
+    "phonetic": "/kʊk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "烹饪；煮",
+    "difficulty": 1
+  },
+  {
+    "word": "cooker",
+    "phonetic": "/ˈkʊkə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "炊具；炉灶",
+    "difficulty": 1
+  },
+  {
+    "word": "cookie",
+    "phonetic": "/ˈkʊki/",
+    "part_of_speech": "n.",
+    "meaning_zh": "饼干；小甜点",
+    "difficulty": 1
+  },
+  {
+    "word": "cool",
+    "phonetic": "/kuːl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "凉爽的；冷静的",
+    "difficulty": 1
+  },
+  {
+    "word": "cooperate",
+    "phonetic": "/kəʊˈɒpəreɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "合作；配合",
+    "difficulty": 2
+  },
+  {
+    "word": "cooperation",
+    "phonetic": "/kəʊˌɒpəˈreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "合作；协作",
+    "difficulty": 2
+  },
+  {
+    "word": "cooperative",
+    "phonetic": "/kəʊˈɒpərətɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "合作的；配合的",
+    "difficulty": 2
+  },
+  {
+    "word": "coordinate",
+    "phonetic": "/kəʊˈɔːdɪneɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "协调；整合",
+    "difficulty": 3
+  },
+  {
+    "word": "coordination",
+    "phonetic": "/kəʊˌɔːdɪˈneɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "协调；配合",
+    "difficulty": 3
+  },
+  {
+    "word": "cope",
+    "phonetic": "/kəʊp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "应对；处理",
+    "difficulty": 2
+  },
+  {
+    "word": "copper",
+    "phonetic": "/ˈkɒpə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "铜；铜币",
+    "difficulty": 2
+  },
+  {
+    "word": "copy",
+    "phonetic": "/ˈkɒpi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "复制品；拷贝",
+    "difficulty": 1
+  },
+  {
+    "word": "cord",
+    "phonetic": "/kɔːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "细绳；电线",
+    "difficulty": 1
+  },
+  {
+    "word": "core",
+    "phonetic": "/kɔː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "核心；中心",
+    "difficulty": 1
+  },
+  {
+    "word": "cork",
+    "phonetic": "/kɔːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "软木塞；软木",
+    "difficulty": 2
+  },
+  {
+    "word": "corn",
+    "phonetic": "/kɔːn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "玉米；谷物",
+    "difficulty": 1
+  },
+  {
+    "word": "corner",
+    "phonetic": "/ˈkɔːnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "角落；拐角",
+    "difficulty": 1
+  },
+  {
+    "word": "corporate",
+    "phonetic": "/ˈkɔːpərət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "公司的；法人的",
+    "difficulty": 2
+  },
+  {
+    "word": "corporation",
+    "phonetic": "/ˌkɔːpəˈreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公司；企业",
+    "difficulty": 2
+  },
+  {
+    "word": "correct",
+    "phonetic": "/kəˈrekt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "正确的；恰当的",
+    "difficulty": 1
+  },
+  {
+    "word": "correction",
+    "phonetic": "/kəˈrekʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "改正；修改",
+    "difficulty": 2
+  },
+  {
+    "word": "correspond",
+    "phonetic": "/ˌkɒrɪˈspɒnd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "符合；通信",
+    "difficulty": 3
+  },
+  {
+    "word": "correspondence",
+    "phonetic": "/ˌkɒrɪˈspɒndəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "通信；来往",
+    "difficulty": 3
+  },
+  {
+    "word": "correspondent",
+    "phonetic": "/ˌkɒrɪˈspɒndənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "记者；通讯员",
+    "difficulty": 3
+  },
+  {
+    "word": "corridor",
+    "phonetic": "/ˈkɒrɪdɔː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "走廊；通道",
+    "difficulty": 2
+  },
+  {
+    "word": "corrupt",
+    "phonetic": "/kəˈrʌpt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "腐败的；贪污的",
+    "difficulty": 2
+  },
+  {
+    "word": "corruption",
+    "phonetic": "/kəˈrʌpʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "腐败；贪污",
+    "difficulty": 2
+  },
+  {
+    "word": "cost",
+    "phonetic": "/kɒst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "费用；成本",
+    "difficulty": 1
+  },
+  {
+    "word": "costly",
+    "phonetic": "/ˈkɒstli/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "昂贵的；价值高的",
+    "difficulty": 2
+  },
+  {
+    "word": "costume",
+    "phonetic": "/ˈkɒstjuːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "服装；戏装",
+    "difficulty": 2
+  },
+  {
+    "word": "cosy",
+    "phonetic": "/ˈkəʊzi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "温暖舒适的；亲切的",
+    "difficulty": 2
+  },
+  {
+    "word": "cottage",
+    "phonetic": "/ˈkɒtɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "小屋；村舍",
+    "difficulty": 1
+  },
+  {
+    "word": "cotton",
+    "phonetic": "/ˈkɒtn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "棉花；棉布",
+    "difficulty": 1
+  },
+  {
+    "word": "cough",
+    "phonetic": "/kɒf/",
+    "part_of_speech": "v.",
+    "meaning_zh": "咳嗽",
+    "difficulty": 1
+  },
+  {
+    "word": "council",
+    "phonetic": "/ˈkaʊnsl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "委员会；理事会",
+    "difficulty": 2
+  },
+  {
+    "word": "counsel",
+    "phonetic": "/ˈkaʊnsl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "建议；律师",
+    "difficulty": 2
+  },
+  {
+    "word": "counselor",
+    "phonetic": "/ˈkaʊnsələ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "顾问；律师",
+    "difficulty": 3
+  },
+  {
+    "word": "count",
+    "phonetic": "/kaʊnt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "数；计算",
+    "difficulty": 1
+  },
+  {
+    "word": "counter",
+    "phonetic": "/ˈkaʊntə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "柜台；计数器",
+    "difficulty": 1
+  },
+  {
+    "word": "country",
+    "phonetic": "/ˈkʌntri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "国家；乡下",
+    "difficulty": 1
+  },
+  {
+    "word": "countryside",
+    "phonetic": "/ˈkʌntrisaɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "农村；乡下",
+    "difficulty": 1
+  },
+  {
+    "word": "county",
+    "phonetic": "/ˈkaʊnti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "县；郡",
+    "difficulty": 2
+  },
+  {
+    "word": "couple",
+    "phonetic": "/ˈkʌpl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一对；夫妇",
+    "difficulty": 1
+  },
+  {
+    "word": "courage",
+    "phonetic": "/ˈkʌrɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "勇气；胆量",
+    "difficulty": 2
+  },
+  {
+    "word": "courageous",
+    "phonetic": "/kəˈreɪdʒəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "勇敢的；无畏的",
+    "difficulty": 2
+  },
+  {
+    "word": "course",
+    "phonetic": "/kɔːs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "课程；过程",
+    "difficulty": 1
+  },
+  {
+    "word": "court",
+    "phonetic": "/kɔːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "法院；球场",
+    "difficulty": 1
+  },
+  {
+    "word": "courtesy",
+    "phonetic": "/ˈkɜːtəsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "礼貌；客气",
+    "difficulty": 2
+  },
+  {
+    "word": "courtyard",
+    "phonetic": "/ˈkɔːtjɑːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "庭院；天井",
+    "difficulty": 2
+  },
+  {
+    "word": "cousin",
+    "phonetic": "/ˈkʌzn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "堂兄；表兄",
+    "difficulty": 1
+  },
+  {
+    "word": "cover",
+    "phonetic": "/ˈkʌvə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "覆盖；遮盖",
+    "difficulty": 1
+  },
+  {
+    "word": "coverage",
+    "phonetic": "/ˈkʌvərɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "覆盖范围；新闻报道",
+    "difficulty": 2
+  },
+  {
+    "word": "cow",
+    "phonetic": "/kaʊ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "母牛；奶牛",
+    "difficulty": 1
+  },
+  {
+    "word": "crack",
+    "phonetic": "/kræk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "裂缝；裂纹",
+    "difficulty": 2
+  },
+  {
+    "word": "cracker",
+    "phonetic": "/ˈkrækə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "薄脆饼干；爆竹",
+    "difficulty": 2
+  },
+  {
+    "word": "cradle",
+    "phonetic": "/ˈkreɪdl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "摇篮；发源地",
+    "difficulty": 2
+  },
+  {
+    "word": "craft",
+    "phonetic": "/krɑːft/",
+    "part_of_speech": "n.",
+    "meaning_zh": "工艺；手艺",
+    "difficulty": 1
+  },
+  {
+    "word": "crash",
+    "phonetic": "/kræʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "碰撞；坠落",
+    "difficulty": 1
+  },
+  {
+    "word": "crawl",
+    "phonetic": "/krɔːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "爬行；徐徐行进",
+    "difficulty": 2
+  },
+  {
+    "word": "crazy",
+    "phonetic": "/ˈkreɪzi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "疯狂的；荒唐的",
+    "difficulty": 1
+  },
+  {
+    "word": "cream",
+    "phonetic": "/kriːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "奶油；面霜",
+    "difficulty": 1
+  },
+  {
+    "word": "create",
+    "phonetic": "/kriˈeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "创造；创作",
+    "difficulty": 1
+  },
+  {
+    "word": "creation",
+    "phonetic": "/kriˈeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "创造；创作物",
+    "difficulty": 2
+  },
+  {
+    "word": "creative",
+    "phonetic": "/kriˈeɪtɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "有创造力的",
+    "difficulty": 2
+  },
+  {
+    "word": "creator",
+    "phonetic": "/kriˈeɪtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "创造者；创作者",
+    "difficulty": 2
+  },
+  {
+    "word": "creature",
+    "phonetic": "/ˈkriːtʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "生物；动物",
+    "difficulty": 2
+  },
+  {
+    "word": "credit",
+    "phonetic": "/ˈkredɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "信用；信誉",
+    "difficulty": 1
+  },
+  {
+    "word": "creek",
+    "phonetic": "/kriːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "小溪；小河",
+    "difficulty": 2
+  },
+  {
+    "word": "creep",
+    "phonetic": "/kriːp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "爬行；蔓延",
+    "difficulty": 2
+  },
+  {
+    "word": "crew",
+    "phonetic": "/kruː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "全体船员；工作队",
+    "difficulty": 1
+  },
+  {
+    "word": "crime",
+    "phonetic": "/kraɪm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "罪行；犯罪",
+    "difficulty": 1
+  },
+  {
+    "word": "criminal",
+    "phonetic": "/ˈkrɪmɪnl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "罪犯；犯人",
+    "difficulty": 1
+  },
+  {
+    "word": "crisis",
+    "phonetic": "/ˈkraɪsɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "危机；紧要关头",
+    "difficulty": 2
+  },
+  {
+    "word": "crisp",
+    "phonetic": "/krɪsp/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "脆的；新鲜的",
+    "difficulty": 2
+  },
+  {
+    "word": "critic",
+    "phonetic": "/ˈkrɪtɪk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "批评家；评论家",
+    "difficulty": 2
+  },
+  {
+    "word": "critical",
+    "phonetic": "/ˈkrɪtɪkl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "批评的；关键的",
+    "difficulty": 2
+  },
+  {
+    "word": "criticism",
+    "phonetic": "/ˈkrɪtɪsɪzəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "批评；批判",
+    "difficulty": 2
+  },
+  {
+    "word": "criticize",
+    "phonetic": "/ˈkrɪtɪsaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "批评；批判",
+    "difficulty": 2
+  },
+  {
+    "word": "crop",
+    "phonetic": "/krɒp/",
+    "part_of_speech": "n.",
+    "meaning_zh": "农作物；收成",
+    "difficulty": 1
+  },
+  {
+    "word": "cross",
+    "phonetic": "/krɒs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "穿过；交叉",
+    "difficulty": 1
+  },
+  {
+    "word": "crouch",
+    "phonetic": "/kraʊtʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "蹲伏；蜷缩",
+    "difficulty": 2
+  },
+  {
+    "word": "crowd",
+    "phonetic": "/kraʊd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "人群；观众",
+    "difficulty": 1
+  },
+  {
+    "word": "crown",
+    "phonetic": "/kraʊn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "王冠；皇冠",
+    "difficulty": 1
+  },
+  {
+    "word": "crucial",
+    "phonetic": "/ˈkruːʃl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "关键的；决定性的",
+    "difficulty": 2
+  },
+  {
+    "word": "crude",
+    "phonetic": "/kruːd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "天然的；粗糙的",
+    "difficulty": 2
+  },
+  {
+    "word": "cruel",
+    "phonetic": "/ˈkruːəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "残忍的；残酷的",
+    "difficulty": 2
+  },
+  {
+    "word": "cruelty",
+    "phonetic": "/ˈkruːəlti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "残忍；残酷",
+    "difficulty": 2
+  },
+  {
+    "word": "cruise",
+    "phonetic": "/kruːz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "巡航；巡游",
+    "difficulty": 2
+  },
+  {
+    "word": "crumble",
+    "phonetic": "/ˈkrʌmbl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "粉碎；崩溃",
+    "difficulty": 2
+  },
+  {
+    "word": "crush",
+    "phonetic": "/krʌʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "压碎；碾碎",
+    "difficulty": 2
+  },
+  {
+    "word": "crust",
+    "phonetic": "/krʌst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "面包皮；外壳",
+    "difficulty": 2
+  },
+  {
+    "word": "cubic",
+    "phonetic": "/ˈkjuːbɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "立方体的；立方的",
+    "difficulty": 3
+  },
+  {
+    "word": "cucumber",
+    "phonetic": "/ˈkjuːkʌmbə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黄瓜",
+    "difficulty": 1
+  },
+  {
+    "word": "cultivate",
+    "phonetic": "/ˈkʌltɪveɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "培养；种植",
+    "difficulty": 2
+  },
+  {
+    "word": "cultural",
+    "phonetic": "/ˈkʌltʃərəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "文化的",
+    "difficulty": 2
+  },
+  {
+    "word": "culture",
+    "phonetic": "/ˈkʌltʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "文化；文明",
+    "difficulty": 1
+  },
+  {
+    "word": "cumulative",
+    "phonetic": "/ˈkjuːmjələtɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "累积的；渐增的",
+    "difficulty": 3
+  },
+  {
+    "word": "cup",
+    "phonetic": "/kʌp/",
+    "part_of_speech": "n.",
+    "meaning_zh": "杯子；奖杯",
+    "difficulty": 1
+  },
+  {
+    "word": "cupboard",
+    "phonetic": "/ˈkʌbəd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "食橱；碗柜",
+    "difficulty": 1
+  },
+  {
+    "word": "cure",
+    "phonetic": "/kjʊə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "治愈；治好",
+    "difficulty": 1
+  },
+  {
+    "word": "curiosity",
+    "phonetic": "/ˌkjʊəriˈɒsəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "好奇心；求知欲",
+    "difficulty": 2
+  },
+  {
+    "word": "curious",
+    "phonetic": "/ˈkjʊəriəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "好奇的；求知的",
+    "difficulty": 1
+  },
+  {
+    "word": "curl",
+    "phonetic": "/kɜːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "卷曲；缠绕",
+    "difficulty": 2
+  },
+  {
+    "word": "currency",
+    "phonetic": "/ˈkʌrənsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "货币；流通",
+    "difficulty": 2
+  },
+  {
+    "word": "current",
+    "phonetic": "/ˈkʌrənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "当前的；流通中的",
+    "difficulty": 1
+  },
+  {
+    "word": "currently",
+    "phonetic": "/ˈkʌrəntli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "目前；当前",
+    "difficulty": 2
+  },
+  {
+    "word": "curse",
+    "phonetic": "/kɜːs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "诅咒；咒骂",
+    "difficulty": 2
+  },
+  {
+    "word": "cursor",
+    "phonetic": "/ˈkɜːsə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "光标；指针",
+    "difficulty": 2
+  },
+  {
+    "word": "curtain",
+    "phonetic": "/ˈkɜːtn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "窗帘；幕布",
+    "difficulty": 1
+  },
+  {
+    "word": "curve",
+    "phonetic": "/kɜːv/",
+    "part_of_speech": "n.",
+    "meaning_zh": "曲线；弯曲",
+    "difficulty": 1
+  },
+  {
+    "word": "cushion",
+    "phonetic": "/ˈkʊʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "垫子；软垫",
+    "difficulty": 1
+  },
+  {
+    "word": "custom",
+    "phonetic": "/ˈkʌstəm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "习惯；风俗",
+    "difficulty": 1
+  },
+  {
+    "word": "customer",
+    "phonetic": "/ˈkʌstəmə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "顾客；客户",
+    "difficulty": 1
+  },
+  {
+    "word": "customs",
+    "phonetic": "/ˈkʌstəmz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "海关；关税",
+    "difficulty": 2
+  },
+  {
+    "word": "cycle",
+    "phonetic": "/ˈsaɪkl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "循环；周期",
+    "difficulty": 1
+  },
+  {
+    "word": "dad",
+    "phonetic": "/dæd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "爸爸；父亲",
+    "difficulty": 1
+  },
+  {
+    "word": "daily",
+    "phonetic": "/ˈdeɪli/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "每日的；日常的",
+    "difficulty": 1
+  },
+  {
+    "word": "damage",
+    "phonetic": "/ˈdæmɪdʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "损害；毁坏",
+    "difficulty": 1
+  },
+  {
+    "word": "damp",
+    "phonetic": "/dæmp/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "潮湿的；湿润的",
+    "difficulty": 2
+  },
+  {
+    "word": "dance",
+    "phonetic": "/dɑːns/",
+    "part_of_speech": "v.",
+    "meaning_zh": "跳舞；舞蹈",
+    "difficulty": 1
+  },
+  {
+    "word": "danger",
+    "phonetic": "/ˈdeɪndʒə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "危险；威胁",
+    "difficulty": 1
+  },
+  {
+    "word": "dangerous",
+    "phonetic": "/ˈdeɪndʒərəs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "危险的；不安全的",
+    "difficulty": 1
+  },
+  {
+    "word": "dare",
+    "phonetic": "/deə/",
+    "part_of_speech": "modal v.",
+    "meaning_zh": "敢；胆敢",
+    "difficulty": 2
+  },
+  {
+    "word": "dark",
+    "phonetic": "/dɑːk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "黑暗的；深色的",
+    "difficulty": 1
+  },
+  {
+    "word": "darkness",
+    "phonetic": "/ˈdɑːknəs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黑暗；漆黑",
+    "difficulty": 1
+  },
+  {
+    "word": "dash",
+    "phonetic": "/dæʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "猛冲；疾驰",
+    "difficulty": 2
+  },
+  {
+    "word": "data",
+    "phonetic": "/ˈdeɪtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "数据；资料",
+    "difficulty": 1
+  },
+  {
+    "word": "database",
+    "phonetic": "/ˈdeɪtəbeɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "数据库",
+    "difficulty": 2
+  },
+  {
+    "word": "date",
+    "phonetic": "/deɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "日期；约会",
+    "difficulty": 1
+  },
+  {
+    "word": "daughter",
+    "phonetic": "/ˈdɔːtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "女儿",
+    "difficulty": 1
+  },
+  {
+    "word": "dawn",
+    "phonetic": "/dɔːn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黎明；拂晓",
+    "difficulty": 2
+  },
+  {
+    "word": "day",
+    "phonetic": "/deɪ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一天；白天",
+    "difficulty": 1
+  },
+  {
+    "word": "daylight",
+    "phonetic": "/ˈdeɪlaɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "日光；白昼",
+    "difficulty": 1
+  },
+  {
+    "word": "dead",
+    "phonetic": "/ded/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "死的；无生命的",
+    "difficulty": 1
+  },
+  {
+    "word": "deadline",
+    "phonetic": "/ˈdedlaɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "最后期限",
+    "difficulty": 2
+  },
+  {
+    "word": "deadly",
+    "phonetic": "/ˈdedli/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "致命的；致死的",
+    "difficulty": 2
+  },
+  {
+    "word": "deaf",
+    "phonetic": "/def/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "聋的",
+    "difficulty": 2
+  },
+  {
+    "word": "deal",
+    "phonetic": "/diːl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "处理；分配",
+    "difficulty": 1
+  },
+  {
+    "word": "dealer",
+    "phonetic": "/ˈdiːlə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "经销商；商人",
+    "difficulty": 2
+  },
+  {
+    "word": "dear",
+    "phonetic": "/dɪə/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "亲爱的；昂贵的",
+    "difficulty": 1
+  },
+  {
+    "word": "death",
+    "phonetic": "/deθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "死亡；逝世",
+    "difficulty": 1
+  },
+  {
+    "word": "debate",
+    "phonetic": "/dɪˈbeɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "辩论；讨论",
+    "difficulty": 2
+  },
+  {
+    "word": "debt",
+    "phonetic": "/det/",
+    "part_of_speech": "n.",
+    "meaning_zh": "债务；欠款",
+    "difficulty": 2
+  },
+  {
+    "word": "decade",
+    "phonetic": "/ˈdekeɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "十年；十年期",
+    "difficulty": 2
+  },
+  {
+    "word": "decay",
+    "phonetic": "/dɪˈkeɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "腐烂；衰落",
+    "difficulty": 2
+  },
+  {
+    "word": "deceive",
+    "phonetic": "/dɪˈsiːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "欺骗；欺诈",
+    "difficulty": 2
+  },
+  {
+    "word": "december",
+    "phonetic": "/dɪˈsembə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "十二月",
+    "difficulty": 1
+  },
+  {
+    "word": "decent",
+    "phonetic": "/ˈdiːsnt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "像样的；体面的",
+    "difficulty": 2
+  },
+  {
+    "word": "decide",
+    "phonetic": "/dɪˈsaɪd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "决定；裁决",
+    "difficulty": 1
+  },
+  {
+    "word": "decision",
+    "phonetic": "/dɪˈsɪʒn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "决定；决策",
+    "difficulty": 1
+  },
+  {
+    "word": "deck",
+    "phonetic": "/dek/",
+    "part_of_speech": "n.",
+    "meaning_zh": "甲板；层面",
+    "difficulty": 1
+  },
+  {
+    "word": "declare",
+    "phonetic": "/dɪˈkleə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "声明；申报",
+    "difficulty": 2
+  },
+  {
+    "word": "decline",
+    "phonetic": "/dɪˈklaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "下降；婉拒",
+    "difficulty": 2
+  },
+  {
+    "word": "decorate",
+    "phonetic": "/ˈdekəreɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "装饰；布置",
+    "difficulty": 2
+  },
+  {
+    "word": "decrease",
+    "phonetic": "/dɪˈkriːs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "减少；减小",
+    "difficulty": 2
+  },
+  {
+    "word": "dedicate",
+    "phonetic": "/ˈdedɪkeɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "奉献；致力于",
+    "difficulty": 3
+  },
+  {
+    "word": "deed",
+    "phonetic": "/diːd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "行为；事迹",
+    "difficulty": 2
+  },
+  {
+    "word": "deem",
+    "phonetic": "/diːm/",
+    "part_of_speech": "v.",
+    "meaning_zh": "认为；视为",
+    "difficulty": 3
+  },
+  {
+    "word": "deep",
+    "phonetic": "/diːp/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "深的；深厚的",
+    "difficulty": 1
+  },
+  {
+    "word": "deeply",
+    "phonetic": "/ˈdiːpli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "深深地；浓厚地",
+    "difficulty": 2
+  },
+  {
+    "word": "deer",
+    "phonetic": "/dɪə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鹿",
+    "difficulty": 1
+  },
+  {
+    "word": "defeat",
+    "phonetic": "/dɪˈfiːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "击败；战胜",
+    "difficulty": 2
+  },
+  {
+    "word": "defect",
+    "phonetic": "/ˈdiːfekt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "缺陷；瑕疵",
+    "difficulty": 2
+  },
+  {
+    "word": "defend",
+    "phonetic": "/dɪˈfend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "防御；保卫",
+    "difficulty": 1
+  },
+  {
+    "word": "defendant",
+    "phonetic": "/dɪˈfendənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "被告；被告人",
+    "difficulty": 3
+  },
+  {
+    "word": "defense",
+    "phonetic": "/dɪˈfens/",
+    "part_of_speech": "n.",
+    "meaning_zh": "防御；辩护",
+    "difficulty": 2
+  },
+  {
+    "word": "defer",
+    "phonetic": "/dɪˈfɜː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "推迟；延期",
+    "difficulty": 3
+  },
+  {
+    "word": "define",
+    "phonetic": "/dɪˈfaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "定义；规定",
+    "difficulty": 2
+  },
+  {
+    "word": "definite",
+    "phonetic": "/ˈdefɪnət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "明确的；肯定的",
+    "difficulty": 2
+  },
+  {
+    "word": "definitely",
+    "phonetic": "/ˈdefɪnətli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "明确地；当然",
+    "difficulty": 2
+  },
+  {
+    "word": "definition",
+    "phonetic": "/ˌdefɪˈnɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "定义；释义",
+    "difficulty": 2
+  },
+  {
+    "word": "degree",
+    "phonetic": "/dɪˈɡriː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "程度；学位",
+    "difficulty": 1
+  },
+  {
+    "word": "delay",
+    "phonetic": "/dɪˈleɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "延迟；耽搁",
+    "difficulty": 2
+  },
+  {
+    "word": "delegate",
+    "phonetic": "/ˈdelɪɡət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代表；委员",
+    "difficulty": 3
+  },
+  {
+    "word": "delegation",
+    "phonetic": "/ˌdelɪˈɡeɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "代表团；授权",
+    "difficulty": 3
+  },
+  {
+    "word": "delete",
+    "phonetic": "/dɪˈliːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "删除；擦除",
+    "difficulty": 1
+  },
+  {
+    "word": "deliberate",
+    "phonetic": "/dɪˈlɪbərət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "故意的；深思熟虑的",
+    "difficulty": 3
+  },
+  {
+    "word": "delicate",
+    "phonetic": "/ˈdelɪkət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "精致的；微妙的",
+    "difficulty": 2
+  },
+  {
+    "word": "delight",
+    "phonetic": "/dɪˈlaɪt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "高兴；快乐",
+    "difficulty": 2
+  },
+  {
+    "word": "delighted",
+    "phonetic": "/dɪˈlaɪtɪd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "高兴的；快乐的",
+    "difficulty": 2
+  },
+  {
+    "word": "deliver",
+    "phonetic": "/dɪˈlɪvə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "投递；发表",
+    "difficulty": 1
+  },
+  {
+    "word": "delivery",
+    "phonetic": "/dɪˈlɪvəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "投递；交付",
+    "difficulty": 2
+  },
+  {
+    "word": "demand",
+    "phonetic": "/dɪˈmɑːnd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "要求；需要",
+    "difficulty": 1
+  },
+  {
+    "word": "democracy",
+    "phonetic": "/dɪˈmɒkrəsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "民主；民主主义",
+    "difficulty": 2
+  },
+  {
+    "word": "democratic",
+    "phonetic": "/ˌdeməˈkrætɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "民主的；民主党的",
+    "difficulty": 2
+  },
+  {
+    "word": "demonstrate",
+    "phonetic": "/ˈdemənstreɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "证明；展示",
+    "difficulty": 2
+  },
+  {
+    "word": "demonstration",
+    "phonetic": "/ˌdemənˈstreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "示范；证明",
+    "difficulty": 2
+  },
+  {
+    "word": "denial",
+    "phonetic": "/dɪˈnaɪəl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "否认；拒绝",
+    "difficulty": 3
+  },
+  {
+    "word": "dense",
+    "phonetic": "/dens/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "密集的；浓密的",
+    "difficulty": 2
+  },
+  {
+    "word": "density",
+    "phonetic": "/ˈdensəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "密度；稠密",
+    "difficulty": 3
+  },
+  {
+    "word": "dentist",
+    "phonetic": "/ˈdentɪst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "牙科医生",
+    "difficulty": 2
+  },
+  {
+    "word": "deny",
+    "phonetic": "/dɪˈnaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "否认；拒绝",
+    "difficulty": 2
+  },
+  {
+    "word": "depart",
+    "phonetic": "/dɪˈpɑːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "离开；出发",
+    "difficulty": 2
+  },
+  {
+    "word": "department",
+    "phonetic": "/dɪˈpɑːtmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "部门；系",
+    "difficulty": 1
+  },
+  {
+    "word": "departure",
+    "phonetic": "/dɪˈpɑːtʃə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "离开；出发",
+    "difficulty": 2
+  },
+  {
+    "word": "depend",
+    "phonetic": "/dɪˈpend/",
+    "part_of_speech": "v.",
+    "meaning_zh": "依靠；依赖",
+    "difficulty": 2
+  },
+  {
+    "word": "dependent",
+    "phonetic": "/dɪˈpendənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "依靠的；从属的",
+    "difficulty": 2
+  },
+  {
+    "word": "depict",
+    "phonetic": "/dɪˈpɪkt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "描绘；描述",
+    "difficulty": 3
+  },
+  {
+    "word": "deposit",
+    "phonetic": "/dɪˈpɒzɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "放置；沉积",
+    "difficulty": 2
+  },
+  {
+    "word": "depress",
+    "phonetic": "/dɪˈpres/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使沮丧；压低",
+    "difficulty": 2
+  },
+  {
+    "word": "depression",
+    "phonetic": "/dɪˈpreʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "抑郁症；沮丧",
+    "difficulty": 2
+  },
+  {
+    "word": "depth",
+    "phonetic": "/depθ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "深度；厚度",
+    "difficulty": 1
+  },
+  {
+    "word": "deputy",
+    "phonetic": "/ˈdepjuti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "副手；代理人",
+    "difficulty": 2
+  },
+  {
+    "word": "derive",
+    "phonetic": "/dɪˈraɪv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "来源于；取得",
+    "difficulty": 2
+  },
+  {
+    "word": "describe",
+    "phonetic": "/dɪˈskraɪb/",
+    "part_of_speech": "v.",
+    "meaning_zh": "描述；形容",
+    "difficulty": 1
+  },
+  {
+    "word": "description",
+    "phonetic": "/dɪˈskrɪpʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "描述；说明",
+    "difficulty": 1
+  },
+  {
+    "word": "desert",
+    "phonetic": "/ˈdezət/",
+    "part_of_speech": "n.",
+    "meaning_zh": "沙漠；荒原",
+    "difficulty": 1
+  },
+  {
+    "word": "deserve",
+    "phonetic": "/dɪˈzɜːv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "值得；应受",
+    "difficulty": 2
+  },
+  {
+    "word": "design",
+    "phonetic": "/dɪˈzaɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "设计；构思",
+    "difficulty": 1
+  },
+  {
+    "word": "designer",
+    "phonetic": "/dɪˈzaɪnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "设计师",
+    "difficulty": 2
+  },
+  {
+    "word": "desire",
+    "phonetic": "/dɪˈzaɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "想要；希望",
+    "difficulty": 2
+  },
+  {
+    "word": "desk",
+    "phonetic": "/desk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "书桌；办公桌",
+    "difficulty": 1
+  },
+  {
+    "word": "desktop",
+    "phonetic": "/ˈdesktop/",
+    "part_of_speech": "n.",
+    "meaning_zh": "台式电脑",
+    "difficulty": 1
+  },
+  {
+    "word": "despair",
+    "phonetic": "/dɪˈspeə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "绝望；丧失信心",
+    "difficulty": 2
+  },
+  {
+    "word": "desperate",
+    "phonetic": "/ˈdespərət/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "绝望的；不顾一切的",
+    "difficulty": 2
+  },
+  {
+    "word": "despite",
+    "phonetic": "/dɪˈspaɪt/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "尽管；不管",
+    "difficulty": 2
+  },
+  {
+    "word": "dessert",
+    "phonetic": "/dɪˈzɜːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "甜点心；甜食",
+    "difficulty": 2
+  },
+  {
+    "word": "destination",
+    "phonetic": "/ˌdestɪˈneɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "目的地；终点",
+    "difficulty": 2
+  },
+  {
+    "word": "destroy",
+    "phonetic": "/dɪˈstrɔɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "破坏；摧毁",
+    "difficulty": 1
+  },
+  {
+    "word": "destruction",
+    "phonetic": "/dɪˈstrʌkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "破坏；毁灭",
+    "difficulty": 2
+  },
+  {
+    "word": "detail",
+    "phonetic": "/ˈdiːteɪl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "细节；详情",
+    "difficulty": 1
+  },
+  {
+    "word": "detailed",
+    "phonetic": "/ˈdiːteɪld/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "详细的；详尽的",
+    "difficulty": 2
+  },
+  {
+    "word": "detect",
+    "phonetic": "/dɪˈtekt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "发现；探测",
+    "difficulty": 2
+  },
+  {
+    "word": "detection",
+    "phonetic": "/dɪˈtekʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "发觉；探测",
+    "difficulty": 2
+  },
+  {
+    "word": "detective",
+    "phonetic": "/dɪˈtektɪv/",
+    "part_of_speech": "n.",
+    "meaning_zh": "侦探",
+    "difficulty": 2
+  },
+  {
+    "word": "detector",
+    "phonetic": "/dɪˈtektə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "探测器",
+    "difficulty": 2
+  },
+  {
+    "word": "determine",
+    "phonetic": "/dɪˈtɜːmɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "决定；确定",
+    "difficulty": 2
+  },
+  {
+    "word": "develop",
+    "phonetic": "/dɪˈveləp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "发展；开发",
+    "difficulty": 1
+  },
+  {
+    "word": "developer",
+    "phonetic": "/dɪˈveləpə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "开发者",
+    "difficulty": 2
+  },
+  {
+    "word": "development",
+    "phonetic": "/dɪˈveləpmənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "发展；开发",
+    "difficulty": 1
+  },
+  {
+    "word": "device",
+    "phonetic": "/dɪˈvaɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "装置；设备",
+    "difficulty": 2
+  },
+  {
+    "word": "devil",
+    "phonetic": "/ˈdevl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "魔鬼；恶魔",
+    "difficulty": 2
+  },
+  {
+    "word": "devise",
+    "phonetic": "/dɪˈvaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "设计；发明",
+    "difficulty": 3
+  },
+  {
+    "word": "devote",
+    "phonetic": "/dɪˈvəʊt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "奉献；致力于",
+    "difficulty": 2
+  },
+  {
+    "word": "diagnose",
+    "phonetic": "/ˈdaɪəɡnəʊz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "诊断；判断",
+    "difficulty": 3
+  },
+  {
+    "word": "diagnosis",
+    "phonetic": "/ˌdaɪəɡˈnəʊsɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "诊断；判断",
+    "difficulty": 3
+  },
+  {
+    "word": "diagram",
+    "phonetic": "/ˈdaɪəɡræm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "图表；图解",
+    "difficulty": 2
+  },
+  {
+    "word": "dial",
+    "phonetic": "/ˈdaɪəl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "拨号码；打电话",
+    "difficulty": 2
+  },
+  {
+    "word": "dialogue",
+    "phonetic": "/ˈdaɪəlɒɡ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "对话；对话",
+    "difficulty": 1
+  },
+  {
+    "word": "diameter",
+    "phonetic": "/daɪˈæmɪtə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "直径",
+    "difficulty": 3
+  },
+  {
+    "word": "diamond",
+    "phonetic": "/ˈdaɪəmənd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "钻石；菱形",
+    "difficulty": 1
+  },
+  {
+    "word": "diary",
+    "phonetic": "/ˈdaɪəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "日记；日记本",
+    "difficulty": 2
+  },
+  {
+    "word": "dictate",
+    "phonetic": "/dɪkˈteɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "口述；命令",
+    "difficulty": 2
+  },
+  {
+    "word": "dictation",
+    "phonetic": "/dɪkˈteɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "听写；口述",
+    "difficulty": 2
+  },
+  {
+    "word": "dictionary",
+    "phonetic": "/ˈdɪkʃənri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "字典；词典",
+    "difficulty": 1
+  },
+  {
+    "word": "differ",
+    "phonetic": "/ˈdɪfə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "不同；有区别",
+    "difficulty": 2
+  },
+  {
+    "word": "difference",
+    "phonetic": "/ˈdɪfrəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "差异；差别",
+    "difficulty": 1
+  },
+  {
+    "word": "different",
+    "phonetic": "/ˈdɪfrənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "不同的；有差异的",
+    "difficulty": 1
+  },
+  {
+    "word": "difficult",
+    "phonetic": "/ˈdɪfɪkəlt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "困难的；艰难的",
+    "difficulty": 1
+  },
+  {
+    "word": "difficulty",
+    "phonetic": "/ˈdɪfɪkəlti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "困难；难度",
+    "difficulty": 1
+  },
+  {
+    "word": "digest",
+    "phonetic": "/daɪˈdʒest/",
+    "part_of_speech": "v.",
+    "meaning_zh": "消化；领悟",
+    "difficulty": 2
+  },
+  {
+    "word": "digital",
+    "phonetic": "/ˈdɪdʒɪtl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "数字的；手指的",
+    "difficulty": 2
+  },
+  {
+    "word": "dignity",
+    "phonetic": "/ˈdɪɡnəti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "尊严；高贵",
+    "difficulty": 2
+  },
+  {
+    "word": "dilemma",
+    "phonetic": "/dɪˈlemə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "困境；进退两难",
+    "difficulty": 3
+  },
+  {
+    "word": "dimension",
+    "phonetic": "/daɪˈmenʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "尺寸；维度",
+    "difficulty": 2
+  },
+  {
+    "word": "diminish",
+    "phonetic": "/dɪˈmɪnɪʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "减少；削弱",
+    "difficulty": 3
+  },
+  {
+    "word": "dinner",
+    "phonetic": "/ˈdɪnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "正餐；宴会",
+    "difficulty": 1
+  },
+  {
+    "word": "dinosaur",
+    "phonetic": "/ˈdaɪnəsɔː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "恐龙",
+    "difficulty": 2
+  },
+  {
+    "word": "dioxide",
+    "phonetic": "/daɪˈɒksaɪd/",
+    "part_of_speech": "n.",
+    "meaning_zh": "二氧化物",
+    "difficulty": 3
+  },
+  {
+    "word": "dip",
+    "phonetic": "/dɪp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "浸；蘸",
+    "difficulty": 2
+  },
+  {
+    "word": "diploma",
+    "phonetic": "/dɪˈpləʊmə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "毕业文凭；资格证书",
+    "difficulty": 2
+  },
+  {
+    "word": "diplomacy",
+    "phonetic": "/dɪˈpləʊməsi/",
+    "part_of_speech": "n.",
+    "meaning_zh": "外交；外交手腕",
+    "difficulty": 3
+  },
+  {
+    "word": "direct",
+    "phonetic": "/dəˈrekt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "直接的；直率的",
+    "difficulty": 1
+  },
+  {
+    "word": "direction",
+    "phonetic": "/dəˈrekʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "方向；指导",
+    "difficulty": 1
+  },
+  {
+    "word": "directly",
+    "phonetic": "/dəˈrektli/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "直接地；立即",
+    "difficulty": 1
+  },
+  {
+    "word": "director",
+    "phonetic": "/dəˈrektə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "导演；负责人",
+    "difficulty": 1
+  },
+  {
+    "word": "dirt",
+    "phonetic": "/dɜːt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "污垢；泥土",
+    "difficulty": 1
+  },
+  {
+    "word": "dirty",
+    "phonetic": "/ˈdɜːti/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "脏的；肮脏的",
+    "difficulty": 1
+  },
+  {
+    "word": "disability",
+    "phonetic": "/ˌdɪsəˈbɪləti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "残疾；无能",
+    "difficulty": 2
+  },
+  {
+    "word": "disable",
+    "phonetic": "/dɪsˈeɪbl/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使丧失能力；使残废",
+    "difficulty": 2
+  },
+  {
+    "word": "disadvantage",
+    "phonetic": "/ˌdɪsədˈvɑːntɪdʒ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "不利条件；劣势",
+    "difficulty": 2
+  },
+  {
+    "word": "disagree",
+    "phonetic": "/ˌdɪsəˈɡriː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "不同意；不一致",
+    "difficulty": 2
+  },
+  {
+    "word": "disappear",
+    "phonetic": "/ˌdɪsəˈpɪə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "消失；不见",
+    "difficulty": 1
+  },
+  {
+    "word": "disappoint",
+    "phonetic": "/ˌdɪsəˈpɔɪnt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使失望",
+    "difficulty": 2
+  },
+  {
+    "word": "disappointed",
+    "phonetic": "/ˌdɪsəˈpɔɪntɪd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "失望的；沮丧的",
+    "difficulty": 2
+  },
+  {
+    "word": "disaster",
+    "phonetic": "/dɪˈzɑːstə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "灾难；祸患",
+    "difficulty": 1
+  },
+  {
+    "word": "disc",
+    "phonetic": "/dɪsk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圆盘；唱片",
+    "difficulty": 1
+  },
+  {
+    "word": "discard",
+    "phonetic": "/dɪsˈkɑːd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "丢弃；抛弃",
+    "difficulty": 2
+  },
+  {
+    "word": "discharge",
+    "phonetic": "/dɪsˈtʃɑːdʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "释放；排出",
+    "difficulty": 2
+  },
+  {
+    "word": "discipline",
+    "phonetic": "/ˈdɪsɪplɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "纪律；训练",
+    "difficulty": 2
+  },
+  {
+    "word": "disclose",
+    "phonetic": "/dɪsˈkləʊz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "揭露；泄露",
+    "difficulty": 3
+  },
+  {
+    "word": "discount",
+    "phonetic": "/ˈdɪskaʊnt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "折扣；贴现",
+    "difficulty": 1
+  },
+  {
+    "word": "discover",
+    "phonetic": "/dɪˈskʌvə/",
+    "part_of_speech": "v.",
+    "meaning_zh": "发现；发觉",
+    "difficulty": 1
+  },
+  {
+    "word": "discovery",
+    "phonetic": "/dɪˈskʌvəri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "发现；发觉",
+    "difficulty": 1
+  },
+  {
+    "word": "discrimination",
+    "phonetic": "/dɪˌskrɪmɪˈneɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "歧视；辨别力",
+    "difficulty": 3
+  },
+  {
+    "word": "discuss",
+    "phonetic": "/dɪˈskʌs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "讨论；论述",
+    "difficulty": 1
+  },
+  {
+    "word": "discussion",
+    "phonetic": "/dɪˈskʌʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "讨论；谈论",
+    "difficulty": 1
+  },
+  {
+    "word": "disease",
+    "phonetic": "/dɪˈziːz/",
+    "part_of_speech": "n.",
+    "meaning_zh": "疾病；弊病",
+    "difficulty": 1
+  },
+  {
+    "word": "disgrace",
+    "phonetic": "/dɪsˈɡreɪs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "丢脸；耻辱",
+    "difficulty": 2
+  },
+  {
+    "word": "disguise",
+    "phonetic": "/dɪsˈɡaɪz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "伪装；隐瞒",
+    "difficulty": 2
+  },
+  {
+    "word": "disgust",
+    "phonetic": "/dɪsˈɡʌst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "厌恶；反感",
+    "difficulty": 2
+  },
+  {
+    "word": "dish",
+    "phonetic": "/dɪʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "盘；碟子",
+    "difficulty": 1
+  },
+  {
+    "word": "disk",
+    "phonetic": "/dɪsk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "磁盘；圆盘",
+    "difficulty": 1
+  },
+  {
+    "word": "dislike",
+    "phonetic": "/dɪsˈlaɪk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "不喜欢；厌恶",
+    "difficulty": 2
+  },
+  {
+    "word": "dismiss",
+    "phonetic": "/dɪsˈmɪs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "解散；解雇",
+    "difficulty": 2
+  },
+  {
+    "word": "disorder",
+    "phonetic": "/dɪsˈɔːdə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "混乱；失调",
+    "difficulty": 2
+  },
+  {
+    "word": "dispatch",
+    "phonetic": "/dɪˈspætʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "派遣；发送",
+    "difficulty": 3
+  },
+  {
+    "word": "display",
+    "phonetic": "/dɪˈspleɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "显示；陈列",
+    "difficulty": 1
+  },
+  {
+    "word": "disposal",
+    "phonetic": "/dɪˈspəʊzl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "处理；销毁",
+    "difficulty": 2
+  },
+  {
+    "word": "dispose",
+    "phonetic": "/dɪˈspəʊz/",
+    "part_of_speech": "v.",
+    "meaning_zh": "处理；安排",
+    "difficulty": 2
+  },
+  {
+    "word": "dispute",
+    "phonetic": "/dɪˈspjuːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "争论；争辩",
+    "difficulty": 2
+  },
+  {
+    "word": "disrupt",
+    "phonetic": "/dɪsˈrʌpt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "中断；破坏",
+    "difficulty": 3
+  },
+  {
+    "word": "dissolve",
+    "phonetic": "/dɪˈzɒlv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "溶解；解散",
+    "difficulty": 2
+  },
+  {
+    "word": "distance",
+    "phonetic": "/ˈdɪstəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "距离；远方",
+    "difficulty": 1
+  },
+  {
+    "word": "distant",
+    "phonetic": "/ˈdɪstənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "远的；久远的",
+    "difficulty": 2
+  },
+  {
+    "word": "distinct",
+    "phonetic": "/dɪˈstɪŋkt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "清楚的；明显的",
+    "difficulty": 2
+  },
+  {
+    "word": "distinction",
+    "phonetic": "/dɪˈstɪŋkʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "区别；卓越",
+    "difficulty": 2
+  },
+  {
+    "word": "distinctive",
+    "phonetic": "/dɪˈstɪŋktɪv/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "与众不同的；有特色的",
+    "difficulty": 3
+  },
+  {
+    "word": "distinguish",
+    "phonetic": "/dɪˈstɪŋɡwɪʃ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "区别；辨别",
+    "difficulty": 2
+  },
+  {
+    "word": "distort",
+    "phonetic": "/dɪˈstɔːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "扭曲；变形",
+    "difficulty": 3
+  },
+  {
+    "word": "distract",
+    "phonetic": "/dɪˈstrækt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "分散注意力；使分心",
+    "difficulty": 2
+  },
+  {
+    "word": "distress",
+    "phonetic": "/dɪˈstres/",
+    "part_of_speech": "n.",
+    "meaning_zh": "痛苦；忧虑",
+    "difficulty": 2
+  },
+  {
+    "word": "distribute",
+    "phonetic": "/dɪˈstrɪbjuːt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "分配；分发",
+    "difficulty": 2
+  },
+  {
+    "word": "distribution",
+    "phonetic": "/ˌdɪstrɪˈbjuːʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "分配；分布",
+    "difficulty": 2
+  },
+  {
+    "word": "district",
+    "phonetic": "/ˈdɪstrɪkt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "区域；行政区",
+    "difficulty": 1
+  },
+  {
+    "word": "disturb",
+    "phonetic": "/dɪˈstɜːb/",
+    "part_of_speech": "v.",
+    "meaning_zh": "打扰；妨碍",
+    "difficulty": 2
+  },
+  {
+    "word": "disturbance",
+    "phonetic": "/dɪˈstɜːbəns/",
+    "part_of_speech": "n.",
+    "meaning_zh": "干扰；骚乱",
+    "difficulty": 3
+  },
+  {
+    "word": "ditch",
+    "phonetic": "/dɪtʃ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "沟；渠",
+    "difficulty": 2
+  },
+  {
+    "word": "dive",
+    "phonetic": "/daɪv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "潜水；俯冲",
+    "difficulty": 1
+  },
+  {
+    "word": "diverse",
+    "phonetic": "/daɪˈvɜːs/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "不同的；多样的",
+    "difficulty": 2
+  },
+  {
+    "word": "diversify",
+    "phonetic": "/daɪˈvɜːsɪfaɪ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "使多样化；变化",
+    "difficulty": 3
+  },
+  {
+    "word": "division",
+    "phonetic": "/dɪˈvɪʒn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "分开；除法",
+    "difficulty": 2
+  },
+  {
+    "word": "divorce",
+    "phonetic": "/dɪˈvɔːs/",
+    "part_of_speech": "v.",
+    "meaning_zh": "离婚；分离",
+    "difficulty": 2
+  },
+  {
+    "word": "dizzy",
+    "phonetic": "/ˈdɪzi/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "头晕的；眩晕的",
+    "difficulty": 2
+  },
+  {
+    "word": "do",
+    "phonetic": "/duː/",
+    "part_of_speech": "aux v.",
+    "meaning_zh": "做；干",
+    "difficulty": 1
+  },
+  {
+    "word": "dock",
+    "phonetic": "/dɒk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "船坞；码头",
+    "difficulty": 2
+  },
+  {
+    "word": "doctor",
+    "phonetic": "/ˈdɒktə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "医生；博士",
+    "difficulty": 1
+  },
+  {
+    "word": "document",
+    "phonetic": "/ˈdɒkjumənt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "文件；公文",
+    "difficulty": 1
+  },
+  {
+    "word": "documentary",
+    "phonetic": "/ˌdɒkjəˈmentri/",
+    "part_of_speech": "n.",
+    "meaning_zh": "纪录片",
+    "difficulty": 2
+  },
+  {
+    "word": "dodge",
+    "phonetic": "/dɒdʒ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "躲开；躲避",
+    "difficulty": 2
+  },
+  {
+    "word": "dog",
+    "phonetic": "/dɒɡ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "狗",
+    "difficulty": 1
+  },
+  {
+    "word": "doll",
+    "phonetic": "/dɒl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "玩偶；玩具娃娃",
+    "difficulty": 1
+  },
+  {
+    "word": "dollar",
+    "phonetic": "/ˈdɒlə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "美元；元",
+    "difficulty": 1
+  },
+  {
+    "word": "dolphin",
+    "phonetic": "/ˈdɒlfɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "海豚",
+    "difficulty": 1
+  },
+  {
+    "word": "domain",
+    "phonetic": "/dəˈmeɪn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "领域；领土",
+    "difficulty": 2
+  },
+  {
+    "word": "dome",
+    "phonetic": "/dəʊm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "圆屋顶；穹顶",
+    "difficulty": 2
+  },
+  {
+    "word": "domestic",
+    "phonetic": "/dəˈmestɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "国内的；家用的",
+    "difficulty": 2
+  },
+  {
+    "word": "dominant",
+    "phonetic": "/ˈdɒmɪnənt/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "支配的；显性的",
+    "difficulty": 2
+  },
+  {
+    "word": "dominate",
+    "phonetic": "/ˈdɒmɪneɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "支配；控制",
+    "difficulty": 2
+  },
+  {
+    "word": "donate",
+    "phonetic": "/dəʊˈneɪt/",
+    "part_of_speech": "v.",
+    "meaning_zh": "捐赠；捐献",
+    "difficulty": 2
+  },
+  {
+    "word": "donation",
+    "phonetic": "/dəʊˈneɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "捐款；捐赠",
+    "difficulty": 2
+  },
+  {
+    "word": "done",
+    "phonetic": "/dʌn/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "完成了的；煮熟的",
+    "difficulty": 1
+  },
+  {
+    "word": "donkey",
+    "phonetic": "/ˈdɒŋki/",
+    "part_of_speech": "n.",
+    "meaning_zh": "驴；傻瓜",
+    "difficulty": 1
+  },
+  {
+    "word": "donor",
+    "phonetic": "/ˈdəʊnə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "捐赠者； donor",
+    "difficulty": 2
+  },
+  {
+    "word": "doom",
+    "phonetic": "/duːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "毁灭；死亡",
+    "difficulty": 2
+  },
+  {
+    "word": "door",
+    "phonetic": "/dɔː/",
+    "part_of_speech": "n.",
+    "meaning_zh": "门；门口",
+    "difficulty": 1
+  },
+  {
+    "word": "dose",
+    "phonetic": "/dəʊs/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一剂；一次剂量",
+    "difficulty": 1
+  },
+  {
+    "word": "dot",
+    "phonetic": "/dɒt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "点；圆点",
+    "difficulty": 1
+  },
+  {
+    "word": "double",
+    "phonetic": "/ˈdʌbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "双的；两倍的",
+    "difficulty": 1
+  },
+  {
+    "word": "doubt",
+    "phonetic": "/daʊt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "怀疑；疑问",
+    "difficulty": 1
+  },
+  {
+    "word": "doubtful",
+    "phonetic": "/ˈdaʊtfl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "怀疑的；可疑的",
+    "difficulty": 2
+  },
+  {
+    "word": "down",
+    "phonetic": "/daʊn/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "向下；在下面",
+    "difficulty": 1
+  },
+  {
+    "word": "download",
+    "phonetic": "/ˌdaʊnˈləʊd/",
+    "part_of_speech": "v.",
+    "meaning_zh": "下载",
+    "difficulty": 1
+  },
+  {
+    "word": "downstairs",
+    "phonetic": "/ˌdaʊnˈsteəz/",
+    "part_of_speech": "adv.",
+    "meaning_zh": "在楼下；往楼下",
+    "difficulty": 1
+  },
+  {
+    "word": "downtown",
+    "phonetic": "/ˈdaʊntaʊn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "市中心；商业区",
+    "difficulty": 1
+  },
+  {
+    "word": "downward",
+    "phonetic": "/ˈdaʊnwəd/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "向下的；下降的",
+    "difficulty": 2
+  },
+  {
+    "word": "dozen",
+    "phonetic": "/ˈdʌzn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "一打；十二个",
+    "difficulty": 1
+  },
+  {
+    "word": "draft",
+    "phonetic": "/drɑːft/",
+    "part_of_speech": "n.",
+    "meaning_zh": "草稿；草案",
+    "difficulty": 1
+  },
+  {
+    "word": "drag",
+    "phonetic": "/dræɡ/",
+    "part_of_speech": "v.",
+    "meaning_zh": "拖；拉",
+    "difficulty": 1
+  },
+  {
+    "word": "dragon",
+    "phonetic": "/ˈdræɡən/",
+    "part_of_speech": "n.",
+    "meaning_zh": "龙",
+    "difficulty": 1
+  },
+  {
+    "word": "drain",
+    "phonetic": "/dreɪn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "排水；流干",
+    "difficulty": 2
+  },
+  {
+    "word": "drama",
+    "phonetic": "/ˈdrɑːmə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "戏剧；剧本",
+    "difficulty": 1
+  },
+  {
+    "word": "dramatic",
+    "phonetic": "/drəˈmætɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "戏剧性的；引人注目的",
+    "difficulty": 2
+  },
+  {
+    "word": "drastic",
+    "phonetic": "/ˈdræstɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "激烈的；猛烈的",
+    "difficulty": 3
+  },
+  {
+    "word": "draw",
+    "phonetic": "/drɔː/",
+    "part_of_speech": "v.",
+    "meaning_zh": "画；拉",
+    "difficulty": 1
+  },
+  {
+    "word": "drawer",
+    "phonetic": "/drɔːə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "抽屉",
+    "difficulty": 1
+  },
+  {
+    "word": "drawing",
+    "phonetic": "/ˈdrɔːɪŋ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "绘画；素描",
+    "difficulty": 1
+  },
+  {
+    "word": "dread",
+    "phonetic": "/dred/",
+    "part_of_speech": "v.",
+    "meaning_zh": "惧怕；担心",
+    "difficulty": 2
+  },
+  {
+    "word": "dream",
+    "phonetic": "/driːm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "梦；梦想",
+    "difficulty": 1
+  },
+  {
+    "word": "dress",
+    "phonetic": "/dres/",
+    "part_of_speech": "n.",
+    "meaning_zh": "衣服；连衣裙",
+    "difficulty": 1
+  },
+  {
+    "word": "drift",
+    "phonetic": "/drɪft/",
+    "part_of_speech": "v.",
+    "meaning_zh": "漂流；漂移",
+    "difficulty": 2
+  },
+  {
+    "word": "drill",
+    "phonetic": "/drɪl/",
+    "part_of_speech": "n.",
+    "meaning_zh": "钻头；训练",
+    "difficulty": 1
+  },
+  {
+    "word": "drink",
+    "phonetic": "/drɪŋk/",
+    "part_of_speech": "v.",
+    "meaning_zh": "喝；饮",
+    "difficulty": 1
+  },
+  {
+    "word": "drip",
+    "phonetic": "/drɪp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "滴下；漏下",
+    "difficulty": 2
+  },
+  {
+    "word": "drive",
+    "phonetic": "/draɪv/",
+    "part_of_speech": "v.",
+    "meaning_zh": "驾驶；驱赶",
+    "difficulty": 1
+  },
+  {
+    "word": "driver",
+    "phonetic": "/ˈdraɪvə/",
+    "part_of_speech": "n.",
+    "meaning_zh": "司机；驾驶员",
+    "difficulty": 1
+  },
+  {
+    "word": "drop",
+    "phonetic": "/drɒp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "落下；降低",
+    "difficulty": 1
+  },
+  {
+    "word": "drought",
+    "phonetic": "/draʊt/",
+    "part_of_speech": "n.",
+    "meaning_zh": "干旱；旱灾",
+    "difficulty": 2
+  },
+  {
+    "word": "drown",
+    "phonetic": "/draʊn/",
+    "part_of_speech": "v.",
+    "meaning_zh": "溺死；淹没",
+    "difficulty": 2
+  },
+  {
+    "word": "drug",
+    "phonetic": "/drʌɡ/",
+    "part_of_speech": "n.",
+    "meaning_zh": "药；毒品",
+    "difficulty": 1
+  },
+  {
+    "word": "drum",
+    "phonetic": "/drʌm/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鼓；鼓声",
+    "difficulty": 1
+  },
+  {
+    "word": "drunk",
+    "phonetic": "/drʌŋk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "醉的；陶醉的",
+    "difficulty": 2
+  },
+  {
+    "word": "dry",
+    "phonetic": "/draɪ/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "干的；干燥的",
+    "difficulty": 1
+  },
+  {
+    "word": "dual",
+    "phonetic": "/ˈdjuːəl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "双的；双重的",
+    "difficulty": 2
+  },
+  {
+    "word": "duck",
+    "phonetic": "/dʌk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "鸭子",
+    "difficulty": 1
+  },
+  {
+    "word": "due",
+    "phonetic": "/djuː/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "应付的；到期的",
+    "difficulty": 2
+  },
+  {
+    "word": "duke",
+    "phonetic": "/djuːk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "公爵",
+    "difficulty": 3
+  },
+  {
+    "word": "dull",
+    "phonetic": "/dʌl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "枯燥的；迟钝的",
+    "difficulty": 2
+  },
+  {
+    "word": "dumb",
+    "phonetic": "/dʌm/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "哑的；愚蠢的",
+    "difficulty": 2
+  },
+  {
+    "word": "dump",
+    "phonetic": "/dʌmp/",
+    "part_of_speech": "v.",
+    "meaning_zh": "倾倒；抛弃",
+    "difficulty": 2
+  },
+  {
+    "word": "duplicate",
+    "phonetic": "/ˈdjuːplɪkət/",
+    "part_of_speech": "v.",
+    "meaning_zh": "复制；重复",
+    "difficulty": 3
+  },
+  {
+    "word": "durable",
+    "phonetic": "/ˈdjʊərəbl/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "耐用的；持久的",
+    "difficulty": 2
+  },
+  {
+    "word": "duration",
+    "phonetic": "/djʊˈreɪʃn/",
+    "part_of_speech": "n.",
+    "meaning_zh": "持续时间；期间",
+    "difficulty": 2
+  },
+  {
+    "word": "during",
+    "phonetic": "/ˈdjʊərɪŋ/",
+    "part_of_speech": "prep.",
+    "meaning_zh": "在...期间",
+    "difficulty": 1
+  },
+  {
+    "word": "dusk",
+    "phonetic": "/dʌsk/",
+    "part_of_speech": "n.",
+    "meaning_zh": "黄昏；傍晚",
+    "difficulty": 2
+  },
+  {
+    "word": "dust",
+    "phonetic": "/dʌst/",
+    "part_of_speech": "n.",
+    "meaning_zh": "灰尘；尘土",
+    "difficulty": 1
+  },
+  {
+    "word": "dusty",
+    "phonetic": "/ˈdʌsti/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "满是灰尘的",
+    "difficulty": 1
+  },
+  {
+    "word": "duty",
+    "phonetic": "/ˈdjuːti/",
+    "part_of_speech": "n.",
+    "meaning_zh": "责任；义务",
+    "difficulty": 1
+  },
+  {
+    "word": "dwarf",
+    "phonetic": "/dwɔːf/",
+    "part_of_speech": "n.",
+    "meaning_zh": "矮子；侏儒",
+    "difficulty": 2
+  },
+  {
+    "word": "dwell",
+    "phonetic": "/dwel/",
+    "part_of_speech": "v.",
+    "meaning_zh": "居住；存在于",
+    "difficulty": 2
+  },
+  {
+    "word": "dynamic",
+    "phonetic": "/daɪˈnæmɪk/",
+    "part_of_speech": "adj.",
+    "meaning_zh": "动态的；有活力的",
+    "difficulty": 2
+  }
+]
