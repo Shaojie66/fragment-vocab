@@ -45,55 +45,8 @@ fn show_card_window_internal(app: &tauri::AppHandle) {
     }
 
     if let Some(window) = app.get_webview_window("card") {
-        // 根据鼠标位置定位窗口
-        if let Ok(Some(monitor)) = window.current_monitor() {
-            let screen_size = monitor.size();
-            let scale_factor = window.scale_factor().unwrap_or(1.0);
-            let window_width = 480;
-            let window_height = 460;
-            let margin = 40; // 更大的边距确保完全可见
-
-            // 定义安全区域边界（使用物理像素）
-            let safe_left = margin;
-            let safe_right = (screen_size.width as i32) - margin;
-            let safe_top = margin;
-            let safe_bottom = (screen_size.height as i32) - margin;
-
-            // 获取鼠标位置并转换为物理坐标
-            let (mouse_x, mouse_y) = window
-                .cursor_position()
-                .map(|pos| {
-                    // cursor_position 返回 LogicalPosition，需要转换为物理坐标
-                    ((pos.x * scale_factor) as i32, (pos.y * scale_factor) as i32)
-                })
-                .unwrap_or_else(|_| {
-                    (screen_size.width as i32 / 2, screen_size.height as i32 / 2)
-                });
-
-            // 尝试放在鼠标右下方
-            let mut x = mouse_x + 20;
-            let mut y = mouse_y + 20;
-
-            // 如果右侧超出安全区域，尝试放在鼠标左侧
-            if x + window_width > safe_right {
-                x = mouse_x - window_width - 20;
-            }
-
-            // 如果下方超出安全区域，尝试放在鼠标上方
-            if y + window_height > safe_bottom {
-                y = mouse_y - window_height - 20;
-            }
-
-            // 确保窗口完全在安全区域内
-            let max_x = (safe_right - window_width).max(safe_left);
-            let max_y = (safe_bottom - window_height).max(safe_top);
-            x = x.max(safe_left).min(max_x);
-            y = y.max(safe_top).min(max_y);
-
-            let _ =
-                window.set_position(tauri::Position::Physical(tauri::PhysicalPosition { x, y }));
-        }
-
+        // 居中显示窗口
+        let _ = window.center();
         let _ = window.set_always_on_top(true);
         focus_window(&window);
         let _ = window.emit("card-window-shown", ());
