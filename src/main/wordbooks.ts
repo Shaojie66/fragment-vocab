@@ -317,8 +317,6 @@ function createWordbookPreviewCard(item: WordbookWordItem) {
   card.className = 'wordbook-preview-item';
   card.dataset.wordId = String(item.id);
   card.tabIndex = 0;
-  card.dataset.wordId = String(item.id);
-  card.tabIndex = 0;
   card.setAttribute('role', 'button');
   card.setAttribute('aria-label', `查看 ${item.word} 详情`);
 
